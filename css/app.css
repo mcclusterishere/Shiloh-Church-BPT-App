@@ -1,0 +1,374 @@
+/* ============================================================================
+   Shiloh — the member app. Components built on css/system.css.
+   ========================================================================= */
+
+body {
+  padding-bottom: calc(7.2rem + env(safe-area-inset-bottom, 0px));
+}
+
+/* ------------------------------------------------------------- app bar --- */
+.appbar {
+  position: sticky; top: 0; z-index: 20;
+  padding: var(--space-4) var(--space-5);
+  background: color-mix(in oklch, var(--ground) 82%, transparent);
+  border-bottom: 1px solid var(--edge);
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-4);
+}
+@supports (backdrop-filter: blur(1px)) {
+  :root:not([data-comfort="on"]) .appbar { backdrop-filter: blur(20px) saturate(150%); }
+}
+.appbar__name {
+  font-family: var(--font-display);
+  font-variation-settings: "opsz" 144, "SOFT" 20, "WONK" 1;
+  font-weight: 800;
+  font-size: var(--step-1);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+.appbar__name span { display: block; font-size: var(--step--1); font-weight: 500; letter-spacing: 0.01em; color: var(--text-muted); font-family: var(--font-body); }
+.appbar__actions { display: flex; gap: var(--space-2); }
+.iconbtn {
+  display: grid; place-items: center;
+  width: var(--tap); height: var(--tap);
+  border-radius: var(--radius-pill);
+  border: 1.5px solid var(--edge);
+  background: color-mix(in oklch, var(--surface) 60%, transparent);
+  color: var(--text);
+  transition: transform var(--dur-fast) var(--ease-spring), border-color var(--dur-fast);
+}
+.iconbtn:active { transform: scale(0.92); }
+.iconbtn svg { width: 22px; height: 22px; }
+
+/* --------------------------------------------------------------- screens - */
+main { padding: var(--space-6) 0 var(--space-8); }
+.screen { display: none; }
+.screen.on { display: block; }
+.screen__head { margin-bottom: var(--space-6); }
+.screen__head h2 { margin-top: var(--space-1); }
+
+/* ---------------------------------------------------------------- hero --- */
+/* The home hero is the one place the light field is allowed to be loud: a
+   glass pane with a jewel wash bleeding through from behind it. */
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding: var(--space-6);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--edge);
+  /* A single directional wash, matching the ambient field's own light
+     direction — warm from the top left, one cool note falling away. */
+  background:
+    radial-gradient(120% 85% at 8% -5%, color-mix(in oklch, var(--amber) 15%, transparent), transparent 60%),
+    radial-gradient(100% 75% at 96% 108%, color-mix(in oklch, var(--teal) 11%, transparent), transparent 62%),
+    color-mix(in oklch, var(--surface) var(--glass), transparent);
+  box-shadow: 0 1px 0 0 var(--edge-light) inset, 0 24px 60px -34px var(--shadow);
+}
+@supports (backdrop-filter: blur(1px)) {
+  :root:not([data-comfort="on"]) .hero { backdrop-filter: blur(16px) saturate(135%); }
+}
+.hero h1 { font-size: var(--step-4); margin: var(--space-2) 0 var(--space-3); }
+.hero p { color: var(--text-muted); }
+.hero__next {
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--edge);
+  display: flex; flex-direction: column; gap: var(--space-1);
+}
+/* Deliberately body-scale: this is a fact, not a headline. */
+.hero__next b { font-family: var(--font-body); font-size: var(--step-0); font-weight: 700; }
+
+/* --------------------------------------------------------- quick actions - */
+/* Full-width rows rather than tiles: labels this long wrap badly in two
+   columns, and a row gives the icon somewhere to sit. */
+.quickgrid { display: grid; gap: var(--space-3); }
+.quick {
+  display: flex; align-items: center; gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  min-height: var(--tap);
+  text-align: left;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--edge);
+  background: color-mix(in oklch, var(--surface) var(--glass), transparent);
+  color: var(--text);
+  transition: transform var(--dur-fast) var(--ease-spring), border-color var(--dur-fast);
+}
+.quick:active { transform: scale(0.98); }
+.quick svg { flex: none; width: 26px; height: 26px; color: var(--qc, var(--accent)); }
+.quick b { display: block; font-size: var(--step-0); }
+.quick small { display: block; font-size: var(--step--1); color: var(--text-muted); }
+.quick--prayer { --qc: var(--ruby); }
+.quick--connect { --qc: var(--teal); }
+
+/* --------------------------------------------------------------- cards --- */
+.card {
+  padding: var(--space-5);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--edge);
+  background: color-mix(in oklch, var(--surface) var(--glass), transparent);
+  box-shadow: 0 1px 0 0 var(--edge-light) inset, 0 14px 34px -26px var(--shadow);
+}
+@supports (backdrop-filter: blur(1px)) {
+  :root:not([data-comfort="on"]) .card { backdrop-filter: blur(16px) saturate(140%); }
+}
+.card h3 { margin-bottom: var(--space-2); }
+.card > p { color: var(--text-muted); }
+
+/* --------------------------------------------------------------- events -- */
+.eventcard { container-type: inline-size; }
+.eventcard__top { display: flex; gap: var(--space-4); align-items: flex-start; }
+/* Date block — reads like a torn calendar page. */
+.datechip {
+  flex: none;
+  width: 4.1rem;
+  padding: var(--space-3) var(--space-2);
+  text-align: center;
+  border-radius: var(--radius-md);
+  border: 1px solid color-mix(in oklch, var(--accent) 34%, transparent);
+  background: color-mix(in oklch, var(--accent) 12%, transparent);
+  color: var(--accent);
+}
+.datechip .m { display: block; font-size: var(--step--2); font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+.datechip .d {
+  display: block;
+  font-family: var(--font-display);
+  font-variation-settings: "opsz" 144, "SOFT" 20, "WONK" 1;
+  font-size: var(--step-2); font-weight: 800; line-height: 1.05;
+  font-variant-numeric: tabular-nums;
+}
+.eventcard__meta { color: var(--text-muted); font-size: var(--step--1); margin-top: var(--space-1); }
+.eventcard__body { margin-top: var(--space-4); }
+
+/* Segmented RSVP control with a sliding indicator. */
+.segmented {
+  position: relative;
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 2px; padding: 3px;
+  background: color-mix(in oklch, var(--text) 7%, transparent);
+  border-radius: var(--radius-pill);
+  margin-top: var(--space-4);
+}
+.segmented__thumb {
+  position: absolute; z-index: 0;
+  top: 3px; bottom: 3px; left: 3px;
+  width: calc((100% - 6px) / 3);
+  border-radius: var(--radius-pill);
+  background: var(--seg-c, var(--ok));
+  box-shadow: 0 4px 14px -6px var(--seg-c, var(--ok));
+  transform: translateX(calc(var(--seg-i, 0) * 100%));
+  transition: transform var(--dur-mid) var(--ease-spring), background-color var(--dur-fast);
+  opacity: 0;
+}
+.segmented[data-picked] .segmented__thumb { opacity: 1; }
+.segmented button {
+  position: relative; z-index: 1;
+  min-height: calc(var(--tap) - 6px);
+  border-radius: var(--radius-pill);
+  font-weight: 700;
+  color: var(--text-muted);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+.segmented button[aria-pressed="true"] { color: #fff; }
+:root[data-theme="dark"] .segmented button[aria-pressed="true"],
+:root:not([data-theme="light"]) .segmented button[aria-pressed="true"] { color: var(--ground-deep); }
+
+.headcount {
+  display: flex; align-items: center; gap: var(--space-2);
+  margin-top: var(--space-3);
+  font-size: var(--step--1); color: var(--text-muted);
+}
+.headcount b { font-variant-numeric: tabular-nums; color: var(--text); font-size: var(--step-0); }
+
+/* --------------------------------------------------------------- prayer -- */
+.prayercard { border-left: 3px solid color-mix(in oklch, var(--ruby) 55%, transparent); }
+.prayercard__who { font-size: var(--step--1); color: var(--text-muted); margin-bottom: var(--space-2); }
+.prayercard__text { font-size: var(--step-0); }
+
+/* The single most-tapped control in the app for this congregation. It should
+   feel like something happened: spring, glow, and a haptic tick. */
+.praybtn {
+  display: inline-flex; align-items: center; gap: var(--space-3);
+  min-height: var(--tap);
+  margin-top: var(--space-4);
+  padding: 0.5em 1.3em;
+  font-weight: 700;
+  color: var(--ruby);
+  border: 1.5px solid color-mix(in oklch, var(--ruby) 45%, transparent);
+  border-radius: var(--radius-pill);
+  background: color-mix(in oklch, var(--ruby) 8%, transparent);
+  transition: transform var(--dur-fast) var(--ease-spring), background-color var(--dur-mid), color var(--dur-mid);
+}
+.praybtn:active { transform: scale(0.94); }
+.praybtn[data-done="true"] {
+  background: var(--ruby); color: var(--accent-ink); border-color: transparent;
+  box-shadow: 0 6px 20px -8px var(--ruby);
+}
+.praybtn svg { width: 20px; height: 20px; }
+.praybtn .n { font-variant-numeric: tabular-nums; }
+@keyframes prayPulse {
+  0% { box-shadow: 0 0 0 0 color-mix(in oklch, var(--ruby) 55%, transparent); }
+  100% { box-shadow: 0 0 0 18px transparent; }
+}
+.praybtn.pulsing { animation: prayPulse 620ms var(--ease-out); }
+
+/* Visibility picker — the tier a request is shared at. */
+.tierpick { display: grid; gap: var(--space-2); }
+.tierpick label {
+  display: flex; align-items: flex-start; gap: var(--space-3);
+  padding: var(--space-4);
+  min-height: var(--tap);
+  border: 1.5px solid var(--edge);
+  border-radius: var(--radius-md);
+  font-weight: 400;
+  margin: 0;
+  transition: border-color var(--dur-fast), background-color var(--dur-fast);
+}
+.tierpick input { width: auto; min-height: 0; margin-top: 0.25em; accent-color: var(--accent); flex: none; }
+.tierpick label:has(input:checked) {
+  border-color: var(--accent);
+  background: color-mix(in oklch, var(--accent) 8%, transparent);
+}
+.tierpick b { display: block; }
+.tierpick small { color: var(--text-muted); font-size: var(--step--1); }
+
+/* ----------------------------------------------------------- ministries -- */
+.ministrygrid { display: grid; gap: var(--space-4); }
+@media (min-width: 34rem) { .ministrygrid { grid-template-columns: 1fr 1fr; } }
+.ministrycard { container-type: inline-size; display: flex; flex-direction: column; }
+.ministrycard .kind {
+  font-size: var(--step--2); font-weight: 700; letter-spacing: 0.13em;
+  text-transform: uppercase; color: var(--text-faint);
+}
+.ministrycard h3 { margin: var(--space-2) 0; }
+.ministrycard .btn { margin-top: auto; align-self: flex-start; }
+
+/* ------------------------------------------------------------- tab bar --- */
+.tabbar {
+  position: fixed; z-index: 30;
+  left: 50%; transform: translateX(-50%);
+  bottom: calc(var(--space-3) + env(safe-area-inset-bottom, 0px));
+  width: min(100% - 1.2rem, 34rem);
+  display: grid; grid-template-columns: repeat(6, 1fr);
+  padding: 6px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--edge);
+  background: color-mix(in oklch, var(--surface) 88%, transparent);
+  box-shadow: 0 1px 0 0 var(--edge-light) inset, 0 18px 40px -18px var(--shadow);
+}
+@supports (backdrop-filter: blur(1px)) {
+  :root:not([data-comfort="on"]) .tabbar { backdrop-filter: blur(22px) saturate(160%); }
+}
+.tabbar button {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+  min-height: calc(var(--tap) - 4px);
+  border-radius: var(--radius-pill);
+  /* --text-muted, not --text-faint: these labels sit on a translucent bar over
+     the light field, which eats contrast. Measured against rendered pixels,
+     faint fell to ~3.6:1 — below the 4.5 floor. Muted clears it in both themes. */
+  color: var(--text-muted);
+  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.01em;
+  transition: color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out);
+}
+.tabbar button svg { width: 21px; height: 21px; }
+.tabbar button[aria-current="true"] {
+  color: var(--accent);
+  background: color-mix(in oklch, var(--accent) 13%, transparent);
+}
+.tabbar button:active { transform: scale(0.93); transition: transform var(--dur-fast) var(--ease-spring); }
+
+/* --------------------------------------------------------- onboarding ---- */
+.onboard {
+  position: fixed; inset: 0; z-index: 90;
+  display: none;
+  flex-direction: column;
+  padding: var(--space-6) var(--space-5) calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
+  background: var(--ground-deep);
+  overflow-y: auto;
+}
+.onboard.on { display: flex; }
+.onboard__glass {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(80% 55% at 20% 12%, color-mix(in oklch, var(--ruby) 40%, transparent), transparent 65%),
+    radial-gradient(75% 50% at 88% 32%, color-mix(in oklch, var(--amber) 34%, transparent), transparent 62%),
+    radial-gradient(90% 60% at 60% 96%, color-mix(in oklch, var(--teal) 32%, transparent), transparent 65%);
+}
+.onboard__inner {
+  position: relative; z-index: 1;
+  flex: 1; display: flex; flex-direction: column;
+  width: min(100%, 30rem); margin-inline: auto;
+}
+.onboard__steps { display: flex; gap: var(--space-2); justify-content: center; margin-bottom: var(--space-6); }
+.onboard__steps i {
+  width: 30px; height: 4px; border-radius: 2px;
+  background: color-mix(in oklch, var(--text) 22%, transparent);
+  transition: background-color var(--dur-mid) var(--ease-out);
+}
+.onboard__steps i[data-on="true"] { background: var(--accent); }
+.onboard__body { flex: 1; display: flex; flex-direction: column; justify-content: center; text-align: center; padding: var(--space-6) 0; }
+.onboard__body h1 { font-size: var(--step-5); margin-bottom: var(--space-4); }
+.onboard__body p { font-size: var(--step-1); color: var(--text-muted); margin-inline: auto; }
+.onboard__mark {
+  width: 74px; height: 74px; margin: 0 auto var(--space-6);
+  border-radius: 22px;
+  display: grid; place-items: center;
+  border: 1px solid color-mix(in oklch, var(--text) 18%, transparent);
+  background: color-mix(in oklch, var(--surface) 40%, transparent);
+  color: var(--accent);
+}
+.onboard__mark svg { width: 36px; height: 36px; }
+.onboard__actions { display: grid; gap: var(--space-3); }
+
+/* ---------------------------------------------------------------- help --- */
+.togglerow {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-4);
+  padding: var(--space-4) 0;
+}
+.togglerow + .togglerow { border-top: 1px solid var(--edge); }
+.togglerow__label b { display: block; }
+.togglerow__label small { color: var(--text-muted); font-size: var(--step--1); }
+/* Switch — a real one, at full tap size. */
+.switch {
+  flex: none; position: relative;
+  width: 62px; height: var(--tap);
+  display: grid; place-items: center;
+}
+.switch input { position: absolute; opacity: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+.switch i {
+  display: block; width: 58px; height: 34px;
+  border-radius: var(--radius-pill);
+  background: color-mix(in oklch, var(--text) 20%, transparent);
+  transition: background-color var(--dur-mid) var(--ease-out);
+}
+.switch i::after {
+  content: ""; position: absolute; top: 50%; left: 5px;
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--surface);
+  box-shadow: 0 2px 6px -1px var(--shadow);
+  transform: translateY(-50%);
+  transition: transform var(--dur-mid) var(--ease-spring);
+}
+.switch input:checked + i { background: var(--ok); }
+.switch input:checked + i::after { transform: translateY(-50%) translateX(24px); }
+.switch input:focus-visible + i { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+.faq dt { font-weight: 700; margin-top: var(--space-5); }
+.faq dt:first-of-type { margin-top: 0; }
+.faq dd { color: var(--text-muted); margin-top: var(--space-1); }
+
+/* -------------------------------------------------------------- toast ---- */
+.toast {
+  position: fixed; z-index: 80;
+  left: 50%; bottom: calc(6.6rem + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%) translateY(14px);
+  display: flex; align-items: center; gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-pill);
+  background: var(--text); color: var(--ground);
+  font-weight: 700; font-size: var(--step--1);
+  box-shadow: 0 18px 40px -16px var(--shadow);
+  opacity: 0; pointer-events: none;
+  transition: opacity var(--dur-mid) var(--ease-out), transform var(--dur-mid) var(--ease-spring);
+  max-width: calc(100% - 1.5rem);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }

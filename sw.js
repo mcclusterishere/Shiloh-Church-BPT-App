@@ -7,20 +7,23 @@
    instead of a stale cache. */
 "use strict";
 
-var CACHE_VERSION = "shiloh-v1";
+var CACHE_VERSION = "shiloh-v2";
 var SHELL = [
   "./",
   "index.html",
   "admin.html",
   "manifest.webmanifest",
   "js/store.js",
+  "js/ambient.js",
+  "css/system.css",
+  "css/app.css",
+  "css/admin.css",
   "data/config.json",
   "data/theme.json",
   "data/church.json",
   "assets/fonts/atkinson-hyperlegible-latin-400-normal.woff2",
   "assets/fonts/atkinson-hyperlegible-latin-700-normal.woff2",
-  "assets/fonts/bitter-latin-800-normal.woff2",
-  "assets/fonts/bitter-latin-900-normal.woff2",
+  "assets/fonts/fraunces-latin-var.woff2",
   "assets/icons/icon-192.png",
   "assets/icons/icon-512.png"
 ];

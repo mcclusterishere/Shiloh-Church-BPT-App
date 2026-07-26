@@ -2,566 +2,723 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Shiloh Baptist Church</title>
   <meta name="description" content="One family, growing in faith together — events, prayer, and connection for Shiloh Baptist Church.">
-  <meta name="theme-color" content="#16283f">
+  <meta name="theme-color" content="#f7f4ec" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#10131d" media="(prefers-color-scheme: dark)">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
   <link rel="icon" href="assets/icons/favicon-32.png" type="image/png">
-  <style>
-    @font-face { font-family: "Atkinson"; src: url("assets/fonts/atkinson-hyperlegible-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-display: swap; }
-    @font-face { font-family: "Atkinson"; src: url("assets/fonts/atkinson-hyperlegible-latin-700-normal.woff2") format("woff2"); font-weight: 700; font-display: swap; }
-    @font-face { font-family: "Bitter"; src: url("assets/fonts/bitter-latin-800-normal.woff2") format("woff2"); font-weight: 800; font-display: swap; }
-    @font-face { font-family: "Bitter"; src: url("assets/fonts/bitter-latin-900-normal.woff2") format("woff2"); font-weight: 900; font-display: swap; }
-
-    :root {
-      --navy: #16283f; --navy-deep: #0f1c30; --cream: #f4f1e6; --ink: #1c261f;
-      --accent: #8f2a3a; --accent-soft: #c65a68; --ok: #2e7d4f; --danger: #b3261e; --warn: #a1591f; --line: #d8d0ba;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html { font-size: 20px; color-scheme: light; }
-    body { background: var(--cream); color: var(--ink); font-family: "Atkinson", Verdana, sans-serif; line-height: 1.6; padding-bottom: 5.2rem; }
-    h1, h2, h3 { font-family: "Bitter", Georgia, serif; font-weight: 900; color: var(--navy); line-height: 1.15; }
-    a { color: var(--accent); }
-    button { font-family: inherit; cursor: pointer; font-size: 1rem; }
-    a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
-      outline: 4px solid var(--accent-soft); outline-offset: 2px; }
-    input, select, textarea { font-family: inherit; font-size: 1rem; }
-
-    .topbar { background: var(--navy); color: var(--cream); padding: 1rem 1.2rem; text-align: center; position: sticky; top: 0; z-index: 5; }
-    .topbar b { font-family: "Bitter", Georgia, serif; font-size: 1.3rem; }
-    .topbar b span { font-weight: 400; }
-    .topbar .tagline { font-size: 0.85rem; color: #cdd3e0; margin-top: 0.1rem; }
-
-    main { max-width: 34rem; margin: 0 auto; padding: 1.3rem 1.1rem 2rem; }
-    .screen { display: none; }
-    .screen.on { display: block; animation: none; }
-
-    .card { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 1.1rem 1.2rem; margin-bottom: 1rem; }
-    .card h3 { font-size: 1.15rem; margin-bottom: 0.4rem; }
-    .hero { background: var(--navy); color: var(--cream); border-radius: 18px; padding: 1.4rem 1.3rem; margin-bottom: 1.2rem; }
-    .hero h1 { color: #fff; font-size: 1.5rem; margin-bottom: 0.3rem; }
-    .hero p { color: #cdd3e0; }
-
-    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; background: var(--navy); border: 2px solid var(--navy);
-      color: #fff; font-weight: 700; font-size: 1rem; border-radius: 100px; padding: 0.6em 1.3em; text-decoration: none; min-height: 48px; }
-    .btn--accent { background: var(--accent); border-color: var(--accent); }
-    .btn--line { background: none; color: var(--navy); border-color: var(--navy); }
-    .btn--ok { background: var(--ok); border-color: var(--ok); }
-    .btn--big { width: 100%; font-size: 1.1rem; padding: 0.75em; }
-    .btn[disabled] { opacity: 0.55; }
-    .row { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; }
-
-    label { display: block; font-weight: 700; margin: 0.9rem 0 0.3rem; color: var(--navy); }
-    label:first-child { margin-top: 0; }
-    input[type="text"], input[type="email"], input[type="tel"], input[type="date"], input[type="time"], select, textarea {
-      width: 100%; border: 1px solid #c7bfa6; border-radius: 12px; padding: 0.65rem 0.8rem; background: #fff; color: var(--ink); }
-    textarea { resize: vertical; min-height: 5rem; }
-    .hint { font-size: 0.88rem; color: #5a5347; margin-top: 0.3rem; }
-    .confirm { background: #e2ecdf; border: 1px solid #b7cdb0; color: #2c5138; border-radius: 14px; padding: 1rem 1.1rem; font-weight: 700; margin-bottom: 1rem; }
-
-    .chip { display: inline-block; font-weight: 700; font-size: 0.85rem; border-radius: 100px; padding: 0.15em 0.8em; background: #eee2df; color: var(--accent); border: 1px solid #e0c9c4; }
-    .event { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 1.1rem 1.2rem; margin-bottom: 1rem; }
-    .event .when { color: #5a5347; font-size: 0.95rem; margin: 0.15rem 0 0.6rem; }
-    .event .rsvp-row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.7rem; }
-    .event .rsvp-row button { flex: 1; min-width: 5rem; border-radius: 100px; border: 2px solid var(--line); background: #fff; padding: 0.5em; font-weight: 700; min-height: 44px; }
-    .event .rsvp-row button.picked { background: var(--ok); border-color: var(--ok); color: #fff; }
-    .event .headcount { font-size: 0.88rem; color: #5a5347; margin-top: 0.4rem; }
-
-    .prayer-post { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 1rem 1.1rem; margin-bottom: 0.9rem; }
-    .prayer-post .who { font-size: 0.85rem; color: #5a5347; margin-bottom: 0.35rem; }
-    .prayer-post .praybtn { margin-top: 0.7rem; background: #fff; border: 2px solid var(--accent); color: var(--accent); border-radius: 100px; padding: 0.5em 1.1em; font-weight: 700; min-height: 44px; }
-    .prayer-post .praybtn.done { background: var(--accent); color: #fff; }
-
-    .ministry { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 1.1rem 1.2rem; margin-bottom: 1rem; }
-    .ministry .type { text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.05em; color: #5a5347; }
-
-    details.resform { margin-top: 0.8rem; }
-    details.resform summary { cursor: pointer; color: var(--accent); font-weight: 700; list-style: none; }
-    details.resform summary::-webkit-details-marker { display: none; }
-
-    .empty { background: #fff; border: 1px dashed #b9a98a; border-radius: 16px; padding: 1.4rem; text-align: center; font-weight: 700; color: var(--navy); }
-
-    /* bottom nav */
-    nav.bottomnav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--navy); display: flex; z-index: 5;
-      padding: env(safe-area-inset-bottom, 0) 0.2rem 0; box-shadow: 0 -2px 10px rgba(0,0,0,0.15); }
-    nav.bottomnav button { flex: 1; background: none; border: none; color: #b7c0d4; font-weight: 700; font-size: 0.72rem;
-      padding: 0.6rem 0.2rem 0.55rem; min-height: 56px; border-top: 3px solid transparent; }
-    nav.bottomnav button[aria-current="true"] { color: #fff; border-top-color: var(--accent-soft); }
-
-    /* onboarding overlay */
-    .onboarding { position: fixed; inset: 0; background: var(--navy); color: #fff; z-index: 50; display: none;
-      flex-direction: column; padding: 1.6rem 1.4rem; }
-    .onboarding.on { display: flex; }
-    .onboarding .ob-progress { font-size: 0.85rem; color: #b7c0d4; margin-bottom: 0.8rem; text-align: center; }
-    .onboarding .ob-body { flex: 1; display: flex; flex-direction: column; justify-content: center; text-align: center; max-width: 26rem; margin: 0 auto; width: 100%; }
-    .onboarding h1 { color: #fff; font-size: 1.7rem; margin-bottom: 0.7rem; }
-    .onboarding p { color: #dfe4ee; font-size: 1.05rem; }
-    .onboarding .ob-actions { display: flex; flex-direction: column; gap: 0.7rem; margin-top: 1.6rem; max-width: 26rem; margin-left: auto; margin-right: auto; width: 100%; }
-    .onboarding .ob-actions .btn { width: 100%; }
-    .onboarding .ob-skip { background: none; border: 2px solid #fff; color: #fff; }
-
-    .faq dt { font-weight: 700; color: var(--navy); margin-top: 0.9rem; }
-    .faq dd { margin: 0.2rem 0 0; color: #3a352c; }
-    [hidden] { display: none !important; }
-  </style>
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/atkinson-hyperlegible-latin-400-normal.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/fraunces-latin-var.woff2" crossorigin>
+  <link rel="stylesheet" href="css/system.css">
+  <link rel="stylesheet" href="css/app.css">
+  <script>
+    /* Applied before first paint so the app never flashes the wrong theme. */
+    (function () {
+      try {
+        var t = localStorage.getItem("shiloh.theme");
+        if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+        if (localStorage.getItem("shiloh.comfort") === "on") document.documentElement.setAttribute("data-comfort", "on");
+      } catch (e) {}
+    })();
+  </script>
 </head>
 <body>
 
-  <div class="onboarding" id="onboarding">
-    <div class="ob-progress" id="obProgress" hidden></div>
-    <div class="ob-body" id="obBody"></div>
-    <div class="ob-actions" id="obActions"></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <g id="i-home"><path d="M3 10.6 12 3.2l9 7.4V20a1.4 1.4 0 0 1-1.4 1.4h-4.2v-6.6H8.6v6.6H4.4A1.4 1.4 0 0 1 3 20z"/></g>
+  <g id="i-cal"><rect x="3.2" y="5" width="17.6" height="16" rx="2.6"/><path d="M3.2 10h17.6M8 3v4M16 3v4"/></g>
+  <g id="i-flame"><path d="M12 21.6c3.2 0 5.6-2.5 5.6-5.7 0-4.4-5.6-11-5.6-11S6.4 11.5 6.4 15.9c0 3.2 2.4 5.7 5.6 5.7z"/><path d="M12 17.8a2 2 0 0 0 2-2c0-1.5-2-3.6-2-3.6s-2 2.1-2 3.6a2 2 0 0 0 2 2z"/></g>
+  <g id="i-people"><circle cx="9" cy="8" r="3.4"/><path d="M2.6 20.4a6.4 6.4 0 0 1 12.8 0"/><path d="M16.2 5.2a3.4 3.4 0 0 1 0 6.6M17.6 14.6a6.4 6.4 0 0 1 3.8 5.8"/></g>
+  <g id="i-chat"><path d="M20.8 12.4c0 4-3.9 7.2-8.8 7.2a10 10 0 0 1-2.6-.33L4.2 21l1.3-3.9a6.8 6.8 0 0 1-2.3-4.7c0-4 3.9-7.2 8.8-7.2s8.8 3.2 8.8 7.2z"/></g>
+  <g id="i-help"><circle cx="12" cy="12" r="9"/><path d="M9.3 9.2a2.8 2.8 0 0 1 5.4 1c0 1.9-2.7 2.4-2.7 4.2"/><path d="M12 17.7v.01"/></g>
+  <g id="i-sun"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.4v2.2M12 19.4v2.2M4.2 12H2M22 12h-2.2M6.5 6.5 4.9 4.9M19.1 19.1l-1.6-1.6M17.5 6.5l1.6-1.6M4.9 19.1l1.6-1.6"/></g>
+  <g id="i-moon"><path d="M20.4 13.6A8.6 8.6 0 0 1 10.4 3.6a8.6 8.6 0 1 0 10 10z"/></g>
+  <g id="i-share"><path d="M4 12v7.2A1.8 1.8 0 0 0 5.8 21h12.4a1.8 1.8 0 0 0 1.8-1.8V12"/><path d="M12 15.4V3.2M7.8 7.4 12 3.2l4.2 4.2"/></g>
+  <g id="i-check"><path d="M4.5 12.6 9.4 17.5 19.5 7.4"/></g>
+  <g id="i-cross"><path d="M12 3v18M6.4 8.4h11.2"/></g>
+</defs></svg>
+
+<!-- ============================ onboarding ============================ -->
+<div class="onboard" id="onboard" role="dialog" aria-modal="true" aria-labelledby="obTitle">
+  <div class="onboard__glass" aria-hidden="true"></div>
+  <div class="onboard__inner">
+    <div class="onboard__steps" id="obSteps" aria-hidden="true"></div>
+    <div class="onboard__body" id="obBody"></div>
+    <div class="onboard__actions" id="obActions"></div>
   </div>
+</div>
 
-  <header class="topbar">
-    <b id="topbarName">Shiloh <span>Baptist Church</span></b>
-    <div class="tagline" id="topbarTagline"></div>
-  </header>
+<!-- ============================== app bar ============================= -->
+<header class="appbar">
+  <div class="appbar__name" id="barName">Shiloh<span id="barTagline"></span></div>
+  <div class="appbar__actions">
+    <button class="iconbtn" id="themeBtn" type="button" aria-label="Switch between light and dark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-sun" id="themeIcon"/></svg>
+    </button>
+  </div>
+</header>
 
-  <main>
-    <section class="screen" id="screen-home">
-      <div class="hero">
-        <h1 id="homeGreeting">Welcome home.</h1>
-        <p id="homeTagline">One family, growing in faith together.</p>
+<main>
+  <!-- ------------------------------- home ------------------------------ -->
+  <section class="screen on" id="screen-home">
+    <div class="wrap stack">
+      <div class="hero rise">
+        <p class="eyebrow">Welcome</p>
+        <h1 id="heroTitle">Welcome home.</h1>
+        <p id="heroTagline">One family, growing in faith together.</p>
+        <div class="hero__next" id="heroNext" hidden>
+          <span class="eyebrow">Next</span>
+          <b id="heroNextTitle"></b>
+          <span class="muted" id="heroNextWhen"></span>
+        </div>
       </div>
-      <div class="card" id="serviceTimesCard" hidden>
-        <h3>This week</h3>
-        <div id="serviceTimesList"></div>
-      </div>
-      <h3 style="margin-bottom:0.7rem">Latest</h3>
-      <div id="newsList"></div>
-      <div class="row" style="margin-top:1.2rem">
-        <button class="btn btn--accent" data-nav="prayer">Share a prayer request</button>
-        <button class="btn btn--line" data-nav="connect">New here? Say hello</button>
-      </div>
-    </section>
 
-    <section class="screen" id="screen-events">
-      <h2 style="margin-bottom:0.9rem">Events</h2>
+      <div class="quickgrid rise rise-2">
+        <button class="quick quick--prayer" data-nav="prayer" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-flame"/></svg>
+          <span><b>Share a prayer request</b><small>The church will pray with you</small></span>
+        </button>
+        <button class="quick quick--connect" data-nav="connect" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-chat"/></svg>
+          <span><b>New here? Say hello</b><small>We'd love to meet you</small></span>
+        </button>
+      </div>
+
+      <div class="card rise rise-3" id="serviceCard" hidden>
+        <p class="eyebrow">This week</p>
+        <div id="serviceList" class="stack" style="--gap: var(--space-3); margin-top: var(--space-4)"></div>
+      </div>
+
+      <div>
+        <p class="eyebrow" style="margin-bottom: var(--space-4)">Latest</p>
+        <div class="stack" id="newsList"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ------------------------------ events ----------------------------- -->
+  <section class="screen" id="screen-events">
+    <div class="wrap stack">
+      <div class="screen__head">
+        <p class="eyebrow">What's coming up</p>
+        <h2>Events</h2>
+      </div>
       <div class="card">
         <h3>See it in your own calendar</h3>
-        <p>Subscribe once and every event shows up automatically in your phone's own Calendar app — no need to open this app to check what's next.</p>
-        <a class="btn btn--line" id="subscribeCal" href="events.ics" style="margin-top:0.6rem">Subscribe to the calendar</a>
+        <p>Subscribe once and every event appears in your phone's own calendar — you'll never have to open this app to know what's next.</p>
+        <a class="btn btn--quiet" id="subscribeCal" href="events.ics" style="margin-top: var(--space-4)">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-cal"/></svg>
+          Subscribe
+        </a>
       </div>
-      <div id="eventsUpcoming"></div>
-      <details style="margin-top:1rem">
-        <summary style="cursor:pointer;font-weight:700;color:var(--navy)">Past events</summary>
-        <div id="eventsPast" style="margin-top:0.8rem"></div>
+      <div class="stack" id="eventsUpcoming"></div>
+      <details id="pastWrap">
+        <summary class="btn btn--quiet btn--block" style="list-style:none">Past events</summary>
+        <div class="stack" id="eventsPast" style="margin-top: var(--space-4)"></div>
       </details>
-    </section>
+    </div>
+  </section>
 
-    <section class="screen" id="screen-prayer">
-      <h2 style="margin-bottom:0.9rem">Prayer wall</h2>
-      <div class="card">
+  <!-- ------------------------------ prayer ----------------------------- -->
+  <section class="screen" id="screen-prayer">
+    <div class="wrap stack">
+      <div class="screen__head">
+        <p class="eyebrow">Held together</p>
+        <h2>Prayer wall</h2>
+      </div>
+
+      <form class="card" id="prayerForm">
         <h3>Share a request</h3>
-        <form id="prayerForm">
-          <label for="prName">Your name (optional)</label>
-          <input type="text" id="prName" placeholder="Leave blank to post anonymously">
+        <div class="field" style="margin-top: var(--space-4)">
+          <label for="prName">Your name <span class="muted" style="font-weight:400">(optional)</span></label>
+          <input type="text" id="prName" placeholder="Leave blank to share anonymously" autocomplete="name">
+        </div>
+        <div class="field">
           <label for="prText">What's on your heart?</label>
           <textarea id="prText" required></textarea>
-          <label for="prVis">Who should see this?</label>
-          <select id="prVis">
-            <option value="church">The whole church family</option>
-            <option value="team">The prayer team only</option>
-            <option value="pastor">The pastor only</option>
-          </select>
-          <p class="hint">You choose who sees every request — nothing you mark private ever appears on the church-wide wall.</p>
-          <button class="btn btn--accent btn--big" type="submit" style="margin-top:1rem">Share this request</button>
-        </form>
+        </div>
+        <div class="field">
+          <label id="tierLabel">Who should see this?</label>
+          <div class="tierpick" role="radiogroup" aria-labelledby="tierLabel">
+            <label><input type="radio" name="prVis" value="church" checked>
+              <span><b>The whole church family</b><small>Everyone sees it on the prayer wall</small></span></label>
+            <label><input type="radio" name="prVis" value="team">
+              <span><b>The prayer team only</b><small>Kept to the people who pray over requests</small></span></label>
+            <label><input type="radio" name="prVis" value="pastor">
+              <span><b>The pastor only</b><small>Private — nobody else will see it</small></span></label>
+          </div>
+          <p class="hint">Nothing you mark private ever appears on the church-wide wall.</p>
+        </div>
+        <button class="btn btn--primary btn--block" type="submit">Share this request</button>
+      </form>
+
+      <div>
+        <p class="eyebrow" style="margin-bottom: var(--space-4)">The church family is praying for</p>
+        <div class="stack" id="prayerList"></div>
       </div>
-      <h3 style="margin:1.3rem 0 0.8rem">The church family is praying for</h3>
-      <div id="prayerList"></div>
-    </section>
+    </div>
+  </section>
 
-    <section class="screen" id="screen-directory">
-      <h2 style="margin-bottom:0.9rem">Ministries &amp; spaces</h2>
-      <div id="ministryList"></div>
-    </section>
+  <!-- ---------------------------- ministries --------------------------- -->
+  <section class="screen" id="screen-directory">
+    <div class="wrap stack">
+      <div class="screen__head">
+        <p class="eyebrow">Where to belong</p>
+        <h2>Ministries &amp; spaces</h2>
+      </div>
+      <div class="ministrygrid" id="ministryList"></div>
+    </div>
+  </section>
 
-    <section class="screen" id="screen-connect">
-      <h2 style="margin-bottom:0.9rem">Connect with us</h2>
-      <div id="connectConfirm" class="confirm" hidden>Thank you — someone from Shiloh will reach out soon.</div>
-      <div class="card">
-        <form id="connectForm">
-          <label for="cName">Name</label>
-          <input type="text" id="cName" required>
-          <label for="cEmail">Email</label>
-          <input type="email" id="cEmail">
-          <label for="cPhone">Phone</label>
-          <input type="tel" id="cPhone">
+  <!-- ------------------------------ connect ---------------------------- -->
+  <section class="screen" id="screen-connect">
+    <div class="wrap stack">
+      <div class="screen__head">
+        <p class="eyebrow">We'd love to meet you</p>
+        <h2>Connect with us</h2>
+      </div>
+      <div class="card" id="connectDone" hidden>
+        <h3>Thank you</h3>
+        <p>Someone from Shiloh will reach out soon.</p>
+      </div>
+      <form class="card" id="connectForm">
+        <div class="field"><label for="cName">Name</label><input type="text" id="cName" required autocomplete="name"></div>
+        <div class="field"><label for="cEmail">Email</label><input type="email" id="cEmail" autocomplete="email"></div>
+        <div class="field"><label for="cPhone">Phone</label><input type="tel" id="cPhone" autocomplete="tel"></div>
+        <div class="field">
           <label for="cWho">I am a</label>
           <select id="cWho">
             <option>First-time visitor</option>
             <option>Returning visitor</option>
             <option>Member updating my info</option>
           </select>
-          <label for="cMsg">Anything you'd like us to know? (optional)</label>
-          <textarea id="cMsg"></textarea>
-          <button class="btn btn--accent btn--big" type="submit" style="margin-top:1rem">Send</button>
-        </form>
-      </div>
-    </section>
+        </div>
+        <div class="field"><label for="cMsg">Anything you'd like us to know? <span class="muted" style="font-weight:400">(optional)</span></label><textarea id="cMsg"></textarea></div>
+        <button class="btn btn--primary btn--block" type="submit">Send</button>
+      </form>
+    </div>
+  </section>
 
-    <section class="screen" id="screen-profile">
-      <h2 style="margin-bottom:0.9rem">Your profile</h2>
+  <!-- ------------------------------ profile ---------------------------- -->
+  <section class="screen" id="screen-profile">
+    <div class="wrap stack">
+      <div class="screen__head">
+        <p class="eyebrow">Your details</p>
+        <h2>Your profile</h2>
+      </div>
+      <form class="card" id="profileForm">
+        <div class="field"><label for="pName">Name</label><input type="text" id="pName" autocomplete="name"></div>
+        <div class="field"><label for="pEmail">Email</label><input type="email" id="pEmail" autocomplete="email"></div>
+        <div class="field"><label for="pPhone">Phone</label><input type="tel" id="pPhone" autocomplete="tel"></div>
+        <button class="btn btn--quiet" type="submit">Save</button>
+      </form>
+      <div>
+        <p class="eyebrow" style="margin-bottom: var(--space-4)">Your RSVPs</p>
+        <div class="stack" id="myRsvpList"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- -------------------------------- help ----------------------------- -->
+  <section class="screen" id="screen-help">
+    <div class="wrap stack">
+      <div class="screen__head">
+        <p class="eyebrow">However you need it</p>
+        <h2>Help</h2>
+      </div>
+
+      <button class="btn btn--primary btn--block" id="replayTour" type="button">Watch the tour again</button>
+
       <div class="card">
-        <form id="profileForm">
-          <label for="pName">Name</label>
-          <input type="text" id="pName">
-          <label for="pEmail">Email</label>
-          <input type="email" id="pEmail">
-          <label for="pPhone">Phone</label>
-          <input type="tel" id="pPhone">
-          <button class="btn btn--line" type="submit" style="margin-top:1rem">Save</button>
-        </form>
+        <p class="eyebrow">Make it easier to use</p>
+        <div class="togglerow" style="margin-top: var(--space-3)">
+          <div class="togglerow__label">
+            <b>Comfort mode</b>
+            <small>Bigger text and a plain, still background.</small>
+          </div>
+          <span class="switch"><input type="checkbox" id="comfortToggle" aria-label="Comfort mode"><i></i></span>
+        </div>
+        <div class="togglerow">
+          <div class="togglerow__label">
+            <b>Dark background</b>
+            <small>Easier on the eyes in a dim room.</small>
+          </div>
+          <span class="switch"><input type="checkbox" id="darkToggle" aria-label="Dark background"><i></i></span>
+        </div>
       </div>
-      <h3 style="margin:1.2rem 0 0.7rem">Your RSVPs</h3>
-      <div id="myRsvpList"></div>
-    </section>
 
-    <section class="screen" id="screen-help">
-      <h2 style="margin-bottom:0.9rem">Help</h2>
-      <button class="btn btn--accent btn--big" id="replayTour" type="button">Watch the tour again</button>
-      <div class="card" style="margin-top:1.1rem">
+      <div class="card">
         <h3>Call the church office</h3>
-        <p id="helpPhone">Phone number not added yet — ask a deacon.</p>
+        <p id="helpPhone">Phone number not added yet — ask a deacon after service.</p>
       </div>
-      <dl class="faq card">
-        <dt>How do I RSVP to an event?</dt>
+
+      <dl class="card faq">
+        <dt>How do I let the church know I'm coming to something?</dt>
         <dd>Open Events at the bottom of the screen, find it, and tap Yes, Maybe, or No.</dd>
         <dt>How do I share a prayer request?</dt>
         <dd>Open Prayer at the bottom of the screen and fill in the short form. You choose who can see it.</dd>
-        <dt>What if I don't want my request seen by everyone?</dt>
-        <dd>Choose "The prayer team only" or "The pastor only" when you share it — it will never show on the church-wide wall.</dd>
+        <dt>What if I don't want everyone to see my request?</dt>
+        <dd>Choose "The prayer team only" or "The pastor only" when you share it. It will never show on the church-wide wall.</dd>
         <dt>What if something isn't working?</dt>
-        <dd>Ask any deacon after service, or call the church office above.</dd>
+        <dd>Ask any deacon after service, or call the church office above. Nothing you tap can break anything.</dd>
       </dl>
-    </section>
-  </main>
+    </div>
+  </section>
+</main>
 
-  <nav class="bottomnav" id="bottomnav">
-    <button data-nav="home" aria-current="true">Home</button>
-    <button data-nav="events">Events</button>
-    <button data-nav="prayer">Prayer</button>
-    <button data-nav="directory">Groups</button>
-    <button data-nav="connect">Connect</button>
-    <button data-nav="help">Help</button>
-  </nav>
+<nav class="tabbar" id="tabbar" aria-label="Main">
+  <button data-nav="home" aria-current="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-home"/></svg>Home</button>
+  <button data-nav="events"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-cal"/></svg>Events</button>
+  <button data-nav="prayer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-flame"/></svg>Prayer</button>
+  <button data-nav="directory"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-people"/></svg>Groups</button>
+  <button data-nav="connect"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-chat"/></svg>Connect</button>
+  <button data-nav="help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-help"/></svg>Help</button>
+</nav>
 
-  <script src="js/store.js"></script>
-  <script>
-  (function () {
-    "use strict";
-    var CHURCH = null, THEME = null, EVENTS = [], MINISTRIES = [];
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-    function esc(s) {
-      return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
-        return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
-      });
-    }
-    function fmtDate(iso) {
-      if (!iso) return "";
-      var d = new Date(iso + "T00:00:00");
-      return d.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
-    }
-    function timeAgo(iso) {
-      var mins = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
-      if (mins < 60) return mins <= 1 ? "just now" : mins + " minutes ago";
-      var hrs = Math.floor(mins / 60);
-      if (hrs < 24) return hrs + " hour" + (hrs === 1 ? "" : "s") + " ago";
-      var days = Math.floor(hrs / 24);
-      return days + " day" + (days === 1 ? "" : "s") + " ago";
-    }
+<script src="js/store.js"></script>
+<script src="js/ambient.js"></script>
+<script>
+(function () {
+  "use strict";
+  var CHURCH = null, THEME = null, EVENTS = [], MINISTRIES = [];
+  var ICON = function (id) {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#' + id + '"/></svg>';
+  };
 
-    /* ---------------- theme apply (runtime, from data/theme.json) ---------------- */
-    function applyTheme(theme) {
-      THEME = theme;
-      var root = document.documentElement.style;
-      var c = theme.colors || {};
-      Object.keys(c).forEach(function (k) {
-        var cssVar = "--" + k.replace(/([A-Z])/g, "-$1").toLowerCase();
-        root.setProperty(cssVar, c[k]);
-      });
-      document.title = theme.churchName || document.title;
-      var full = theme.churchName || "";
-      var shortName = theme.shortName || full;
-      var rest = full.indexOf(shortName) === 0 ? full.slice(shortName.length).trim() : "";
-      document.getElementById("topbarName").innerHTML = esc(shortName) + (rest ? " <span>" + esc(rest) + "</span>" : "");
-      document.getElementById("topbarTagline").textContent = theme.tagline || "";
-      document.getElementById("homeTagline").textContent = theme.tagline || "";
-    }
-
-    /* ---------------- router ---------------- */
-    var ROUTES = ["home", "events", "prayer", "directory", "connect", "profile", "help"];
-    function route() {
-      var r = (location.hash || "#/home").replace("#/", "");
-      if (ROUTES.indexOf(r) === -1) r = "home";
-      document.querySelectorAll(".screen").forEach(function (s) { s.classList.toggle("on", s.id === "screen-" + r); });
-      document.querySelectorAll("#bottomnav button").forEach(function (b) {
-        b.setAttribute("aria-current", b.getAttribute("data-nav") === r ? "true" : "false");
-      });
-      if (r === "events") renderEvents();
-      if (r === "prayer") renderPrayer();
-      if (r === "directory") renderMinistries();
-      if (r === "profile") renderProfile();
-      window.scrollTo(0, 0);
-    }
-    window.addEventListener("hashchange", route);
-    document.addEventListener("click", function (e) {
-      var b = e.target.closest("[data-nav]");
-      if (!b) return;
-      location.hash = "#/" + b.getAttribute("data-nav");
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
     });
+  }
+  function fmtDate(iso) {
+    if (!iso) return "";
+    return new Date(iso + "T00:00:00").toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
+  }
+  function monthOf(iso) { return new Date(iso + "T00:00:00").toLocaleDateString("en-US", { month: "short" }); }
+  function dayOf(iso) { return new Date(iso + "T00:00:00").getDate(); }
+  function timeAgo(iso) {
+    var mins = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
+    if (mins < 60) return mins <= 1 ? "just now" : mins + " minutes ago";
+    var hrs = Math.floor(mins / 60);
+    if (hrs < 24) return hrs + " hour" + (hrs === 1 ? "" : "s") + " ago";
+    var days = Math.floor(hrs / 24);
+    return days + " day" + (days === 1 ? "" : "s") + " ago";
+  }
+  /* A short, physical tick on meaningful taps where the device supports it. */
+  function haptic(ms) { if (navigator.vibrate) { try { navigator.vibrate(ms || 12); } catch (e) {} } }
 
-    /* ---------------- home ---------------- */
-    function renderServiceTimes() {
-      var times = (CHURCH.serviceTimes || []).filter(function (t) { return t.time; });
-      if (!times.length) return;
-      document.getElementById("serviceTimesCard").hidden = false;
-      document.getElementById("serviceTimesList").innerHTML = times.map(function (t) {
-        return '<div class="row" style="justify-content:space-between"><b>' + esc(t.label) + "</b><span>" + esc(t.time) + "</span></div>";
-      }).join("");
-    }
-    function renderNews(news) {
-      var cutoff = Date.now() - 18 * 30 * 864e5;
-      var fresh = news.filter(function (n) { return new Date(n.date).getTime() >= cutoff; })
-        .sort(function (a, b) { return b.date.localeCompare(a.date); });
-      document.getElementById("newsList").innerHTML = fresh.length ? fresh.map(function (n) {
-        return '<div class="card"><h3>' + esc(n.title) + '</h3><p>' + esc(n.body) + "</p></div>";
-      }).join("") : '<div class="empty">Nothing new right now — check back soon.</div>';
-    }
+  var toastTimer = null;
+  function toast(msg) {
+    var el = document.getElementById("toast");
+    el.textContent = msg;
+    el.classList.add("on");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { el.classList.remove("on"); }, 3200);
+  }
 
-    /* ---------------- events ---------------- */
-    function renderEvents() {
-      var today = new Date().toISOString().slice(0, 10);
-      var future = EVENTS.filter(function (e) { return e.date >= today; }).sort(function (a, b) { return a.date.localeCompare(b.date); });
-      var past = EVENTS.filter(function (e) { return e.date < today; }).sort(function (a, b) { return b.date.localeCompare(a.date); });
-      var rsvps = JSON.parse(localStorage.getItem("shiloh.rsvps") || "[]");
-      var myRsvpIds = JSON.parse(localStorage.getItem("shiloh.myRsvps") || "[]");
+  /* ------------------------------ theme ------------------------------- */
+  function systemPrefersDark() {
+    return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  }
+  function isDarkNow() {
+    var a = document.documentElement.getAttribute("data-theme");
+    return a ? a === "dark" : systemPrefersDark();
+  }
+  function syncThemeIcon() {
+    document.getElementById("themeIcon").setAttribute("href", isDarkNow() ? "#i-moon" : "#i-sun");
+    var d = document.getElementById("darkToggle");
+    if (d) d.checked = isDarkNow();
+  }
+  function setTheme(mode) {
+    document.documentElement.setAttribute("data-theme", mode);
+    try { localStorage.setItem("shiloh.theme", mode); } catch (e) {}
+    syncThemeIcon();
+    ShilohAmbient.refresh();
+  }
+  document.getElementById("themeBtn").addEventListener("click", function () {
+    haptic();
+    setTheme(isDarkNow() ? "light" : "dark");
+  });
 
-      function card(e, isPast) {
-        var yes = rsvps.filter(function (r) { return r.eventId === e.id && r.answer === "yes"; }).length;
-        var mine = rsvps.find(function (r) { return r.eventId === e.id && myRsvpIds.indexOf(r.id) !== -1; });
-        var rsvpRow = (!isPast && e.rsvp !== false) ? (
-          '<div class="rsvp-row">' +
-          ["yes", "maybe", "no"].map(function (ans) {
-            var label = ans === "yes" ? "Yes" : ans === "maybe" ? "Maybe" : "No";
-            var picked = mine && mine.answer === ans ? " picked" : "";
-            return '<button class="' + picked.trim() + '" data-rsvp="' + esc(e.id) + '" data-ans="' + ans + '">' + label + "</button>";
-          }).join("") + "</div>" +
-          '<div class="headcount">' + yes + " coming so far</div>" +
-          '<div class="row" style="margin-top:0.6rem"><button class="btn btn--line" data-ics="' + esc(e.id) + '" type="button">Add to my calendar</button></div>'
-        ) : "";
-        return '<div class="event" data-eid="' + esc(e.id) + '"><span class="chip">' + esc(e.category || "Event") + '</span>' +
-          "<h3 style=\"margin-top:0.5rem\">" + esc(e.title) + "</h3>" +
-          '<div class="when">' + fmtDate(e.date) + (e.time ? " · " + esc(e.time) : "") + (e.location ? " · " + esc(e.location) : "") + "</div>" +
-          "<p>" + esc(e.body || "") + "</p>" + rsvpRow + "</div>";
-      }
-      document.getElementById("eventsUpcoming").innerHTML = future.length ? future.map(function (e) { return card(e, false); }).join("")
-        : '<div class="empty">Nothing on the calendar yet — check back soon.</div>';
-      document.getElementById("eventsPast").innerHTML = past.map(function (e) { return card(e, true); }).join("");
-    }
-    document.addEventListener("click", function (e) {
-      var b = e.target.closest("button[data-rsvp]");
-      if (b) {
-        var eventId = b.getAttribute("data-rsvp"), ans = b.getAttribute("data-ans");
-        var profile = ShilohStore.getProfile() || {};
-        ShilohStore.submitRsvp({ eventId: eventId, answer: ans, name: profile.name || "", email: profile.email || "" }).then(renderEvents);
-        return;
-      }
-      var ics = e.target.closest("button[data-ics]");
-      if (ics) {
-        var ev = EVENTS.find(function (x) { return x.id === ics.getAttribute("data-ics"); });
-        if (ev) ShilohStore.downloadEventIcs(ev);
-      }
+  /* --------------------------- comfort mode --------------------------- */
+  function setComfort(on) {
+    document.documentElement.setAttribute("data-comfort", on ? "on" : "off");
+    try { localStorage.setItem("shiloh.comfort", on ? "on" : "off"); } catch (e) {}
+    ShilohAmbient.setComfort(on);
+    toast(on ? "Comfort mode on." : "Comfort mode off.");
+  }
+
+  /* ------------------------------ router ------------------------------ */
+  var ROUTES = ["home", "events", "prayer", "directory", "connect", "profile", "help"];
+  function paint(r) {
+    document.querySelectorAll(".screen").forEach(function (s) { s.classList.toggle("on", s.id === "screen-" + r); });
+    document.querySelectorAll("#tabbar button").forEach(function (b) {
+      b.setAttribute("aria-current", b.getAttribute("data-nav") === r ? "true" : "false");
     });
+    if (r === "events") renderEvents();
+    if (r === "prayer") renderPrayer();
+    if (r === "directory") renderMinistries();
+    if (r === "profile") renderProfile();
+    window.scrollTo(0, 0);
+  }
+  function route() {
+    var r = (location.hash || "#/home").replace("#/", "");
+    if (ROUTES.indexOf(r) === -1) r = "home";
+    /* Native cross-screen morphing where the browser has it; a plain switch
+       everywhere else. Nothing depends on it working. */
+    if (document.startViewTransition && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      document.startViewTransition(function () { paint(r); });
+    } else { paint(r); }
+  }
+  window.addEventListener("hashchange", route);
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-nav]");
+    if (!b) return;
+    haptic();
+    location.hash = "#/" + b.getAttribute("data-nav");
+  });
 
-    /* ---------------- prayer ---------------- */
-    function renderPrayer() {
-      ShilohStore.listVisiblePrayerRequests().then(function (list) {
-        document.getElementById("prayerList").innerHTML = list.length ? list.map(function (p) {
-          var done = ShilohStore.hasPrayed(p.id);
-          return '<div class="prayer-post"><div class="who">' + esc(p.name || "Anonymous") + " · " + timeAgo(p.submittedAt) + "</div>" +
-            "<p>" + esc(p.text) + "</p>" +
-            '<button class="praybtn' + (done ? " done" : "") + '" data-pray="' + esc(p.id) + '" type="button">' +
-            "🙏 Praying (" + (p.prayingCount || 0) + ")</button></div>";
-        }).join("") : '<div class="empty">No requests on the church-wide wall yet.</div>';
-      });
-    }
-    document.getElementById("prayerForm").addEventListener("submit", function (e) {
-      e.preventDefault();
-      ShilohStore.submitPrayerRequest({
-        name: document.getElementById("prName").value.trim(),
-        text: document.getElementById("prText").value.trim(),
-        visibility: document.getElementById("prVis").value
-      }).then(function () {
-        e.target.reset();
-        renderPrayer();
-      });
-    });
-    document.addEventListener("click", function (e) {
-      var b = e.target.closest("button[data-pray]");
-      if (!b) return;
-      ShilohStore.markPraying(b.getAttribute("data-pray")).then(renderPrayer);
-    });
+  /* ------------------------------- home ------------------------------- */
+  function renderServiceTimes() {
+    var times = (CHURCH.serviceTimes || []).filter(function (t) { return t.time; });
+    if (!times.length) return;
+    document.getElementById("serviceCard").hidden = false;
+    document.getElementById("serviceList").innerHTML = times.map(function (t) {
+      return '<div class="row" style="justify-content:space-between"><b>' + esc(t.label) + "</b><span class=\"muted tnum\">" + esc(t.time) + "</span></div>";
+    }).join("");
+  }
+  function renderHeroNext() {
+    var today = new Date().toISOString().slice(0, 10);
+    var next = EVENTS.filter(function (e) { return e.date >= today; })
+      .sort(function (a, b) { return a.date.localeCompare(b.date); })[0];
+    if (!next) return;
+    document.getElementById("heroNext").hidden = false;
+    document.getElementById("heroNextTitle").textContent = next.title;
+    document.getElementById("heroNextWhen").textContent =
+      fmtDate(next.date) + (next.time ? " · " + next.time : "");
+  }
+  function renderNews(news) {
+    var cutoff = Date.now() - 18 * 30 * 864e5;
+    var fresh = news.filter(function (n) { return new Date(n.date).getTime() >= cutoff; })
+      .sort(function (a, b) { return b.date.localeCompare(a.date); });
+    document.getElementById("newsList").innerHTML = fresh.length ? fresh.map(function (n) {
+      return '<article class="card reveal"><h3>' + esc(n.title) + "</h3><p>" + esc(n.body) + "</p></article>";
+    }).join("") : '<div class="empty">Nothing new right now — check back soon.</div>';
+  }
 
-    /* ---------------- ministries & facilities ---------------- */
-    function renderMinistries() {
-      document.getElementById("ministryList").innerHTML = MINISTRIES.map(function (m) {
-        var action = m.bookable
-          ? '<details class="resform"><summary>Request to book this space</summary>' +
-            '<form data-book="' + esc(m.id) + '" style="margin-top:0.7rem">' +
-            '<label>Date <input type="date" name="date" required></label>' +
-            '<label>Start time <input type="time" name="startTime" required></label>' +
-            '<label>End time <input type="time" name="endTime" required></label>' +
-            '<label>What for? <input type="text" name="purpose" required></label>' +
-            '<button class="btn btn--accent" type="submit" style="margin-top:0.8rem">Send request</button>' +
-            '<p class="hint" data-conflict hidden>Heads up — that space already has a pending or approved booking that overlaps. An admin will follow up.</p>' +
-            "</form></details>"
-          : '<button class="btn btn--line" data-interest="' + esc(m.id) + '" type="button" style="margin-top:0.7rem">I\'m interested</button>';
-        return '<div class="ministry"><span class="type">' + esc(m.type) + "</span><h3>" + esc(m.name) + "</h3>" +
-          (m.leader ? "<p><strong>Leader:</strong> " + esc(m.leader) + "</p>" : "") +
-          (m.meets ? "<p><strong>Meets:</strong> " + esc(m.meets) + "</p>" : "") +
-          "<p>" + esc(m.description || "") + "</p>" + action + "</div>";
-      }).join("");
-    }
-    document.addEventListener("submit", function (e) {
-      var f = e.target.closest("form[data-book]");
-      if (!f) return;
-      e.preventDefault();
-      var facilityId = f.getAttribute("data-book");
-      var fd = new FormData(f);
-      var date = fd.get("date"), startTime = fd.get("startTime"), endTime = fd.get("endTime");
-      if (ShilohStore.hasConflict(facilityId, date, startTime, endTime)) {
-        f.querySelector("[data-conflict]").hidden = false;
+  /* ------------------------------ events ------------------------------ */
+  function renderEvents() {
+    var today = new Date().toISOString().slice(0, 10);
+    var future = EVENTS.filter(function (e) { return e.date >= today; }).sort(function (a, b) { return a.date.localeCompare(b.date); });
+    var past = EVENTS.filter(function (e) { return e.date < today; }).sort(function (a, b) { return b.date.localeCompare(a.date); });
+    var rsvps = JSON.parse(localStorage.getItem("shiloh.rsvps") || "[]");
+    var mineIds = JSON.parse(localStorage.getItem("shiloh.myRsvps") || "[]");
+    var SEG = { yes: 0, maybe: 1, no: 2 };
+    var SEGC = { yes: "var(--ok)", maybe: "var(--warn)", no: "var(--text-faint)" };
+
+    function card(e, isPast) {
+      var yes = rsvps.filter(function (r) { return r.eventId === e.id && r.answer === "yes"; }).length;
+      var mine = rsvps.filter(function (r) { return r.eventId === e.id && mineIds.indexOf(r.id) !== -1; }).pop();
+      var picked = mine && mine.answer;
+      var controls = "";
+      if (!isPast && e.rsvp !== false) {
+        controls =
+          '<div class="segmented"' + (picked ? ' data-picked="' + esc(picked) + '"' : "") +
+            ' style="--seg-i:' + (picked ? SEG[picked] : 0) + ';--seg-c:' + (picked ? SEGC[picked] : "var(--ok)") + '" role="group" aria-label="Are you coming?">' +
+            '<span class="segmented__thumb" aria-hidden="true"></span>' +
+            ["yes", "maybe", "no"].map(function (a) {
+              var label = a === "yes" ? "Yes" : a === "maybe" ? "Maybe" : "No";
+              return '<button type="button" data-rsvp="' + esc(e.id) + '" data-ans="' + a + '" aria-pressed="' + (picked === a) + '">' + label + "</button>";
+            }).join("") +
+          "</div>" +
+          '<div class="headcount"><b class="tnum">' + yes + "</b> coming so far</div>" +
+          '<div class="row" style="margin-top:var(--space-4)">' +
+            '<button class="btn btn--quiet" data-ics="' + esc(e.id) + '" type="button">' + ICON("i-cal") + "Add to calendar</button>" +
+            '<button class="btn btn--quiet" data-share="' + esc(e.id) + '" type="button">' + ICON("i-share") + "Share</button>" +
+          "</div>";
       }
+      return '<article class="card eventcard reveal">' +
+        '<div class="eventcard__top">' +
+          '<div class="datechip"><span class="m">' + esc(monthOf(e.date)) + '</span><span class="d">' + dayOf(e.date) + "</span></div>" +
+          "<div><h3>" + esc(e.title) + '</h3><div class="eventcard__meta">' +
+            esc(fmtDate(e.date)) + (e.time ? " · " + esc(e.time) : "") + (e.location ? " · " + esc(e.location) : "") +
+          "</div></div>" +
+        "</div>" +
+        (e.body ? '<div class="eventcard__body"><p>' + esc(e.body) + "</p></div>" : "") +
+        controls + "</article>";
+    }
+    document.getElementById("eventsUpcoming").innerHTML = future.length
+      ? future.map(function (e) { return card(e, false); }).join("")
+      : '<div class="empty">Nothing on the calendar yet — check back soon.</div>';
+    document.getElementById("eventsPast").innerHTML = past.length
+      ? past.map(function (e) { return card(e, true); }).join("")
+      : '<div class="empty">No past events.</div>';
+    document.getElementById("pastWrap").hidden = !past.length;
+  }
+
+  document.addEventListener("click", function (e) {
+    var r = e.target.closest("button[data-rsvp]");
+    if (r) {
+      haptic(14);
       var profile = ShilohStore.getProfile() || {};
-      ShilohStore.submitReservationRequest({
-        facilityId: facilityId, date: date, startTime: startTime, endTime: endTime,
-        purpose: fd.get("purpose"), requestedBy: profile.name || ""
-      }).then(function () {
-        f.closest("details").innerHTML = '<p class="hint">Request sent — an admin will confirm it soon.</p>';
-      });
-    });
-    document.addEventListener("click", function (e) {
-      var b = e.target.closest("button[data-interest]");
-      if (!b) return;
-      var profile = ShilohStore.getProfile() || {};
-      ShilohStore.submitReservationRequest({ facilityId: b.getAttribute("data-interest"), type: "interest", requestedBy: profile.name || "" })
-        .then(function () { b.outerHTML = '<p class="hint" style="margin-top:0.7rem">Thanks — the ministry leader will reach out.</p>'; });
-    });
-
-    /* ---------------- connect ---------------- */
-    document.getElementById("connectForm").addEventListener("submit", function (e) {
-      e.preventDefault();
-      ShilohStore.submitVisitorCard({
-        name: document.getElementById("cName").value.trim(),
-        email: document.getElementById("cEmail").value.trim(),
-        phone: document.getElementById("cPhone").value.trim(),
-        who: document.getElementById("cWho").value,
-        message: document.getElementById("cMsg").value.trim()
-      }).then(function () {
-        document.getElementById("connectConfirm").hidden = false;
-        e.target.reset();
-      });
-    });
-
-    /* ---------------- profile ---------------- */
-    function renderProfile() {
-      var p = ShilohStore.getProfile() || {};
-      document.getElementById("pName").value = p.name || "";
-      document.getElementById("pEmail").value = p.email || "";
-      document.getElementById("pPhone").value = p.phone || "";
-      var mine = ShilohStore.myRsvps();
-      document.getElementById("myRsvpList").innerHTML = mine.length ? mine.map(function (r) {
-        var ev = EVENTS.find(function (x) { return x.id === r.eventId; });
-        return '<div class="card"><b>' + esc(ev ? ev.title : r.eventId) + "</b> — you said " + esc(r.answer) + "</div>";
-      }).join("") : '<div class="empty">No RSVPs yet.</div>';
+      var ans = r.getAttribute("data-ans");
+      /* Optimistic: move the thumb immediately, persist behind it. */
+      var seg = r.closest(".segmented");
+      var idx = { yes: 0, maybe: 1, no: 2 }[ans];
+      var col = { yes: "var(--ok)", maybe: "var(--warn)", no: "var(--text-faint)" }[ans];
+      seg.setAttribute("data-picked", ans);
+      seg.style.setProperty("--seg-i", idx);
+      seg.style.setProperty("--seg-c", col);
+      seg.querySelectorAll("button").forEach(function (b) { b.setAttribute("aria-pressed", b === r); });
+      ShilohStore.submitRsvp({ eventId: r.getAttribute("data-rsvp"), answer: ans, name: profile.name || "", email: profile.email || "" })
+        .then(function () {
+          renderEvents();
+          toast(ans === "yes" ? "We'll see you there." : ans === "maybe" ? "Marked as maybe." : "Thanks for letting us know.");
+        });
+      return;
     }
-    document.getElementById("profileForm").addEventListener("submit", function (e) {
-      e.preventDefault();
-      ShilohStore.saveProfile({
-        name: document.getElementById("pName").value.trim(),
-        email: document.getElementById("pEmail").value.trim(),
-        phone: document.getElementById("pPhone").value.trim()
-      }).then(renderProfile);
-    });
-
-    /* ---------------- help ---------------- */
-    document.getElementById("replayTour").addEventListener("click", function () { startOnboarding(true); });
-
-    /* ---------------- onboarding ---------------- */
-    var OB_STEPS = [
-      { title: "Welcome to the Shiloh app", body: "Everything you need — service times, events, and staying connected to the church family — in one place.", first: true },
-      { title: "Nothing is forced", body: "You choose who sees a prayer request when you share it. Nobody is added to anything without asking first." },
-      { title: "Add this to your home screen", body: "On most phones: tap Share, then \"Add to Home Screen.\" It opens like any other app, and works even without signal." },
-      { title: "You're all set", body: "You can watch this again any time from Help at the bottom of the screen.", last: true }
-    ];
-    var obIndex = 0;
-    function renderOb() {
-      var step = OB_STEPS[obIndex];
-      document.getElementById("obProgress").hidden = step.first;
-      document.getElementById("obProgress").textContent = step.first ? "" : "Step " + obIndex + " of " + (OB_STEPS.length - 1);
-      document.getElementById("obBody").innerHTML = "<h1>" + esc(step.title) + "</h1><p>" + esc(step.body) + "</p>";
-      var actions = "";
-      if (step.first) {
-        actions = '<button class="btn btn--accent btn--big" id="obShow" type="button">Show me around</button>' +
-          '<button class="btn ob-skip btn--big" id="obSkip" type="button">Skip for now</button>';
-      } else if (step.last) {
-        actions = '<button class="btn btn--accent btn--big" id="obDone" type="button">Get started</button>';
-      } else {
-        actions = '<button class="btn btn--accent btn--big" id="obNext" type="button">Next</button>' +
-          '<button class="btn ob-skip btn--big" id="obSkip" type="button">Skip for now</button>';
+    var ics = e.target.closest("button[data-ics]");
+    if (ics) {
+      var ev = EVENTS.find(function (x) { return x.id === ics.getAttribute("data-ics"); });
+      if (ev) { ShilohStore.downloadEventIcs(ev); toast("Added to your calendar."); }
+      return;
+    }
+    var sh = e.target.closest("button[data-share]");
+    if (sh) {
+      var ev2 = EVENTS.find(function (x) { return x.id === sh.getAttribute("data-share"); });
+      if (!ev2) return;
+      var text = ev2.title + " — " + fmtDate(ev2.date) + (ev2.time ? ", " + ev2.time : "");
+      var url = location.href.split("#")[0] + "#/events";
+      if (navigator.share) {
+        navigator.share({ title: ev2.title, text: text, url: url }).catch(function () {});
+      } else if (navigator.clipboard) {
+        navigator.clipboard.writeText(text + " " + url).then(function () { toast("Copied."); });
       }
-      document.getElementById("obActions").innerHTML = actions;
+      return;
     }
-    function closeOnboarding() {
-      ShilohStore.setOnboardingDone(true);
-      document.getElementById("onboarding").classList.remove("on");
-    }
-    document.getElementById("onboarding").addEventListener("click", function (e) {
-      if (e.target.id === "obSkip") return closeOnboarding();
-      if (e.target.id === "obDone") return closeOnboarding();
-      if (e.target.id === "obShow" || e.target.id === "obNext") { obIndex++; renderOb(); }
+  });
+
+  /* ------------------------------ prayer ------------------------------ */
+  function renderPrayer() {
+    ShilohStore.listVisiblePrayerRequests().then(function (list) {
+      document.getElementById("prayerList").innerHTML = list.length ? list.map(function (p) {
+        var done = ShilohStore.hasPrayed(p.id);
+        return '<article class="card prayercard reveal">' +
+          '<div class="prayercard__who">' + esc(p.name || "Anonymous") + " · " + timeAgo(p.submittedAt) + "</div>" +
+          '<p class="prayercard__text">' + esc(p.text) + "</p>" +
+          '<button class="praybtn" data-pray="' + esc(p.id) + '" data-done="' + done + '" type="button">' +
+            ICON("i-flame") + (done ? "You're praying" : "I'm praying") +
+            ' <span class="n">(' + (p.prayingCount || 0) + ")</span></button>" +
+          "</article>";
+      }).join("") : '<div class="empty">No requests on the church-wide wall yet.</div>';
     });
-    function startOnboarding(replay) {
-      obIndex = 0;
-      renderOb();
-      document.getElementById("onboarding").classList.add("on");
+  }
+  document.getElementById("prayerForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var vis = document.querySelector('input[name="prVis"]:checked').value;
+    ShilohStore.submitPrayerRequest({
+      name: document.getElementById("prName").value.trim(),
+      text: document.getElementById("prText").value.trim(),
+      visibility: vis
+    }).then(function () {
+      document.getElementById("prText").value = "";
+      renderPrayer();
+      haptic(18);
+      toast(vis === "church" ? "Shared with the church." : vis === "team" ? "Shared with the prayer team." : "Sent to the pastor.");
+    });
+  });
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-pray]");
+    if (!b) return;
+    if (b.getAttribute("data-done") === "true") return;
+    haptic(16);
+    b.classList.add("pulsing");
+    setTimeout(function () { b.classList.remove("pulsing"); }, 700);
+    ShilohStore.markPraying(b.getAttribute("data-pray")).then(function (ok) {
+      if (ok) { renderPrayer(); toast("Thank you for praying."); }
+    });
+  });
+
+  /* ---------------------------- ministries ---------------------------- */
+  function renderMinistries() {
+    document.getElementById("ministryList").innerHTML = MINISTRIES.map(function (m) {
+      var action = m.bookable
+        ? '<details class="resform" style="margin-top:var(--space-4)"><summary class="btn btn--quiet">Request to book</summary>' +
+          '<form data-book="' + esc(m.id) + '" style="margin-top:var(--space-4)">' +
+          '<div class="field"><label>Date<input type="date" name="date" required></label></div>' +
+          '<div class="field"><label>Start time<input type="time" name="startTime" required></label></div>' +
+          '<div class="field"><label>End time<input type="time" name="endTime" required></label></div>' +
+          '<div class="field"><label>What for?<input type="text" name="purpose" required></label></div>' +
+          '<p class="hint" data-conflict hidden>That space already has a booking that overlaps. An admin will follow up.</p>' +
+          '<button class="btn btn--primary btn--block" type="submit">Send request</button></form></details>'
+        : '<button class="btn btn--quiet" data-interest="' + esc(m.id) + '" type="button" style="margin-top:var(--space-4)">I\'m interested</button>';
+      return '<article class="card ministrycard reveal"><span class="kind">' + esc(m.type) + "</span>" +
+        "<h3>" + esc(m.name) + "</h3>" +
+        (m.leader ? '<p class="muted"><b>Leader:</b> ' + esc(m.leader) + "</p>" : "") +
+        (m.meets ? '<p class="muted"><b>Meets:</b> ' + esc(m.meets) + "</p>" : "") +
+        (m.description ? "<p>" + esc(m.description) + "</p>" : "") +
+        action + "</article>";
+    }).join("");
+  }
+  document.addEventListener("submit", function (e) {
+    var f = e.target.closest("form[data-book]");
+    if (!f) return;
+    e.preventDefault();
+    var fd = new FormData(f);
+    var facilityId = f.getAttribute("data-book");
+    var date = fd.get("date"), s = fd.get("startTime"), en = fd.get("endTime");
+    if (ShilohStore.hasConflict(facilityId, date, s, en)) f.querySelector("[data-conflict]").hidden = false;
+    var profile = ShilohStore.getProfile() || {};
+    ShilohStore.submitReservationRequest({
+      facilityId: facilityId, date: date, startTime: s, endTime: en,
+      purpose: fd.get("purpose"), requestedBy: profile.name || ""
+    }).then(function () {
+      f.closest("details").innerHTML = '<p class="hint">Request sent — an admin will confirm it soon.</p>';
+      toast("Booking request sent.");
+    });
+  });
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-interest]");
+    if (!b) return;
+    var profile = ShilohStore.getProfile() || {};
+    ShilohStore.submitReservationRequest({ facilityId: b.getAttribute("data-interest"), type: "interest", requestedBy: profile.name || "" })
+      .then(function () {
+        b.outerHTML = '<p class="hint" style="margin-top:var(--space-4)">Thanks — the ministry leader will reach out.</p>';
+        toast("We'll pass that along.");
+      });
+  });
+
+  /* ------------------------------ connect ----------------------------- */
+  document.getElementById("connectForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    ShilohStore.submitVisitorCard({
+      name: document.getElementById("cName").value.trim(),
+      email: document.getElementById("cEmail").value.trim(),
+      phone: document.getElementById("cPhone").value.trim(),
+      who: document.getElementById("cWho").value,
+      message: document.getElementById("cMsg").value.trim()
+    }).then(function () {
+      document.getElementById("connectDone").hidden = false;
+      e.target.reset();
+      haptic(18);
+      toast("Thank you — we've got it.");
+    });
+  });
+
+  /* ------------------------------ profile ----------------------------- */
+  function renderProfile() {
+    var p = ShilohStore.getProfile() || {};
+    document.getElementById("pName").value = p.name || "";
+    document.getElementById("pEmail").value = p.email || "";
+    document.getElementById("pPhone").value = p.phone || "";
+    var mine = ShilohStore.myRsvps();
+    document.getElementById("myRsvpList").innerHTML = mine.length ? mine.map(function (r) {
+      var ev = EVENTS.find(function (x) { return x.id === r.eventId; });
+      var cls = r.answer === "yes" ? "chip--ok" : r.answer === "maybe" ? "chip--warn" : "";
+      return '<div class="card row" style="justify-content:space-between"><b>' + esc(ev ? ev.title : r.eventId) +
+        '</b><span class="chip ' + cls + '">' + esc(r.answer) + "</span></div>";
+    }).join("") : '<div class="empty">No RSVPs yet.</div>';
+  }
+  document.getElementById("profileForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    ShilohStore.saveProfile({
+      name: document.getElementById("pName").value.trim(),
+      email: document.getElementById("pEmail").value.trim(),
+      phone: document.getElementById("pPhone").value.trim()
+    }).then(function () { renderProfile(); toast("Saved."); });
+  });
+
+  /* -------------------------------- help ------------------------------ */
+  document.getElementById("replayTour").addEventListener("click", function () { startOnboarding(); });
+  document.getElementById("comfortToggle").addEventListener("change", function () { setComfort(this.checked); });
+  document.getElementById("darkToggle").addEventListener("change", function () { setTheme(this.checked ? "dark" : "light"); });
+
+  /* ---------------------------- onboarding ---------------------------- */
+  var OB = [
+    { icon: "i-cross", title: "Welcome to the Shiloh app", body: "Service times, what's coming up, and the prayers this church is holding — all in one place.", first: true },
+    { icon: "i-flame", title: "You choose who sees it", body: "When you share a prayer request, you decide: the whole church, the prayer team, or the pastor alone. Nothing is ever shared for you." },
+    { icon: "i-cal", title: "Never miss a gathering", body: "Tap Yes on any event and we'll know to expect you. You can add it straight to your phone's own calendar." },
+    { icon: "i-home", title: "Keep it on your home screen", body: "Tap your browser's Share button, then \"Add to Home Screen.\" It opens like any other app — and works even with no signal.", last: true }
+  ];
+  var obIndex = 0;
+  function renderOb() {
+    var s = OB[obIndex];
+    document.getElementById("obSteps").innerHTML = OB.map(function (_, i) {
+      return '<i data-on="' + (i <= obIndex) + '"></i>';
+    }).join("");
+    document.getElementById("obBody").innerHTML =
+      '<div class="onboard__mark">' + ICON(s.icon) + "</div>" +
+      '<h1 id="obTitle">' + esc(s.title) + "</h1><p>" + esc(s.body) + "</p>";
+    var acts = "";
+    if (s.first) {
+      acts = '<button class="btn btn--primary btn--block" data-ob="next" type="button">Show me around</button>' +
+             '<button class="btn btn--quiet btn--block" data-ob="skip" type="button">Skip for now</button>';
+    } else if (s.last) {
+      acts = '<button class="btn btn--primary btn--block" data-ob="skip" type="button">Get started</button>';
+    } else {
+      acts = '<button class="btn btn--primary btn--block" data-ob="next" type="button">Next</button>' +
+             '<button class="btn btn--quiet btn--block" data-ob="skip" type="button">Skip for now</button>';
+    }
+    document.getElementById("obActions").innerHTML = acts;
+  }
+  function startOnboarding() {
+    obIndex = 0; renderOb();
+    document.getElementById("onboard").classList.add("on");
+  }
+  document.getElementById("onboard").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-ob]");
+    if (!b) return;
+    haptic();
+    if (b.getAttribute("data-ob") === "next") { obIndex++; renderOb(); return; }
+    ShilohStore.setOnboardingDone(true);
+    document.getElementById("onboard").classList.remove("on");
+  });
+
+  /* -------------------------------- boot ------------------------------ */
+  Promise.all([
+    ShilohStore.init(),
+    fetch("data/theme.json", { cache: "no-cache" }).then(function (r) { return r.json(); }),
+    fetch("data/church.json", { cache: "no-cache" }).then(function (r) { return r.json(); }),
+    fetch("data/events.json", { cache: "no-cache" }).then(function (r) { return r.json(); }).catch(function () { return { events: [] }; }),
+    fetch("data/news.json", { cache: "no-cache" }).then(function (r) { return r.json(); }).catch(function () { return { news: [] }; }),
+    fetch("data/ministries.json", { cache: "no-cache" }).then(function (r) { return r.json(); }).catch(function () { return { ministries: [] }; })
+  ]).then(function (res) {
+    THEME = res[1]; CHURCH = res[2];
+    EVENTS = res[3].events || []; MINISTRIES = res[5].ministries || [];
+
+    document.title = THEME.churchName || document.title;
+    var full = THEME.churchName || "", shortName = THEME.shortName || full;
+    var rest = full.indexOf(shortName) === 0 ? full.slice(shortName.length).trim() : "";
+    document.getElementById("barName").innerHTML = esc(shortName) + (rest ? '<span>' + esc(rest) + "</span>" : "");
+    document.getElementById("heroTagline").textContent = THEME.tagline || "";
+    document.getElementById("helpPhone").textContent = CHURCH.phone || "Phone number not added yet — ask a deacon after service.";
+
+    renderServiceTimes();
+    renderHeroNext();
+    renderNews(res[4].news || []);
+
+    var cal = document.getElementById("subscribeCal");
+    if (cal && location.protocol === "https:") {
+      cal.href = "webcal://" + location.host + location.pathname.replace(/index\.html$/, "") + "events.ics";
     }
 
-    /* ---------------- boot ---------------- */
-    Promise.all([
-      ShilohStore.init(),
-      fetch("data/theme.json", { cache: "no-cache" }).then(function (r) { return r.json(); }),
-      fetch("data/church.json", { cache: "no-cache" }).then(function (r) { return r.json(); }),
-      fetch("data/events.json", { cache: "no-cache" }).then(function (r) { return r.json(); }).catch(function () { return { events: [] }; }),
-      fetch("data/news.json", { cache: "no-cache" }).then(function (r) { return r.json(); }).catch(function () { return { news: [] }; }),
-      fetch("data/ministries.json", { cache: "no-cache" }).then(function (r) { return r.json(); }).catch(function () { return { ministries: [] }; })
-    ]).then(function (res) {
-      applyTheme(res[1]);
-      CHURCH = res[2];
-      EVENTS = res[3].events || [];
-      MINISTRIES = res[5].ministries || [];
-      renderServiceTimes();
-      renderNews(res[4].news || []);
-      var calLink = document.getElementById("subscribeCal");
-      if (calLink && location.protocol === "https:") {
-        calLink.href = "webcal://" + location.host + location.pathname.replace(/index\.html$/, "") + "events.ics";
-      }
-      document.getElementById("helpPhone").textContent = CHURCH.phone ? CHURCH.phone : "Phone number not added yet — ask a deacon.";
-      route();
-      if (!ShilohStore.isOnboardingDone()) startOnboarding(false);
-    });
-  })();
-  </script>
-
-  <script>
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", function () { navigator.serviceWorker.register("sw.js").catch(function () {}); });
-    }
-  </script>
+    document.getElementById("comfortToggle").checked = document.documentElement.getAttribute("data-comfort") === "on";
+    syncThemeIcon();
+    ShilohAmbient.mount();
+    route();
+    if (!ShilohStore.isOnboardingDone()) startOnboarding();
+  });
+})();
+</script>
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function () { navigator.serviceWorker.register("sw.js").catch(function () {}); });
+  }
+</script>
 </body>
 </html>
