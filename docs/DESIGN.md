@@ -91,6 +91,20 @@ around" / "Skip," never auto-launched full-screen); contextual coach-marks over 
 exhaustive tour; a permanent "Replay Tutorial" entry in Help; and a plain-language
 copy pass throughout.
 
+## The appliance track (added after Phase 1 shipped)
+
+Matthew asked to start the hardware integration, beginning with a Mac mini.
+Following Church OS's own sequencing rather than jumping ahead: this is
+**Phase 1, "the brain and the pipe," only** — a local Ollama model on the box,
+reachable through a Cloudflare Tunnel, that the admin panel can ask questions.
+The database stays on Supabase; no member, giving, or prayer data is sent to
+the appliance, and it cannot send a message or move money on its own. See
+`docs/APPLIANCE-SETUP.md` for the actual setup steps and
+`scripts/appliance/gateway.js` for the service that runs on the box. Moving
+real data onto local hardware — the full Church OS "data never leaves the
+building" end state — stays a separate, later decision (open question 1,
+below).
+
 ## Open questions (still Matthew's to answer)
 
 1. **The on-premises appliance.** Pursue Church OS's physical-box vision in parallel

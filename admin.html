@@ -124,6 +124,7 @@
         <button data-pane="volunteers">Volunteers</button>
         <button data-pane="brand">Brand &amp; Settings</button>
         <button data-pane="auto">Automations</button>
+        <button data-pane="assistant">Assistant</button>
       </nav>
       <button class="out" id="signOut" type="button">Sign out</button>
     </header>
@@ -241,6 +242,19 @@
         </div>
         <p class="note">Every visitor card, RSVP, prayer request, and reservation request POSTs to the webhook. Point it at Zapier, Make, n8n, or Resend and fan out to email, texts, or a CRM — full recipes in <code>docs/BACKEND.md</code>.</p>
       </section>
+
+      <section class="pane" id="pane-assistant">
+        <h2>Assistant</h2>
+        <p class="note" style="margin-bottom:1rem">Church OS Phase 1 — a local AI model running on the church's own box (see <code>docs/APPLIANCE-SETUP.md</code>), reachable only from here. It answers a question; it does not see member, giving, or prayer data, and it never sends anything on its own.</p>
+        <div id="assistantNotConfigured" class="empty" hidden>Not connected yet. Set <code>applianceUrl</code> and <code>applianceToken</code> in <code>data/config.json</code> once the appliance is set up — see <code>docs/APPLIANCE-SETUP.md</code>.</div>
+        <div id="assistantUi" hidden>
+          <form id="assistantForm" class="kv" style="grid-template-columns:1fr">
+            <label>Ask it something <textarea id="assistantPrompt" rows="3" style="width:100%;font-family:inherit;font-size:1rem;border:1px solid #c7d3e4;border-radius:12px;padding:0.6rem 0.8rem" placeholder="e.g. Draft a short note welcoming a new visitor"></textarea></label>
+            <button class="btn" type="submit" style="margin-top:0.6rem;justify-self:start">Ask</button>
+          </form>
+          <div id="assistantAnswer" class="rec" style="padding:1.1rem 1.2rem;margin-top:1rem" hidden></div>
+        </div>
+      </section>
     </main>
   </div>
 
@@ -327,7 +341,7 @@
         VISITOR_CARDS = res[0] || []; RESERVATIONS = res[1] || []; PRAYERS = res[2] || [];
         PEOPLE = res[3] || []; VOLUNTEERS = res[4] || []; RSVPS = res[5] || []; PUBLISHED_EVENTS = res[6].events || [];
         renderDash(); renderInbox(); renderPeople(); renderMinistries(); renderEventsAdmin(); renderPrayerAdmin();
-        renderVolunteers(); renderBrand(); renderAuto();
+        renderVolunteers(); renderBrand(); renderAuto(); renderAssistant();
       });
     }
 
@@ -552,6 +566,27 @@
         out.textContent = ok ? "Sent ✓ Check your Zap/scenario history." : "Failed. Is the URL right?";
         out.style.color = ok ? "var(--ok)" : "var(--danger)";
       });
+    });
+    /* ---------------- assistant (appliance) ---------------- */
+    function renderAssistant() {
+      var on = ShilohStore.applianceConfigured();
+      document.getElementById("assistantNotConfigured").hidden = on;
+      document.getElementById("assistantUi").hidden = !on;
+    }
+    document.getElementById("assistantForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var prompt = document.getElementById("assistantPrompt").value.trim();
+      if (!prompt) return;
+      var out = document.getElementById("assistantAnswer");
+      out.hidden = false;
+      out.textContent = "Asking…";
+      var btn = e.target.querySelector("button[type=submit]");
+      btn.disabled = true;
+      ShilohStore.askAppliance(prompt).then(function (answer) {
+        out.textContent = answer;
+      }).catch(function (err) {
+        out.textContent = "Couldn't reach the appliance: " + err.message + ". Is the Mac mini on and the tunnel up?";
+      }).finally(function () { btn.disabled = false; });
     });
   })();
   </script>

@@ -253,6 +253,28 @@ window.ShilohStore = (function () {
     return Promise.resolve(i >= 0 ? all[i] : patch);
   }
 
+  /* ---------------- the appliance (Church OS Phase 1: "the brain and the pipe") ----------------
+     A local Ollama model running on a box in the building, reached through a
+     Cloudflare Tunnel — see docs/APPLIANCE-SETUP.md. Deliberately narrow: it
+     answers a question and nothing else. No member/giving/prayer data is ever
+     sent to it, it cannot send a message or move money, and it is not wired
+     into any other part of the app. Both config fields blank is the normal,
+     fully-supported "not set up yet" state. */
+  function applianceConfigured() { return !!(config.applianceUrl && config.applianceToken); }
+  function askAppliance(prompt) {
+    if (!applianceConfigured()) return Promise.reject(new Error("not-configured"));
+    return fetch(config.applianceUrl.replace(/\/$/, "") + "/ask", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": "Bearer " + config.applianceToken },
+      body: JSON.stringify({ prompt: prompt })
+    }).then(function (r) {
+      if (!r.ok) return r.json().catch(function () { return {}; }).then(function (e) {
+        throw new Error(e.error || ("The appliance answered with an error (" + r.status + ")."));
+      });
+      return r.json();
+    }).then(function (data) { return data.response; });
+  }
+
   /* ---------------- admin auth ---------------- */
   function adminSignIn(email, password) {
     if (!isSupabase()) return Promise.resolve({ demo: true });
@@ -337,6 +359,7 @@ window.ShilohStore = (function () {
     submitReservationRequest: submitReservationRequest, listReservationRequests: listReservationRequests,
     updateReservationRequest: updateReservationRequest, hasConflict: hasConflict,
     listVolunteers: listVolunteers, addVolunteer: addVolunteer, updateVolunteer: updateVolunteer,
+    applianceConfigured: applianceConfigured, askAppliance: askAppliance,
     adminSignIn: adminSignIn, adminSignOut: adminSignOut, isAdminSignedIn: isAdminSignedIn, listProfiles: listProfiles,
     fireWebhook: fireWebhook, downloadCsv: downloadCsv, downloadEventIcs: downloadEventIcs
   };

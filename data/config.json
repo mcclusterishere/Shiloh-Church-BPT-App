@@ -1,9 +1,11 @@
 {
-  "note": "Backend configuration. mode: 'demo' stores everything in this browser (zero setup, perfect for the pilot). 'supabase' uses a real database + real admin login. Webhook automations fire in ANY mode when webhookUrl is set: point it at Zapier/Make/n8n/Resend to fan out to email, texts, or a CRM. See docs/BACKEND.md.",
+  "note": "Backend configuration. mode: 'demo' stores everything in this browser (zero setup, perfect for the pilot). 'supabase' uses a real database + real admin login. Webhook automations fire in ANY mode when webhookUrl is set: point it at Zapier/Make/n8n/Resend to fan out to email, texts, or a CRM. See docs/BACKEND.md. applianceUrl/applianceToken point Admin -> Assistant at the church's local Ollama box once it exists — see docs/APPLIANCE-SETUP.md. Both blank is a normal, fully-supported state (Assistant just shows 'not connected yet').",
   "mode": "demo",
   "supabaseUrl": "",
   "supabaseAnonKey": "",
   "webhookUrl": "",
   "notifyEmail": "",
-  "adminPasscode": "shiloh2026"
+  "adminPasscode": "shiloh2026",
+  "applianceUrl": "",
+  "applianceToken": ""
 }

@@ -64,6 +64,8 @@ size, so it's here from day one), a read-only **Brand & Settings** preview, and
 - `docs/MANAGE.md` — the one-page content-editing guide
 - `docs/supabase-setup.sql` — schema + Row Level Security policies for live mode
 - `docs/DESIGN.md` — the full design proposal this build follows
+- `docs/APPLIANCE-SETUP.md` — turning a Mac mini into the Church OS "brain and pipe" appliance
+- `scripts/appliance/gateway.js` — the local service that runs on that box
 - `manifest.webmanifest` / `sw.js` — install metadata and the offline service worker
 - `assets/icons/` — home-screen icons (**placeholder** — see "Still needed," below)
 - `assets/fonts/` — self-hosted type, copied from the Faith & Results sister app
