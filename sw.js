@@ -1,0 +1,70 @@
+/* Shiloh — offline service worker.
+   App-shell files are cached on install and served cache-first (so the app
+   opens instantly and works with no signal). data/*.json is network-first
+   with a cache fallback, so content edits show up right away when online but
+   the app still renders the last-known data offline. Bump CACHE_VERSION any
+   time the shell files below change, so returning visitors get the update
+   instead of a stale cache. */
+"use strict";
+
+var CACHE_VERSION = "shiloh-v1";
+var SHELL = [
+  "./",
+  "index.html",
+  "admin.html",
+  "manifest.webmanifest",
+  "js/store.js",
+  "data/config.json",
+  "data/theme.json",
+  "data/church.json",
+  "assets/fonts/atkinson-hyperlegible-latin-400-normal.woff2",
+  "assets/fonts/atkinson-hyperlegible-latin-700-normal.woff2",
+  "assets/fonts/bitter-latin-800-normal.woff2",
+  "assets/fonts/bitter-latin-900-normal.woff2",
+  "assets/icons/icon-192.png",
+  "assets/icons/icon-512.png"
+];
+
+self.addEventListener("install", function (event) {
+  event.waitUntil(
+    caches.open(CACHE_VERSION).then(function (cache) { return cache.addAll(SHELL); })
+      .then(function () { return self.skipWaiting(); })
+  );
+});
+
+self.addEventListener("activate", function (event) {
+  event.waitUntil(
+    caches.keys().then(function (keys) {
+      return Promise.all(keys.filter(function (k) { return k !== CACHE_VERSION; }).map(function (k) { return caches.delete(k); }));
+    }).then(function () { return self.clients.claim(); })
+  );
+});
+
+self.addEventListener("fetch", function (event) {
+  var url = new URL(event.request.url);
+  if (event.request.method !== "GET" || url.origin !== self.location.origin) return;
+
+  var isData = url.pathname.indexOf("/data/") !== -1 && url.pathname.endsWith(".json");
+  if (isData) {
+    event.respondWith(
+      fetch(event.request).then(function (res) {
+        var copy = res.clone();
+        caches.open(CACHE_VERSION).then(function (cache) { cache.put(event.request, copy); });
+        return res;
+      }).catch(function () { return caches.match(event.request); })
+    );
+    return;
+  }
+
+  event.respondWith(
+    caches.match(event.request).then(function (cached) {
+      return cached || fetch(event.request).then(function (res) {
+        var copy = res.clone();
+        caches.open(CACHE_VERSION).then(function (cache) { cache.put(event.request, copy); });
+        return res;
+      }).catch(function () {
+        if (event.request.mode === "navigate") return caches.match("index.html");
+      });
+    })
+  );
+});

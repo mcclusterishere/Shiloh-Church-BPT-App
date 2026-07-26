@@ -1,0 +1,31 @@
+name: Keepalive
+
+# GitHub silently disables ALL scheduled workflows in a repo after 60 days
+# with no commits (issues, tags, and releases don't count) — with no
+# notification when it happens. A calm church app that nobody is actively
+# coding on for two months would otherwise have this exact job stop firing
+# with no error. Running monthly, well under the 60-day cutoff, keeps every
+# scheduled workflow in this repo alive. See docs/DESIGN.md.
+on:
+  schedule:
+    - cron: "0 12 1 * *" # 12:00 UTC on the 1st of every month
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Record a heartbeat
+        run: |
+          mkdir -p .github
+          date -u +"%Y-%m-%dT%H:%M:%SZ" > .github/keepalive
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .github/keepalive
+          git diff --cached --quiet && echo "Nothing to commit" || git commit -m "chore: monthly keepalive"
+          git push

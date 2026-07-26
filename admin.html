@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin · Shiloh Baptist Church</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="icon" href="assets/icons/favicon-32.png" type="image/png">
+  <style>
+    @font-face { font-family: "Atkinson"; src: url("assets/fonts/atkinson-hyperlegible-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+    @font-face { font-family: "Atkinson"; src: url("assets/fonts/atkinson-hyperlegible-latin-700-normal.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+    @font-face { font-family: "Bitter"; src: url("assets/fonts/bitter-latin-800-normal.woff2") format("woff2"); font-weight: 800; font-display: swap; }
+    @font-face { font-family: "Bitter"; src: url("assets/fonts/bitter-latin-900-normal.woff2") format("woff2"); font-weight: 900; font-display: swap; }
+
+    :root { --navy: #16283f; --navy-deep: #0f1c30; --cream: #f4f1e6; --ink: #1c261f;
+      --accent: #8f2a3a; --accent-soft: #c65a68; --ok: #2e7d4f; --danger: #b3261e; --warn: #a1591f; --line: #d8d0ba; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { font-size: 17px; color-scheme: light; }
+    body { background: var(--cream); color: var(--ink); font-family: "Atkinson", Verdana, sans-serif; line-height: 1.6; }
+    h1, h2, h3 { font-family: "Bitter", Georgia, serif; font-weight: 900; color: var(--navy); line-height: 1.1; }
+    a { color: var(--accent); }
+    button { font-family: inherit; cursor: pointer; }
+    a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible { outline: 4px solid var(--accent-soft); outline-offset: 2px; }
+
+    .bar { background: var(--navy); color: var(--cream); padding: 0.7rem 1.2rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+    .bar b { font-family: "Bitter", Georgia, serif; font-size: 1.15rem; }
+    .bar b span { color: var(--accent-soft); }
+    .bar .tag { background: #fff; color: var(--navy); font-weight: 700; border-radius: 100px; padding: 0.15em 0.9em; font-size: 0.9rem; }
+    .bar nav { display: flex; gap: 0.3rem; flex-wrap: wrap; }
+    .bar nav button { background: none; border: 2px solid transparent; color: var(--cream); font-weight: 700; font-size: 0.9rem; border-radius: 100px; padding: 0.35em 0.9em; }
+    .bar nav button[aria-current="true"] { border-color: var(--accent-soft); color: var(--accent-soft); }
+    .bar .out { background: none; border: 2px solid var(--cream); color: var(--cream); font-weight: 700; border-radius: 100px; padding: 0.3em 1em; font-size: 0.9rem; }
+
+    main { max-width: 68rem; margin: 0 auto; padding: 1.6rem 1.2rem 3rem; }
+    .banner { border: 1px solid #cddcee; background: #f0f6fd; border-radius: 14px; padding: 0.9rem 1.1rem; font-size: 0.98rem; margin-bottom: 1.4rem; }
+    .pane { display: none; }
+    .pane.on { display: block; }
+    h2 { font-size: 1.8rem; margin-bottom: 1rem; }
+    .note { font-size: 0.95rem; color: rgba(20,16,12,0.7); margin-top: 0.5rem; }
+
+    .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(11rem, 100%), 1fr)); gap: 1rem; margin-bottom: 1.6rem; }
+    .tile { background: var(--navy); color: var(--cream); border-radius: 16px; padding: 1.1rem 1.2rem; }
+    .tile.warn { background: var(--warn); }
+    .tile b { font-family: "Bitter", Georgia, serif; font-size: 2.2rem; color: #fff; display: block; line-height: 1.05; }
+    .tile span { font-weight: 700; font-size: 0.92rem; }
+
+    .tools { display: flex; gap: 0.7rem; flex-wrap: wrap; margin-bottom: 1.1rem; align-items: center; }
+    .tools select, .tools input { font-family: inherit; font-size: 1rem; border: 1px solid #c7d3e4; border-radius: 12px; padding: 0.45rem 0.7rem; background: #fff; color: var(--ink); }
+    .tools input { flex: 1; min-width: 12rem; }
+    .btn { display: inline-block; background: var(--navy); border: 2px solid var(--navy); color: #fff; font-weight: 700; font-size: 0.98rem; border-radius: 100px; padding: 0.45em 1.3em; text-decoration: none; }
+    .btn--navy { background: var(--navy); border-color: var(--navy); color: var(--cream); }
+    .btn--line { background: none; color: var(--navy); border-color: var(--navy); }
+    .btn--ok { background: var(--ok); border-color: var(--ok); color: #fff; }
+    .btn--danger { background: var(--danger); border-color: var(--danger); color: #fff; }
+    .btn[disabled] { opacity: 0.5; cursor: default; }
+
+    .rec { background: #fff; border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 1px 3px rgba(14,27,44,0.05); margin-bottom: 0.9rem; overflow: hidden; }
+    .rec summary { list-style: none; cursor: pointer; display: flex; gap: 0.8rem; align-items: center; flex-wrap: wrap; padding: 0.9rem 1.1rem; }
+    .rec summary::-webkit-details-marker { display: none; }
+    .rec summary b { font-size: 1.05rem; color: var(--navy); }
+    .rec summary .who { flex: 1; min-width: 10rem; }
+    .rec summary .when { font-size: 0.88rem; color: rgba(20,16,12,0.65); }
+    .chip { display: inline-block; font-weight: 700; font-size: 0.85rem; border-radius: 100px; padding: 0.15em 0.85em; background: #eef1fb; border: 1px solid #c8d0ec; color: #2c3468; }
+    .chip--ok { background: rgba(46,125,79,0.14); border-color: var(--ok); color: #1d5437; }
+    .chip--danger { background: #f9e6e4; border-color: #d99b95; color: var(--danger); }
+    .chip--warn { background: #f5e6d8; border-color: #dfb587; color: #7a4413; }
+    .chip--pastor { background: #eee2df; border-color: #e0c9c4; color: var(--accent); }
+    .recbody { border-top: 1px solid var(--line); padding: 1rem 1.1rem; display: grid; gap: 0.5rem; }
+    .recbody dl { display: grid; grid-template-columns: minmax(8rem, 14rem) 1fr; gap: 0.3rem 1rem; }
+    .recbody dt { font-weight: 700; color: var(--navy); }
+    .recbody dd { overflow-wrap: anywhere; }
+    .acts { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 0.7rem; align-items: center; }
+    .acts input, .acts select { flex: 1; min-width: 9rem; font-family: inherit; font-size: 0.95rem; border: 1px solid #c7d3e4; border-radius: 12px; padding: 0.4rem 0.7rem; background: #fff; }
+
+    .empty { background: #fff; border: 1px dashed #b9c8d8; border-radius: 16px; padding: 1.6rem; text-align: center; font-weight: 700; color: var(--navy); }
+
+    .gate { min-height: 100vh; display: grid; place-items: center; background: var(--navy); padding: 1.5rem; }
+    .gatecard { background: var(--cream); border-radius: 20px; padding: 2rem 1.8rem; max-width: 26rem; width: 100%; }
+    .gatecard h1 { font-size: 1.7rem; margin-bottom: 0.3rem; }
+    .gatecard p { font-size: 0.98rem; margin-bottom: 1rem; }
+    .gatecard label { display: block; font-weight: 700; margin: 0.8rem 0 0.25rem; color: var(--navy); }
+    .gatecard input { width: 100%; font-family: inherit; font-size: 1.05rem; border: 1px solid #c7d3e4; border-radius: 12px; padding: 0.6rem 0.8rem; background: #fff; }
+    .gatecard .btn { width: 100%; text-align: center; margin-top: 1.2rem; padding: 0.7em; font-size: 1.05rem; }
+    .gatecard .err { color: var(--danger); font-weight: 700; display: none; margin-top: 0.6rem; }
+
+    .kv { display: grid; grid-template-columns: minmax(9rem, 14rem) 1fr; gap: 0.5rem 1rem; background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 1.1rem 1.2rem; margin-bottom: 1rem; }
+    .kv dt { font-weight: 700; color: var(--navy); }
+    .pairgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem,1fr)); gap: 1rem; margin-bottom: 1.2rem; }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+
+  <div class="gate" id="gate">
+    <form class="gatecard" id="gateForm">
+      <h1><span id="gateChurch">Shiloh</span> <span style="color:var(--accent)">Admin</span></h1>
+      <p id="gateBlurb">Sign in to run the back office.</p>
+      <div id="gateDemo" hidden>
+        <label for="gatePass">Passcode</label>
+        <input id="gatePass" type="password" autocomplete="current-password">
+      </div>
+      <div id="gateSb" hidden>
+        <label for="gateEmail">Email</label>
+        <input id="gateEmail" type="email" autocomplete="email">
+        <label for="gatePw">Password</label>
+        <input id="gatePw" type="password" autocomplete="current-password">
+      </div>
+      <p class="err" id="gateErr">That didn't work. Try again.</p>
+      <button class="btn" type="submit">Open the admin</button>
+    </form>
+  </div>
+
+  <div id="adminApp" hidden>
+    <header class="bar">
+      <b><span id="barChurch">SHILOH</span> <span>· Admin</span></b>
+      <span class="tag" id="modeTag">demo</span>
+      <nav id="nav">
+        <button data-pane="dash" aria-current="true">Dashboard</button>
+        <button data-pane="inbox">Inbox</button>
+        <button data-pane="people">People</button>
+        <button data-pane="ministries">Ministries</button>
+        <button data-pane="events">Events</button>
+        <button data-pane="prayer">Prayer</button>
+        <button data-pane="volunteers">Volunteers</button>
+        <button data-pane="brand">Brand &amp; Settings</button>
+        <button data-pane="auto">Automations</button>
+      </nav>
+      <button class="out" id="signOut" type="button">Sign out</button>
+    </header>
+
+    <main>
+      <div class="banner" id="demoBanner" hidden>
+        <b>Demo mode.</b> Everything below lives in this browser only, and the passcode is a
+        courtesy lock, not security. Flip <code>data/config.json</code> to
+        <code>"mode": "supabase"</code> for a real database and real admin login — see
+        <code>docs/BACKEND.md</code>.
+      </div>
+
+      <section class="pane on" id="pane-dash">
+        <h2>The day at a glance.</h2>
+        <div class="tiles" id="tiles"></div>
+        <h3 style="margin:0 0 0.7rem">Needs attention</h3>
+        <div id="dashLatest"></div>
+      </section>
+
+      <section class="pane" id="pane-inbox">
+        <h2>Inbox</h2>
+        <p class="note" style="margin-bottom:1rem">Every visitor card, reservation request, and new prayer request in one place — the church-sized version of a unified host inbox.</p>
+        <div class="tools">
+          <select id="inboxType">
+            <option value="">Every type</option>
+            <option value="visitor">Visitor cards</option>
+            <option value="reservation">Reservation requests</option>
+            <option value="prayer">Prayer requests</option>
+          </select>
+        </div>
+        <div id="inboxList"></div>
+      </section>
+
+      <section class="pane" id="pane-people">
+        <h2>People</h2>
+        <p class="note" style="margin-bottom:1rem">Profiles built in the app. In demo mode this only shows profiles saved on <em>this</em> device — real cross-device directory sync arrives with Supabase mode.</p>
+        <div class="tools">
+          <input id="pSearch" type="search" placeholder="Search name, email…">
+          <button class="btn btn--navy" id="exportPeople" type="button">Export CSV</button>
+        </div>
+        <div id="peopleList"></div>
+      </section>
+
+      <section class="pane" id="pane-ministries">
+        <h2>Ministries &amp; facilities</h2>
+        <p class="note" style="margin-bottom:1rem">The catalog itself lives in <code>data/ministries.json</code> — edit that file and push to change names, leaders, or descriptions (see <code>docs/MANAGE.md</code>). Reservation requests below come from the app.</p>
+        <div id="ministryCatalog"></div>
+        <h3 style="margin:1.4rem 0 0.7rem">Reservation requests</h3>
+        <div id="reservationList"></div>
+      </section>
+
+      <section class="pane" id="pane-events">
+        <h2>Events &amp; RSVPs</h2>
+        <p class="note" style="margin-bottom:1rem">Draft events here (stored in this browser), then <b>download events.json</b> and commit it to publish — the app sorts future/past automatically. Each event shows its RSVP roster with one-tap email and text blasts.</p>
+        <div class="tools">
+          <button class="btn" id="evtNew" type="button">+ New event</button>
+          <button class="btn btn--navy" id="evtDownload" type="button">Download events.json</button>
+          <button class="btn btn--line" id="exportRsvps" type="button">Export RSVPs CSV</button>
+        </div>
+        <form id="evtForm" class="kv" hidden style="grid-template-columns:1fr">
+          <label>Title <input id="evTitle" required style="width:100%"></label>
+          <label>Date <input id="evDate" type="date" required></label>
+          <label>Time (e.g. 11:00 AM) <input id="evTime"></label>
+          <label>Location <input id="evLoc"></label>
+          <label>Category
+            <select id="evCat"><option>Worship</option><option>Community</option><option>Ministry</option><option>Study</option></select></label>
+          <label>Description <textarea id="evBody" rows="3" style="width:100%"></textarea></label>
+          <label><input id="evRsvp" type="checkbox" checked> Takes RSVPs</label>
+          <div class="tools"><button class="btn" type="submit">Save event</button>
+            <button class="btn btn--line" type="button" id="evtCancel">Cancel</button></div>
+        </form>
+        <div id="evtAdminList"></div>
+      </section>
+
+      <section class="pane" id="pane-prayer">
+        <h2>Prayer</h2>
+        <p class="note" style="margin-bottom:1rem">All requests, at every visibility tier. Only Admin sees this list — never a general ministry-leader login.</p>
+        <div class="tools">
+          <select id="prFilter">
+            <option value="">Every tier</option>
+            <option value="church">Whole church</option>
+            <option value="team">Prayer team</option>
+            <option value="pastor">Pastor only</option>
+          </select>
+        </div>
+        <div id="prayerAdminList"></div>
+      </section>
+
+      <section class="pane" id="pane-volunteers">
+        <h2>Volunteers &amp; safety status</h2>
+        <p class="note" style="margin-bottom:1rem">Background-check and child-safety training status per volunteer — a liability issue independent of church size, so it's tracked from day one even before a full member directory exists.</p>
+        <form id="volForm" class="kv" style="grid-template-columns:1fr">
+          <label>Name <input id="volName" required style="width:100%"></label>
+          <label>Role <input id="volRole" placeholder="e.g. nursery, usher, van driver" style="width:100%"></label>
+          <button class="btn" type="submit" style="margin-top:0.6rem;justify-self:start">+ Add volunteer</button>
+        </form>
+        <div id="volunteerList" style="margin-top:1rem"></div>
+      </section>
+
+      <section class="pane" id="pane-brand">
+        <h2>Brand &amp; Settings</h2>
+        <p class="note" style="margin-bottom:1rem">Read-only for now — this is exactly what a future no-code editor here would write to. To change any of it today, edit the file directly and push (see <code>docs/MANAGE.md</code>).</p>
+        <h3 style="margin-bottom:0.6rem">data/theme.json</h3>
+        <dl class="kv" id="themeKv"></dl>
+        <h3 style="margin-bottom:0.6rem">data/church.json</h3>
+        <dl class="kv" id="churchKv"></dl>
+      </section>
+
+      <section class="pane" id="pane-auto">
+        <h2>Automations</h2>
+        <dl class="kv" id="autoKv"></dl>
+        <div class="tools">
+          <button class="btn" id="testHook" type="button">Send a test event</button>
+          <span id="testResult" style="font-weight:700"></span>
+        </div>
+        <p class="note">Every visitor card, RSVP, prayer request, and reservation request POSTs to the webhook. Point it at Zapier, Make, n8n, or Resend and fan out to email, texts, or a CRM — full recipes in <code>docs/BACKEND.md</code>.</p>
+      </section>
+    </main>
+  </div>
+
+  <script src="js/store.js"></script>
+  <script>
+  (function () {
+    "use strict";
+    var config = null, THEME = null, CHURCH = null, MINISTRIES = [];
+    var VISITOR_CARDS = [], RESERVATIONS = [], PRAYERS = [], PEOPLE = [], VOLUNTEERS = [], RSVPS = [], PUBLISHED_EVENTS = [];
+
+    function esc(s) {
+      return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+        return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+      });
+    }
+    function fmtDate(iso) {
+      return iso ? new Date(iso).toLocaleString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" }) : "";
+    }
+    function daysSince(iso) { return iso ? Math.floor((Date.now() - new Date(iso).getTime()) / 864e5) : 0; }
+
+    /* ---------------- gate ---------------- */
+    var UNLOCKED = "shiloh.adminUnlocked";
+    function openAdmin() {
+      document.getElementById("gate").style.display = "none";
+      document.getElementById("adminApp").hidden = false;
+      document.getElementById("modeTag").textContent = config.mode === "supabase" ? "live database" : "demo mode";
+      document.getElementById("demoBanner").hidden = config.mode === "supabase";
+      refresh();
+    }
+    Promise.all([
+      ShilohStore.init(),
+      fetch("data/theme.json", { cache: "no-cache" }).then(function (r) { return r.json(); }),
+      fetch("data/church.json", { cache: "no-cache" }).then(function (r) { return r.json(); }),
+      fetch("data/ministries.json", { cache: "no-cache" }).then(function (r) { return r.json(); }).catch(function () { return { ministries: [] }; })
+    ]).then(function (res) {
+      config = res[0]; THEME = res[1]; CHURCH = res[2]; MINISTRIES = res[3].ministries || [];
+      document.getElementById("gateChurch").textContent = THEME.shortName || "Church";
+      document.getElementById("barChurch").textContent = (THEME.shortName || "CHURCH").toUpperCase();
+      if (config.mode === "supabase") {
+        document.getElementById("gateSb").hidden = false;
+        document.getElementById("gateBlurb").textContent = "Sign in with your admin account.";
+        if (ShilohStore.isAdminSignedIn()) openAdmin();
+      } else {
+        document.getElementById("gateDemo").hidden = false;
+        document.getElementById("gateBlurb").textContent = "Demo mode: enter the passcode from data/config.json.";
+        if (sessionStorage.getItem(UNLOCKED) === "yes") openAdmin();
+      }
+    });
+    document.getElementById("gateForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var err = document.getElementById("gateErr");
+      err.style.display = "none";
+      if (config.mode === "supabase") {
+        ShilohStore.adminSignIn(document.getElementById("gateEmail").value.trim(), document.getElementById("gatePw").value)
+          .then(openAdmin).catch(function () { err.style.display = "block"; });
+      } else {
+        if (document.getElementById("gatePass").value === (config.adminPasscode || "shiloh2026")) {
+          sessionStorage.setItem(UNLOCKED, "yes");
+          openAdmin();
+        } else { err.style.display = "block"; }
+      }
+    });
+    document.getElementById("signOut").addEventListener("click", function () {
+      ShilohStore.adminSignOut();
+      sessionStorage.removeItem(UNLOCKED);
+      location.reload();
+    });
+
+    /* ---------------- nav ---------------- */
+    document.getElementById("nav").addEventListener("click", function (e) {
+      var b = e.target.closest("button");
+      if (!b) return;
+      document.querySelectorAll("#nav button").forEach(function (x) { x.setAttribute("aria-current", x === b ? "true" : "false"); });
+      document.querySelectorAll(".pane").forEach(function (p) { p.classList.toggle("on", p.id === "pane-" + b.getAttribute("data-pane")); });
+    });
+
+    /* ---------------- data ---------------- */
+    function refresh() {
+      Promise.all([
+        ShilohStore.listVisitorCards(), ShilohStore.listReservationRequests(), ShilohStore.listAllPrayerRequests(),
+        ShilohStore.listProfiles(), ShilohStore.listVolunteers(), ShilohStore.listRsvps(),
+        fetch("data/events.json", { cache: "no-cache" }).then(function (r) { return r.json(); }).catch(function () { return { events: [] }; })
+      ]).then(function (res) {
+        VISITOR_CARDS = res[0] || []; RESERVATIONS = res[1] || []; PRAYERS = res[2] || [];
+        PEOPLE = res[3] || []; VOLUNTEERS = res[4] || []; RSVPS = res[5] || []; PUBLISHED_EVENTS = res[6].events || [];
+        renderDash(); renderInbox(); renderPeople(); renderMinistries(); renderEventsAdmin(); renderPrayerAdmin();
+        renderVolunteers(); renderBrand(); renderAuto();
+      });
+    }
+
+    function renderDash() {
+      var pendingVisitors = VISITOR_CARDS.filter(function (v) { return v.status === "received"; }).length;
+      var pendingRes = RESERVATIONS.filter(function (r) { return r.status === "pending"; }).length;
+      var expiring = VOLUNTEERS.filter(function (v) { return v.status !== "current"; }).length;
+      document.getElementById("tiles").innerHTML =
+        '<div class="tile"><b>' + VISITOR_CARDS.length + "</b><span>Visitor cards</span></div>" +
+        '<div class="tile' + (pendingVisitors ? " warn" : "") + '"><b>' + pendingVisitors + "</b><span>Awaiting follow-up</span></div>" +
+        '<div class="tile' + (pendingRes ? " warn" : "") + '"><b>' + pendingRes + "</b><span>Reservation requests</span></div>" +
+        '<div class="tile"><b>' + PRAYERS.length + "</b><span>Prayer requests</span></div>" +
+        '<div class="tile"><b>' + RSVPS.length + "</b><span>RSVPs</span></div>" +
+        '<div class="tile"><b>' + PEOPLE.length + "</b><span>Profiles</span></div>";
+      var needs = VISITOR_CARDS.filter(function (v) { return v.status === "received"; }).slice(0, 3)
+        .map(function (v) { return '<div class="rec"><summary style="display:flex"><b>' + esc(v.name || "Visitor") + '</b><span class="who">' + esc(v.who || "") + '</span><span class="chip chip--warn">new</span></summary></div>'; });
+      document.getElementById("dashLatest").innerHTML = needs.length ? needs.join("") : '<div class="empty">Nothing waiting — you\'re caught up.</div>';
+    }
+
+    /* ---------------- inbox ---------------- */
+    function inboxItems() {
+      var items = [];
+      VISITOR_CARDS.forEach(function (v) { items.push({ kind: "visitor", at: v.submittedAt, data: v }); });
+      RESERVATIONS.forEach(function (r) { items.push({ kind: "reservation", at: r.submittedAt, data: r }); });
+      PRAYERS.forEach(function (p) { items.push({ kind: "prayer", at: p.submittedAt, data: p }); });
+      return items.sort(function (a, b) { return (b.at || "").localeCompare(a.at || ""); });
+    }
+    function renderInbox() {
+      var filter = document.getElementById("inboxType").value;
+      var items = inboxItems().filter(function (i) { return !filter || i.kind === filter; });
+      document.getElementById("inboxList").innerHTML = items.length ? items.map(function (i) {
+        if (i.kind === "visitor") {
+          var v = i.data;
+          return '<details class="rec"><summary><b>' + esc(v.name) + '</b><span class="who">' + esc(v.who || "Visitor card") + '</span>' +
+            chip(v.status) + '<span class="when">' + fmtDate(v.submittedAt) + '</span></summary><div class="recbody"><dl>' +
+            "<dt>Email</dt><dd>" + esc(v.email || "–") + "</dd><dt>Phone</dt><dd>" + esc(v.phone || "–") + "</dd>" +
+            "<dt>Message</dt><dd>" + esc(v.message || "–") + "</dd></dl>" +
+            '<div class="acts"><button class="btn btn--ok" data-vc-status="' + esc(v.id) + '" data-status="contacted" type="button">Mark contacted</button>' +
+            (v.email ? '<a class="btn btn--navy" href="mailto:' + esc(v.email) + '?subject=' + encodeURIComponent("Welcome from " + (THEME.shortName || "the church")) + '">Email them</a>' : "") +
+            "</div></div></details>";
+        }
+        if (i.kind === "reservation") {
+          var r = i.data;
+          var m = MINISTRIES.find(function (x) { return x.id === r.facilityId; });
+          return '<details class="rec"><summary><b>' + esc(m ? m.name : r.facilityId) + '</b><span class="who">' + esc(r.purpose || r.type || "") + '</span>' +
+            chip(r.status) + '<span class="when">' + fmtDate(r.submittedAt) + '</span></summary><div class="recbody"><dl>' +
+            "<dt>Requested by</dt><dd>" + esc(r.requestedBy || "–") + "</dd>" +
+            (r.date ? "<dt>When</dt><dd>" + esc(r.date) + " " + esc(r.startTime || "") + "–" + esc(r.endTime || "") + "</dd>" : "") + "</dl>" +
+            '<div class="acts"><button class="btn btn--ok" data-res-status="' + esc(r.id) + '" data-status="approved" type="button">Approve</button>' +
+            '<button class="btn btn--danger" data-res-status="' + esc(r.id) + '" data-status="denied" type="button">Deny</button></div></div></details>';
+        }
+        var p = i.data;
+        return '<details class="rec"><summary><b>' + esc(p.name || "Anonymous") + '</b><span class="who">Prayer request</span>' +
+          '<span class="chip' + (p.visibility === "pastor" ? " chip--pastor" : "") + '">' + esc(p.visibility) + '</span>' +
+          '<span class="when">' + fmtDate(p.submittedAt) + '</span></summary><div class="recbody"><dl><dt>Request</dt><dd>' + esc(p.text) + "</dd></dl></div></details>";
+      }).join("") : '<div class="empty">Nothing here.</div>';
+    }
+    function chip(status) {
+      var cls = status === "approved" || status === "contacted" ? "chip chip--ok" : status === "denied" ? "chip chip--danger" : "chip chip--warn";
+      var label = status ? status.charAt(0).toUpperCase() + status.slice(1) : "New";
+      return '<span class="' + cls + '">' + esc(label) + "</span>";
+    }
+    document.getElementById("inboxType").addEventListener("change", renderInbox);
+    document.addEventListener("click", function (e) {
+      var vb = e.target.closest("button[data-vc-status]");
+      if (vb) { ShilohStore.updateVisitorCard(vb.getAttribute("data-vc-status"), { status: vb.getAttribute("data-status") }).then(refresh); return; }
+      var rb = e.target.closest("button[data-res-status]");
+      if (rb) { ShilohStore.updateReservationRequest(rb.getAttribute("data-res-status"), { status: rb.getAttribute("data-status") }).then(refresh); return; }
+    });
+
+    /* ---------------- people ---------------- */
+    function renderPeople() {
+      var q = document.getElementById("pSearch").value.trim().toLowerCase();
+      var rows = PEOPLE.filter(function (p) { return !q || [p.name, p.email].join(" ").toLowerCase().indexOf(q) !== -1; });
+      document.getElementById("peopleList").innerHTML = rows.length ? rows.map(function (p) {
+        return '<details class="rec"><summary><b>' + esc(p.name || "–") + '</b><span class="who">' + esc(p.email || "") + '</span>' +
+          '<span class="when">' + fmtDate(p.updatedAt) + '</span></summary><div class="recbody"><dl><dt>Phone</dt><dd>' + esc(p.phone || "–") + "</dd></dl></div></details>";
+      }).join("") : '<div class="empty">No profiles yet on this device.</div>';
+    }
+    document.getElementById("pSearch").addEventListener("input", renderPeople);
+    document.getElementById("exportPeople").addEventListener("click", function () { ShilohStore.downloadCsv(PEOPLE, "shiloh-people.csv"); });
+
+    /* ---------------- ministries & reservations ---------------- */
+    function renderMinistries() {
+      document.getElementById("ministryCatalog").innerHTML = '<div class="pairgrid">' + MINISTRIES.map(function (m) {
+        return '<div class="rec" style="padding:1rem 1.1rem"><span class="chip">' + esc(m.type) + "</span><h3 style=\"margin-top:0.4rem\">" + esc(m.name) +
+          (m.bookable ? ' <span class="chip chip--ok">bookable</span>' : "") + "</h3><p class=\"note\">" + esc(m.description || "") + "</p></div>";
+      }).join("") + "</div>";
+      renderReservations();
+    }
+    function renderReservations() {
+      document.getElementById("reservationList").innerHTML = RESERVATIONS.length ? RESERVATIONS.map(function (r) {
+        var m = MINISTRIES.find(function (x) { return x.id === r.facilityId; });
+        return '<details class="rec"><summary><b>' + esc(m ? m.name : r.facilityId) + '</b><span class="who">' + esc(r.requestedBy || "") + '</span>' +
+          chip(r.status) + '<span class="when">' + fmtDate(r.submittedAt) + '</span></summary><div class="recbody"><dl>' +
+          (r.date ? "<dt>When</dt><dd>" + esc(r.date) + " " + esc(r.startTime || "") + "–" + esc(r.endTime || "") + "</dd>" : "") +
+          "<dt>Purpose</dt><dd>" + esc(r.purpose || r.type || "–") + "</dd></dl>" +
+          '<div class="acts"><button class="btn btn--ok" data-res-status="' + esc(r.id) + '" data-status="approved" type="button">Approve</button>' +
+          '<button class="btn btn--danger" data-res-status="' + esc(r.id) + '" data-status="denied" type="button">Deny</button></div></div></details>';
+      }).join("") : '<div class="empty">No reservation requests yet.</div>';
+    }
+
+    /* ---------------- events + RSVPs ---------------- */
+    function allEvents() {
+      return PUBLISHED_EVENTS.map(function (e) { return Object.assign({ _src: "published" }, e); })
+        .concat(ShilohStore.getLocalEvents().map(function (e) { return Object.assign({ _src: "local" }, e); }));
+    }
+    function renderEventsAdmin() {
+      var evs = allEvents().sort(function (a, b) { return (b.date || "").localeCompare(a.date || ""); });
+      document.getElementById("evtAdminList").innerHTML = evs.length ? evs.map(function (ev) {
+        var roster = RSVPS.filter(function (r) { return r.eventId === ev.id; });
+        var yes = roster.filter(function (r) { return r.answer === "yes"; });
+        var emails = roster.map(function (r) { return r.email; }).filter(Boolean);
+        var blast = emails.length ? '<a class="btn btn--navy" href="mailto:?bcc=' + emails.join(",") + "&subject=" + encodeURIComponent(ev.title) + '">Email everyone who RSVP\'d (' + emails.length + ")</a>" : "";
+        return '<details class="rec"><summary><b>' + esc(ev.title) + '</b><span class="who">' + esc(ev.date) + (ev.location ? " · " + esc(ev.location) : "") + '</span>' +
+          '<span class="chip">' + yes.length + " yes · " + roster.length + " total</span>" +
+          '<span class="chip' + (ev._src === "local" ? " chip--warn" : " chip--ok") + '">' + (ev._src === "local" ? "draft" : "published") + "</span></summary>" +
+          '<div class="recbody"><p>' + esc(ev.body || "") + "</p>" +
+          '<div class="acts">' + blast +
+          (ev._src === "local" ? '<button class="btn btn--danger" data-evdel="' + esc(ev.id) + '" type="button">Delete draft</button>' : "") +
+          "</div></div></details>";
+      }).join("") : '<div class="empty">No events yet. Draft one above.</div>';
+    }
+    document.getElementById("evtNew").addEventListener("click", function () { document.getElementById("evtForm").hidden = false; });
+    document.getElementById("evtCancel").addEventListener("click", function () { document.getElementById("evtForm").hidden = true; });
+    document.getElementById("evtForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var title = document.getElementById("evTitle").value.trim(), date = document.getElementById("evDate").value;
+      if (!title || !date) return;
+      var list = ShilohStore.getLocalEvents();
+      list.push({
+        id: title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") + "-" + date,
+        title: title, date: date, time: document.getElementById("evTime").value.trim(),
+        location: document.getElementById("evLoc").value.trim(), category: document.getElementById("evCat").value,
+        body: document.getElementById("evBody").value.trim(), rsvp: document.getElementById("evRsvp").checked
+      });
+      ShilohStore.saveLocalEvents(list);
+      document.getElementById("evtForm").hidden = true;
+      e.target.reset();
+      renderEventsAdmin();
+    });
+    document.addEventListener("click", function (e) {
+      var d = e.target.closest("button[data-evdel]");
+      if (!d) return;
+      ShilohStore.saveLocalEvents(ShilohStore.getLocalEvents().filter(function (ev) { return ev.id !== d.getAttribute("data-evdel"); }));
+      renderEventsAdmin();
+    });
+    document.getElementById("evtDownload").addEventListener("click", function () {
+      var merged = { note: "The one events file. Commit this to data/events.json to publish.", events: allEvents().map(function (ev) { var c = Object.assign({}, ev); delete c._src; return c; }) };
+      var blob = new Blob([JSON.stringify(merged, null, 2)], { type: "application/json" });
+      var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "events.json"; a.click(); URL.revokeObjectURL(a.href);
+    });
+    document.getElementById("exportRsvps").addEventListener("click", function () { ShilohStore.downloadCsv(RSVPS, "shiloh-rsvps.csv"); });
+
+    /* ---------------- prayer (admin, all tiers) ---------------- */
+    function renderPrayerAdmin() {
+      var filter = document.getElementById("prFilter").value;
+      var rows = PRAYERS.filter(function (p) { return !filter || p.visibility === filter; });
+      document.getElementById("prayerAdminList").innerHTML = rows.length ? rows.map(function (p) {
+        return '<details class="rec"><summary><b>' + esc(p.name || "Anonymous") + '</b>' +
+          '<span class="chip' + (p.visibility === "pastor" ? " chip--pastor" : "") + '">' + esc(p.visibility) + '</span>' +
+          '<span class="chip">' + (p.prayingCount || 0) + ' praying</span>' +
+          '<span class="when">' + fmtDate(p.submittedAt) + '</span></summary><div class="recbody"><dl><dt>Request</dt><dd>' + esc(p.text) + "</dd></dl></div></details>";
+      }).join("") : '<div class="empty">Nothing at this tier yet.</div>';
+    }
+    document.getElementById("prFilter").addEventListener("change", renderPrayerAdmin);
+
+    /* ---------------- volunteers & safety status ---------------- */
+    function renderVolunteers() {
+      document.getElementById("volunteerList").innerHTML = VOLUNTEERS.length ? VOLUNTEERS.map(function (v) {
+        var cls = v.status === "current" ? "chip--ok" : v.status === "expired" ? "chip--danger" : "chip--warn";
+        return '<div class="rec" style="padding:0.9rem 1.1rem;display:flex;gap:0.8rem;align-items:center;flex-wrap:wrap">' +
+          "<b>" + esc(v.name) + "</b><span class=\"who\" style=\"flex:1;color:#5a5347\">" + esc(v.role || "") + "</span>" +
+          '<select data-vol-status="' + esc(v.id) + '" style="border:1px solid #c7d3e4;border-radius:10px;padding:0.3rem 0.5rem">' +
+          ["not started", "in progress", "current", "expired"].map(function (s) { return '<option' + (s === v.status ? " selected" : "") + ">" + s + "</option>"; }).join("") +
+          "</select><span class=\"chip " + cls + "\">" + esc(v.status) + "</span></div>";
+      }).join("") : '<div class="empty">No volunteers tracked yet — add one above.</div>';
+    }
+    document.getElementById("volForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var name = document.getElementById("volName").value.trim();
+      if (!name) return;
+      ShilohStore.addVolunteer({ name: name, role: document.getElementById("volRole").value.trim() }).then(function () {
+        e.target.reset();
+        refresh();
+      });
+    });
+    document.addEventListener("change", function (e) {
+      var sel = e.target.closest("select[data-vol-status]");
+      if (!sel) return;
+      ShilohStore.updateVolunteer(sel.getAttribute("data-vol-status"), { status: sel.value }).then(refresh);
+    });
+
+    /* ---------------- brand & settings (read-only) ---------------- */
+    function renderBrand() {
+      document.getElementById("themeKv").innerHTML =
+        "<dt>Church name</dt><dd>" + esc(THEME.churchName) + "</dd>" +
+        "<dt>Tagline</dt><dd>" + esc(THEME.tagline || "–") + "</dd>" +
+        "<dt>Colors</dt><dd>" + Object.keys(THEME.colors || {}).map(function (k) {
+          return "<span style=\"display:inline-flex;align-items:center;gap:0.35em;margin-right:0.9em\"><span style=\"width:1em;height:1em;border-radius:3px;border:1px solid #0002;background:" + esc(THEME.colors[k]) + ";display:inline-block\"></span>" + esc(k) + "</span>";
+        }).join("") + "</dd>";
+      document.getElementById("churchKv").innerHTML =
+        "<dt>Denomination</dt><dd>" + esc(CHURCH.denomination || "–") + "</dd>" +
+        "<dt>Pastor</dt><dd>" + esc(CHURCH.pastor || "–") + "</dd>" +
+        "<dt>Address</dt><dd>" + esc(CHURCH.address || "–") + "</dd>" +
+        "<dt>Phone</dt><dd>" + esc(CHURCH.phone || "–") + "</dd>" +
+        "<dt>Service times</dt><dd>" + (CHURCH.serviceTimes || []).map(function (t) { return esc(t.label) + (t.time ? ": " + esc(t.time) : " (not set)"); }).join("<br>") + "</dd>";
+    }
+
+    /* ---------------- automations ---------------- */
+    function renderAuto() {
+      document.getElementById("autoKv").innerHTML =
+        "<dt>Mode</dt><dd>" + esc(config.mode) + (config.mode === "demo" ? " (this browser only)" : "") + "</dd>" +
+        "<dt>Database</dt><dd>" + (config.mode === "supabase" && config.supabaseUrl ? esc(config.supabaseUrl) : "none (demo storage)") + "</dd>" +
+        "<dt>Outbound webhook</dt><dd>" + (config.webhookUrl ? esc(config.webhookUrl) : "not set; add webhookUrl in data/config.json") + "</dd>";
+      document.getElementById("testHook").disabled = !config.webhookUrl;
+    }
+    document.getElementById("testHook").addEventListener("click", function () {
+      var out = document.getElementById("testResult");
+      out.textContent = "Sending…";
+      ShilohStore.fireWebhook("test", { hello: "from the Shiloh admin" }).then(function (ok) {
+        out.textContent = ok ? "Sent ✓ Check your Zap/scenario history." : "Failed. Is the URL right?";
+        out.style.color = ok ? "var(--ok)" : "var(--danger)";
+      });
+    });
+  })();
+  </script>
+</body>
+</html>

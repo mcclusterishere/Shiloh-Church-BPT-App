@@ -1,0 +1,13 @@
+{
+  "note": "Real church facts, kept separate from theme.json (which is pure branding). Fields are left blank rather than guessed — fill in the real address, phone, and service times before launch. See docs/MANAGE.md.",
+  "name": "Shiloh Baptist Church",
+  "denomination": "Baptist",
+  "pastor": "",
+  "address": "",
+  "phone": "",
+  "email": "",
+  "serviceTimes": [
+    { "label": "Sunday Worship", "time": "" },
+    { "label": "Bible Study", "time": "" }
+  ]
+}

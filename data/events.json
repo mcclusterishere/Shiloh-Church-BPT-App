@@ -1,0 +1,25 @@
+{
+  "note": "SAMPLE DATA — replace with Shiloh's real calendar. Future events rise to the top and past ones archive themselves automatically; edit this file (or draft in Admin → Events) and push to publish. See docs/MANAGE.md.",
+  "events": [
+    {
+      "id": "sunday-worship-sample",
+      "title": "Sunday Worship Service (sample)",
+      "date": "2026-08-02",
+      "time": "11:00 AM",
+      "location": "Sanctuary",
+      "category": "Worship",
+      "body": "Replace this with a real, recurring service time in church.json and a real weekly entry here.",
+      "rsvp": true
+    },
+    {
+      "id": "fellowship-dinner-sample",
+      "title": "Fellowship Dinner (sample)",
+      "date": "2026-08-09",
+      "time": "5:00 PM",
+      "location": "Fellowship Hall",
+      "category": "Community",
+      "body": "A sample event to show how RSVPs and headcounts look before real events are added.",
+      "rsvp": true
+    }
+  ]
+}

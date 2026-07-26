@@ -1,0 +1,18 @@
+{
+  "note": "The ONLY place branding should live. Colors here are a proposed starting palette from the design review, not a final decision — swap them (and church.json, and assets/brand/logo if one is added) to re-skin this whole app for another church. Because manifest.webmanifest and favicons are fetched by the browser before any JavaScript runs, changing colors here also means updating manifest.webmanifest's theme_color/background_color by hand — see docs/MANAGE.md.",
+  "churchName": "Shiloh Baptist Church",
+  "shortName": "Shiloh",
+  "tagline": "One family, growing in faith together.",
+  "colors": {
+    "navy": "#16283f",
+    "navyDeep": "#0f1c30",
+    "cream": "#f4f1e6",
+    "ink": "#1c261f",
+    "accent": "#8f2a3a",
+    "accentSoft": "#c65a68",
+    "ok": "#2e7d4f",
+    "danger": "#b3261e",
+    "warn": "#a1591f",
+    "line": "#d8d0ba"
+  }
+}

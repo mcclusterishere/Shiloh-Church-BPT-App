@@ -1,0 +1,11 @@
+{
+  "note": "Announcements for the Home feed. Anything older than 18 months hides itself automatically. Edit this file and push to publish.",
+  "news": [
+    {
+      "id": "welcome-to-the-app",
+      "date": "2026-07-26",
+      "title": "Welcome to the new Shiloh app",
+      "body": "This app is brand new. If anything is confusing, tap Help at the bottom of the screen any time to watch the tour again, or just ask a deacon after service — someone will always be glad to walk you through it."
+    }
+  ]
+}

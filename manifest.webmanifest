@@ -1,0 +1,25 @@
+{
+  "name": "Shiloh Baptist Church",
+  "short_name": "Shiloh",
+  "description": "One family, growing in faith together — events, prayer, and connection for Shiloh Baptist Church.",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f4f1e6",
+  "theme_color": "#16283f",
+  "lang": "en",
+  "categories": ["lifestyle", "social"],
+  "icons": [
+    { "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Events", "url": "./#/events", "description": "See what's coming up and RSVP" },
+    { "name": "Prayer wall", "url": "./#/prayer", "description": "Share or pray over a request" },
+    { "name": "Connect", "url": "./#/connect", "description": "New here? Let us know" },
+    { "name": "Help", "url": "./#/help", "description": "Watch the tour again" }
+  ]
+}

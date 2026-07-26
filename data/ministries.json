@@ -1,0 +1,12 @@
+{
+  "note": "PLACEHOLDER DATA — these are common Baptist-church ministry names, not Shiloh's real ones. Replace with the actual ~4-6 ministries and bookable spaces before launch (open question in the design proposal). Each entry with \"bookable\": true shows a 'Request to book' action in the app instead of 'I'm interested'.",
+  "ministries": [
+    { "id": "usher-board", "type": "ministry", "name": "Usher Board", "leader": "", "meets": "", "description": "Welcomes guests and helps Sunday service run smoothly.", "bookable": false },
+    { "id": "deacon-ministry", "type": "ministry", "name": "Deacon Ministry", "leader": "", "meets": "", "description": "Supports the pastor and cares for the congregation.", "bookable": false },
+    { "id": "prayer-ministry", "type": "ministry", "name": "Prayer Ministry", "leader": "", "meets": "", "description": "Prays over the requests shared in the app and in service.", "bookable": false },
+    { "id": "music-ministry", "type": "ministry", "name": "Music Ministry", "leader": "", "meets": "", "description": "Choir and musicians leading worship.", "bookable": false },
+    { "id": "sunday-school", "type": "ministry", "name": "Sunday School", "leader": "", "meets": "", "description": "Bible study for all ages before or after service.", "bookable": false },
+    { "id": "sanctuary", "type": "facility", "name": "Sanctuary", "leader": "", "meets": "", "description": "Main worship space.", "bookable": true, "capacity": null },
+    { "id": "fellowship-hall", "type": "facility", "name": "Fellowship Hall", "leader": "", "meets": "", "description": "Meals, meetings, and gatherings.", "bookable": true, "capacity": null }
+  ]
+}
