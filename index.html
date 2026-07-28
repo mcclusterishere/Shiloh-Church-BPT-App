@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Shiloh Baptist Church</title>
-  <meta name="description" content="One family, growing in faith together — events, prayer, and connection for Shiloh Baptist Church.">
+  <meta name="description" content="Shiloh Baptist Church, Bridgeport CT — Where Christ Is Lifted Up. Events, prayer, sermons, and connection.">
   <meta name="theme-color" content="#f7f4ec" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#10131d" media="(prefers-color-scheme: dark)">
   <link rel="manifest" href="manifest.webmanifest">
@@ -12,6 +12,7 @@
   <link rel="icon" href="assets/icons/favicon-32.png" type="image/png">
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/atkinson-hyperlegible-latin-400-normal.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/fraunces-latin-var.woff2" crossorigin>
+  <link rel="preload" as="image" href="assets/media/home-hero.webp" fetchpriority="high">
   <link rel="stylesheet" href="css/system.css">
   <link rel="stylesheet" href="css/app.css">
   <script>
@@ -39,6 +40,10 @@
   <g id="i-share"><path d="M4 12v7.2A1.8 1.8 0 0 0 5.8 21h12.4a1.8 1.8 0 0 0 1.8-1.8V12"/><path d="M12 15.4V3.2M7.8 7.4 12 3.2l4.2 4.2"/></g>
   <g id="i-check"><path d="M4.5 12.6 9.4 17.5 19.5 7.4"/></g>
   <g id="i-cross"><path d="M12 3v18M6.4 8.4h11.2"/></g>
+  <g id="i-heart"><path d="M12 20.6S3.4 15.4 3.4 9.6a4.6 4.6 0 0 1 8.6-2.3A4.6 4.6 0 0 1 20.6 9.6c0 5.8-8.6 11-8.6 11z"/></g>
+  <g id="i-play"><circle cx="12" cy="12" r="9"/><path d="M10 8.6v6.8l5.4-3.4z"/></g>
+  <g id="i-phone"><path d="M6.8 3.4h3l1.5 4-2 1.5a12.8 12.8 0 0 0 5.8 5.8l1.5-2 4 1.5v3a2 2 0 0 1-2.2 2A16.8 16.8 0 0 1 4.8 5.6a2 2 0 0 1 2-2.2z"/></g>
+  <g id="i-pin"><path d="M12 21.4s6.8-6 6.8-11A6.8 6.8 0 0 0 5.2 10.4c0 5 6.8 11 6.8 11z"/><circle cx="12" cy="10.2" r="2.6"/></g>
 </defs></svg>
 
 <!-- ============================ onboarding ============================ -->
@@ -65,32 +70,76 @@
   <!-- ------------------------------- home ------------------------------ -->
   <section class="screen on" id="screen-home">
     <div class="wrap stack">
-      <div class="hero rise">
-        <p class="eyebrow">Welcome</p>
-        <h1 id="heroTitle">Welcome home.</h1>
-        <p id="heroTagline">One family, growing in faith together.</p>
-        <div class="hero__next" id="heroNext" hidden>
-          <span class="eyebrow">Next</span>
-          <b id="heroNextTitle"></b>
-          <span class="muted" id="heroNextWhen"></span>
+      <div class="photohero rise">
+        <img src="assets/media/home-hero.webp" alt="Worship at Shiloh Baptist Church" fetchpriority="high">
+        <div class="photohero__scrim" aria-hidden="true"></div>
+        <div class="photohero__body">
+          <p class="eyebrow">Shiloh Baptist Church · Bridgeport, CT</p>
+          <h1>Where Christ<br>Is Lifted Up</h1>
+          <p>Celebrating our past &amp; laying foundations for our future.</p>
         </div>
       </div>
 
-      <div class="quickgrid rise rise-2">
+      <div class="card rise rise-2" id="heroNext" hidden>
+        <div class="row" style="justify-content:space-between; align-items:baseline">
+          <span class="eyebrow">Next</span>
+          <span class="muted" id="heroNextWhen" style="font-size:var(--step--1)"></span>
+        </div>
+        <b id="heroNextTitle" style="display:block;margin-top:var(--space-2)"></b>
+      </div>
+
+      <div class="quickgrid rise rise-3">
         <button class="quick quick--prayer" data-nav="prayer" type="button">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-flame"/></svg>
           <span><b>Share a prayer request</b><small>The church will pray with you</small></span>
         </button>
         <button class="quick quick--connect" data-nav="connect" type="button">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-chat"/></svg>
-          <span><b>New here? Say hello</b><small>We'd love to meet you</small></span>
+          <span><b>New here? Plan a visit</b><small>We'd love to meet you</small></span>
         </button>
       </div>
 
-      <div class="card rise rise-3" id="serviceCard" hidden>
-        <p class="eyebrow">This week</p>
+      <div class="card rise rise-4" id="serviceCard" hidden>
+        <p class="eyebrow">Sundays &amp; through the week</p>
         <div id="serviceList" class="stack" style="--gap: var(--space-3); margin-top: var(--space-4)"></div>
+        <hr class="leading" style="margin: var(--space-4) 0">
+        <div class="stack" style="--gap: var(--space-2)">
+          <div class="row" style="justify-content:space-between"><b>Online</b><span class="muted" id="onlineWhen"></span></div>
+          <p class="muted" style="font-size:var(--step--1)" id="addressLine"></p>
+        </div>
       </div>
+
+      <div class="card pastorcard rise rise-5" id="pastorCard" hidden>
+        <img class="portrait" id="pastorPhoto" src="assets/media/pastor-mccluster.webp" alt="Portrait of the pastor" loading="lazy" decoding="async">
+        <div>
+          <p class="eyebrow">Greetings from the pastor</p>
+          <h3 id="pastorName" style="margin-top:var(--space-2)"></h3>
+          <p class="muted" id="pastorTenure" style="font-size:var(--step--1)"></p>
+          <p id="pastorGreetingLead" style="margin-top:var(--space-3)"></p>
+          <details id="pastorMore">
+            <summary class="btn btn--quiet" style="list-style:none;margin-top:var(--space-3)">Read the full greeting</summary>
+            <div id="pastorGreetingRest" style="margin-top:var(--space-3)"></div>
+          </details>
+        </div>
+      </div>
+
+      <button class="card photocard reveal" data-nav="watch" type="button" style="text-align:left;width:100%">
+        <img src="assets/media/home-recent-sermon.webp" alt="" loading="lazy" decoding="async">
+        <div class="photocard__body">
+          <p class="eyebrow">Watch</p>
+          <h3>The most recent message</h3>
+          <p>Sermons from Pastor Carl, and Facebook Live every Sunday at 9 AM.</p>
+        </div>
+      </button>
+
+      <button class="card photocard reveal" data-nav="about" type="button" style="text-align:left;width:100%">
+        <img src="assets/media/about-us-banner.webp" alt="" loading="lazy" decoding="async">
+        <div class="photocard__body">
+          <p class="eyebrow">Who we are</p>
+          <h3>85 years in Bridgeport</h3>
+          <p>Our story, what we believe, and the people who serve here.</p>
+        </div>
+      </button>
 
       <div>
         <p class="eyebrow" style="margin-bottom: var(--space-4)">Latest</p>
@@ -109,10 +158,13 @@
       <div class="card">
         <h3>See it in your own calendar</h3>
         <p>Subscribe once and every event appears in your phone's own calendar — you'll never have to open this app to know what's next.</p>
-        <a class="btn btn--quiet" id="subscribeCal" href="events.ics" style="margin-top: var(--space-4)">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-cal"/></svg>
-          Subscribe
-        </a>
+        <div class="row" style="margin-top: var(--space-4)">
+          <a class="btn btn--quiet" id="subscribeCal" href="events.ics">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-cal"/></svg>
+            Subscribe
+          </a>
+          <a class="btn btn--quiet" href="https://www.shilohchurchbpt.org/events-2/" target="_blank" rel="noopener">Full calendar on the website</a>
+        </div>
       </div>
       <div class="stack" id="eventsUpcoming"></div>
       <details id="pastWrap">
@@ -128,6 +180,18 @@
       <div class="screen__head">
         <p class="eyebrow">Held together</p>
         <h2>Prayer wall</h2>
+      </div>
+
+      <div class="card" id="prayerLineCard" hidden>
+        <p class="eyebrow">The prayer line</p>
+        <p style="margin-top:var(--space-3)">Can't be there in person? The church prays together by phone, Monday to Friday at 6:00 AM and 8:00 PM.</p>
+        <div class="row" style="margin-top:var(--space-4)">
+          <a class="btn btn--primary" id="prayerLineCall" href="#">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-phone"/></svg>
+            Call the prayer line
+          </a>
+          <span class="muted" id="prayerLineCode" style="font-size:var(--step--1)"></span>
+        </div>
       </div>
 
       <form class="card" id="prayerForm">
@@ -166,10 +230,96 @@
   <section class="screen" id="screen-directory">
     <div class="wrap stack">
       <div class="screen__head">
-        <p class="eyebrow">Where to belong</p>
-        <h2>Ministries &amp; spaces</h2>
+        <p class="eyebrow">There is a place for you here</p>
+        <h2>Ministries</h2>
       </div>
       <div class="ministrygrid" id="ministryList"></div>
+      <div>
+        <p class="eyebrow" style="margin: var(--space-4) 0">Spaces you can book</p>
+        <div class="ministrygrid" id="facilityList"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ------------------------------- give ------------------------------ -->
+  <section class="screen" id="screen-give">
+    <div class="wrap stack">
+      <div class="screen__head">
+        <p class="eyebrow">Tithes &amp; offering</p>
+        <h2>Giving</h2>
+      </div>
+      <p id="giveIntro" class="muted"></p>
+      <div class="givegrid" id="giveGrid"></div>
+      <div class="stack" id="giveOffline" style="--gap: var(--space-4)"></div>
+      <p class="hint">These buttons open the church's own giving accounts. This app never handles or stores your money or card details.</p>
+    </div>
+  </section>
+
+  <!-- ------------------------------ watch ------------------------------ -->
+  <section class="screen" id="screen-watch">
+    <div class="wrap stack">
+      <div class="screen__head">
+        <p class="eyebrow">Sermons &amp; live worship</p>
+        <h2>Watch</h2>
+      </div>
+      <div class="card photocard">
+        <img src="assets/media/home-online.webp" alt="" loading="lazy" decoding="async">
+        <div class="photocard__body">
+          <h3>Facebook Live — Sundays at 9 AM</h3>
+          <p>Worship with the Shiloh family from anywhere.</p>
+          <a class="btn btn--primary" id="watchLiveBtn" href="#" target="_blank" rel="noopener" style="margin-top:var(--space-4)">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-play"/></svg>
+            Watch live
+          </a>
+        </div>
+      </div>
+      <div>
+        <p class="eyebrow" style="margin-bottom: var(--space-4)">Recent messages from Pastor Carl</p>
+        <div class="stack" id="sermonList"></div>
+      </div>
+      <a class="btn btn--quiet btn--block" id="sermonArchive" href="#" target="_blank" rel="noopener">The full sermon archive</a>
+      <div class="card" id="rightnowCard" hidden>
+        <p class="eyebrow">Free for the Shiloh family</p>
+        <h3 style="margin-top:var(--space-2)">RightNow Media</h3>
+        <p>A huge library of Bible studies and video teaching for every age — free with a Shiloh church account.</p>
+        <a class="btn btn--quiet" id="rightnowBtn" href="#" target="_blank" rel="noopener" style="margin-top:var(--space-4)">Register free</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ------------------------------ about ------------------------------ -->
+  <section class="screen" id="screen-about">
+    <div class="wrap stack">
+      <div class="screen__head">
+        <p class="eyebrow">Who we are</p>
+        <h2>About Shiloh</h2>
+      </div>
+      <div class="stack" id="aboutSections"></div>
+      <div class="card" id="sundayFlowCard">
+        <p class="eyebrow">Sunday morning at Shiloh</p>
+        <div class="stack" style="--gap: var(--space-3); margin-top: var(--space-4)" id="sundayFlow"></div>
+      </div>
+      <div class="card">
+        <p class="eyebrow">Bible Discovery Classes</p>
+        <p style="margin-top:var(--space-3)">Christian Education — one of the "backbone" ministries of the church — has classes for every age:</p>
+        <div class="stack" style="--gap: var(--space-2); margin-top: var(--space-4)" id="classGroups"></div>
+      </div>
+      <div>
+        <p class="eyebrow" style="margin-bottom: var(--space-4)">The people who serve here</p>
+        <div class="stack" id="staffList"></div>
+      </div>
+      <div class="card photocard" id="annivCard" hidden>
+        <img id="annivImg" src="" alt="" loading="lazy" decoding="async">
+        <div class="photocard__body">
+          <p class="eyebrow" id="annivWhen"></p>
+          <h3 id="annivTitle"></h3>
+          <p id="annivTheme"></p>
+        </div>
+      </div>
+      <div class="card" id="socialCard">
+        <p class="eyebrow">Find us</p>
+        <div class="row" style="margin-top:var(--space-4)" id="socialRow"></div>
+      </div>
     </div>
   </section>
 
@@ -178,13 +328,33 @@
     <div class="wrap stack">
       <div class="screen__head">
         <p class="eyebrow">We'd love to meet you</p>
-        <h2>Connect with us</h2>
+        <h2>Plan a visit</h2>
       </div>
+      <div class="card photocard">
+        <img src="assets/media/new-here-plan-a-visit.webp" alt="" loading="lazy" decoding="async">
+        <div class="photocard__body">
+          <h3>A place you can call home</h3>
+          <p id="visitIntro">At Shiloh, we love to welcome new visitors. Here is what you can expect when you come.</p>
+          <div class="row" style="margin-top:var(--space-4)">
+            <a class="btn btn--quiet" id="directionsBtn" href="#" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-pin"/></svg>
+              Directions
+            </a>
+            <a class="btn btn--quiet" id="callBtn" href="#">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-phone"/></svg>
+              Call the office
+            </a>
+          </div>
+        </div>
+      </div>
+
       <div class="card" id="connectDone" hidden>
         <h3>Thank you</h3>
         <p>Someone from Shiloh will reach out soon.</p>
       </div>
       <form class="card" id="connectForm">
+        <h3>Say hello before you come</h3>
+        <p class="muted" style="margin-bottom:var(--space-4)">Leave your details and we'll look out for you on Sunday.</p>
         <div class="field"><label for="cName">Name</label><input type="text" id="cName" required autocomplete="name"></div>
         <div class="field"><label for="cEmail">Email</label><input type="email" id="cEmail" autocomplete="email"></div>
         <div class="field"><label for="cPhone">Phone</label><input type="tel" id="cPhone" autocomplete="tel"></div>
@@ -199,6 +369,19 @@
         <div class="field"><label for="cMsg">Anything you'd like us to know? <span class="muted" style="font-weight:400">(optional)</span></label><textarea id="cMsg"></textarea></div>
         <button class="btn btn--primary btn--block" type="submit">Send</button>
       </form>
+
+      <div class="card photocard">
+        <img src="assets/media/new-here-kids1.webp" alt="" loading="lazy" decoding="async">
+        <div class="photocard__body">
+          <h3>Bringing kids?</h3>
+          <p id="kidsText"></p>
+        </div>
+      </div>
+
+      <div class="card">
+        <p class="eyebrow">Questions &amp; answers</p>
+        <div class="stack" style="--gap: var(--space-2); margin-top: var(--space-4)" id="faqList"></div>
+      </div>
     </div>
   </section>
 
@@ -251,8 +434,14 @@
       </div>
 
       <div class="card">
-        <h3>Call the church office</h3>
-        <p id="helpPhone">Phone number not added yet — ask a deacon after service.</p>
+        <h3>Reach a person</h3>
+        <p id="helpPhone" class="muted"></p>
+        <div class="row" style="margin-top:var(--space-4)">
+          <a class="btn btn--quiet" id="helpCallBtn" href="#">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-phone"/></svg>
+            Call the church office
+          </a>
+        </div>
       </div>
 
       <dl class="card faq">
@@ -262,6 +451,8 @@
         <dd>Open Prayer at the bottom of the screen and fill in the short form. You choose who can see it.</dd>
         <dt>What if I don't want everyone to see my request?</dt>
         <dd>Choose "The prayer team only" or "The pastor only" when you share it. It will never show on the church-wide wall.</dd>
+        <dt>How do I give my tithe or offering in the app?</dt>
+        <dd>Open Give at the bottom of the screen. Every button there goes straight to the church's own giving accounts.</dd>
         <dt>What if something isn't working?</dt>
         <dd>Ask any deacon after service, or call the church office above. Nothing you tap can break anything.</dd>
       </dl>
@@ -274,7 +465,7 @@
   <button data-nav="events"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-cal"/></svg>Events</button>
   <button data-nav="prayer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-flame"/></svg>Prayer</button>
   <button data-nav="directory"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-people"/></svg>Groups</button>
-  <button data-nav="connect"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-chat"/></svg>Connect</button>
+  <button data-nav="give"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-heart"/></svg>Give</button>
   <button data-nav="help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-help"/></svg>Help</button>
 </nav>
 
@@ -285,7 +476,7 @@
 <script>
 (function () {
   "use strict";
-  var CHURCH = null, THEME = null, EVENTS = [], MINISTRIES = [];
+  var CHURCH = null, THEME = null, EVENTS = [], MINISTRIES = [], GIVING = null, ABOUT = null, SERMONS = null, FAQ = [];
   var ICON = function (id) {
     return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#' + id + '"/></svg>';
   };
@@ -294,6 +485,9 @@
     return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
     });
+  }
+  function paras(s) {
+    return String(s || "").split(/\n+/).filter(Boolean).map(function (p) { return "<p>" + esc(p) + "</p>"; }).join("");
   }
   function fmtDate(iso) {
     if (!iso) return "";
@@ -309,7 +503,7 @@
     var days = Math.floor(hrs / 24);
     return days + " day" + (days === 1 ? "" : "s") + " ago";
   }
-  /* A short, physical tick on meaningful taps where the device supports it. */
+  function telHref(num) { return "tel:" + String(num || "").replace(/[^0-9+]/g, ""); }
   function haptic(ms) { if (navigator.vibrate) { try { navigator.vibrate(ms || 12); } catch (e) {} } }
 
   var toastTimer = null;
@@ -354,7 +548,7 @@
   }
 
   /* ------------------------------ router ------------------------------ */
-  var ROUTES = ["home", "events", "prayer", "directory", "connect", "profile", "help"];
+  var ROUTES = ["home", "events", "prayer", "directory", "give", "watch", "about", "connect", "profile", "help"];
   function paint(r) {
     document.querySelectorAll(".screen").forEach(function (s) { s.classList.toggle("on", s.id === "screen-" + r); });
     document.querySelectorAll("#tabbar button").forEach(function (b) {
@@ -369,8 +563,6 @@
   function route() {
     var r = (location.hash || "#/home").replace("#/", "");
     if (ROUTES.indexOf(r) === -1) r = "home";
-    /* Native cross-screen morphing where the browser has it; a plain switch
-       everywhere else. Nothing depends on it working. */
     if (document.startViewTransition && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       document.startViewTransition(function () { paint(r); });
     } else { paint(r); }
@@ -391,6 +583,24 @@
     document.getElementById("serviceList").innerHTML = times.map(function (t) {
       return '<div class="row" style="justify-content:space-between"><b>' + esc(t.label) + "</b><span class=\"muted tnum\">" + esc(t.time) + "</span></div>";
     }).join("");
+    if (CHURCH.online) document.getElementById("onlineWhen").textContent = CHURCH.online.label + " · " + CHURCH.online.when;
+    document.getElementById("addressLine").textContent = CHURCH.address || "";
+  }
+  function renderPastor() {
+    if (!ABOUT || !ABOUT.staff || !ABOUT.staff.length) return;
+    var p = ABOUT.staff[0];
+    document.getElementById("pastorCard").hidden = false;
+    document.getElementById("pastorName").textContent = p.name;
+    document.getElementById("pastorTenure").textContent = (p.title || "") + (CHURCH.pastorTenure ? " · " + CHURCH.pastorTenure : "");
+    /* The greeting, verbatim from the church's own site. */
+    var greeting = [
+      "We greet you today with the Joy of Our Risen Savior Jesus Christ! Thank you for taking the time to visit with us. We hope that something you see, hear, learn, or feel will bring you encouragement and hope through the Salvation of our Lord.",
+      "As you continue your journey of faith, we ask that you would pray for: clarity of vision and focus to the ministry which God has called us; the Holy Spirit's moving upon your heart as to how you can participate within the ministry; and the opportunity for us to join together in person through joint worship, as well as the ministry assignment that would best fit your God-given gifting as we sojourn.",
+      "Our prayer is that God will continue to bless and nourish you in His anointing for your life. We look forward to working together for the Cause of Christ!",
+      "In His Love,\nPastor Carl"
+    ];
+    document.getElementById("pastorGreetingLead").textContent = greeting[0];
+    document.getElementById("pastorGreetingRest").innerHTML = paras(greeting.slice(1).join("\n"));
   }
   function renderHeroNext() {
     var today = new Date().toISOString().slice(0, 10);
@@ -399,15 +609,15 @@
     if (!next) return;
     document.getElementById("heroNext").hidden = false;
     document.getElementById("heroNextTitle").textContent = next.title;
-    document.getElementById("heroNextWhen").textContent =
-      fmtDate(next.date) + (next.time ? " · " + next.time : "");
+    document.getElementById("heroNextWhen").textContent = fmtDate(next.date) + (next.time ? " · " + next.time : "");
   }
   function renderNews(news) {
     var cutoff = Date.now() - 18 * 30 * 864e5;
     var fresh = news.filter(function (n) { return new Date(n.date).getTime() >= cutoff; })
       .sort(function (a, b) { return b.date.localeCompare(a.date); });
     document.getElementById("newsList").innerHTML = fresh.length ? fresh.map(function (n) {
-      return '<article class="card reveal"><h3>' + esc(n.title) + "</h3><p>" + esc(n.body) + "</p></article>";
+      var link = n.link ? '<a class="btn btn--quiet" href="' + esc(n.link) + '" target="_blank" rel="noopener" style="margin-top:var(--space-4)">' + esc(n.linkLabel || "More") + "</a>" : "";
+      return '<article class="card reveal"><h3>' + esc(n.title) + "</h3><p>" + esc(n.body) + "</p>" + link + "</article>";
     }).join("") : '<div class="empty">Nothing new right now — check back soon.</div>';
   }
 
@@ -467,7 +677,6 @@
       haptic(14);
       var profile = ShilohStore.getProfile() || {};
       var ans = r.getAttribute("data-ans");
-      /* Optimistic: move the thumb immediately, persist behind it. */
       var seg = r.closest(".segmented");
       var idx = { yes: 0, maybe: 1, no: 2 }[ans];
       var col = { yes: "var(--ok)", maybe: "var(--warn)", no: "var(--text-faint)" }[ans];
@@ -545,25 +754,39 @@
   });
 
   /* ---------------------------- ministries ---------------------------- */
+  function ministryCard(m) {
+    var img = m.image ? '<img src="' + esc(m.image) + '" alt="" loading="lazy" decoding="async">' : "";
+    var scripture = "";
+    if (m.scripture) {
+      /* Citation sits outside the quotation marks: “verse” — Reference */
+      var cut = m.scripture.lastIndexOf(" — ");
+      var verse = cut > 0 ? m.scripture.slice(0, cut) : m.scripture;
+      var ref = cut > 0 ? m.scripture.slice(cut + 3) : "";
+      scripture = '<p class="scripture">“' + esc(verse.trim()) + "”" + (ref ? " — " + esc(ref.trim()) : "") + "</p>";
+    }
+    var action = m.bookable
+      ? '<details class="resform" style="margin-top:var(--space-4)"><summary class="btn btn--quiet">Request to book</summary>' +
+        '<form data-book="' + esc(m.id) + '" style="margin-top:var(--space-4)">' +
+        '<div class="field"><label>Date<input type="date" name="date" required></label></div>' +
+        '<div class="field"><label>Start time<input type="time" name="startTime" required></label></div>' +
+        '<div class="field"><label>End time<input type="time" name="endTime" required></label></div>' +
+        '<div class="field"><label>What for?<input type="text" name="purpose" required></label></div>' +
+        '<p class="hint" data-conflict hidden>That space already has a booking that overlaps. An admin will follow up.</p>' +
+        '<button class="btn btn--primary btn--block" type="submit">Send request</button></form></details>'
+      : '<button class="btn btn--quiet" data-interest="' + esc(m.id) + '" type="button" style="margin-top:var(--space-4)">I\'m interested</button>';
+    var desc = m.description
+      ? '<details style="margin-top:var(--space-3)"><summary class="btn btn--quiet" style="list-style:none">About this ministry</summary><div style="margin-top:var(--space-3)">' + paras(m.description) + "</div></details>"
+      : "";
+    return '<article class="card ministrycard reveal">' + img +
+      '<div class="ministrycard__body">' +
+      "<h3>" + esc(m.name) + "</h3>" + scripture + desc + action +
+      "</div></article>";
+  }
   function renderMinistries() {
-    document.getElementById("ministryList").innerHTML = MINISTRIES.map(function (m) {
-      var action = m.bookable
-        ? '<details class="resform" style="margin-top:var(--space-4)"><summary class="btn btn--quiet">Request to book</summary>' +
-          '<form data-book="' + esc(m.id) + '" style="margin-top:var(--space-4)">' +
-          '<div class="field"><label>Date<input type="date" name="date" required></label></div>' +
-          '<div class="field"><label>Start time<input type="time" name="startTime" required></label></div>' +
-          '<div class="field"><label>End time<input type="time" name="endTime" required></label></div>' +
-          '<div class="field"><label>What for?<input type="text" name="purpose" required></label></div>' +
-          '<p class="hint" data-conflict hidden>That space already has a booking that overlaps. An admin will follow up.</p>' +
-          '<button class="btn btn--primary btn--block" type="submit">Send request</button></form></details>'
-        : '<button class="btn btn--quiet" data-interest="' + esc(m.id) + '" type="button" style="margin-top:var(--space-4)">I\'m interested</button>';
-      return '<article class="card ministrycard reveal"><span class="kind">' + esc(m.type) + "</span>" +
-        "<h3>" + esc(m.name) + "</h3>" +
-        (m.leader ? '<p class="muted"><b>Leader:</b> ' + esc(m.leader) + "</p>" : "") +
-        (m.meets ? '<p class="muted"><b>Meets:</b> ' + esc(m.meets) + "</p>" : "") +
-        (m.description ? "<p>" + esc(m.description) + "</p>" : "") +
-        action + "</article>";
-    }).join("");
+    var mins = MINISTRIES.filter(function (m) { return m.type !== "facility"; });
+    var facs = MINISTRIES.filter(function (m) { return m.type === "facility"; });
+    document.getElementById("ministryList").innerHTML = mins.map(ministryCard).join("");
+    document.getElementById("facilityList").innerHTML = facs.map(ministryCard).join("");
   }
   document.addEventListener("submit", function (e) {
     var f = e.target.closest("form[data-book]");
@@ -593,7 +816,118 @@
       });
   });
 
+  /* -------------------------------- give ------------------------------ */
+  function renderGive() {
+    if (!GIVING) return;
+    document.getElementById("giveIntro").textContent = GIVING.intro || "";
+    var linked = (GIVING.methods || []).filter(function (g) { return g.url; });
+    var offline = (GIVING.methods || []).filter(function (g) { return !g.url; });
+    /* Tap-out apps as tiles; in-person and mail as full-width reading cards. */
+    document.getElementById("giveGrid").innerHTML = linked.map(function (g) {
+      var img = g.image ? '<img src="' + esc(g.image) + '" alt="" loading="lazy" decoding="async">' : "";
+      return '<a class="givemethod" href="' + esc(g.url) + '" target="_blank" rel="noopener">' +
+        img + "<b>" + esc(g.method) + "</b><small>" + esc(g.details || "") + "</small></a>";
+    }).join("");
+    document.getElementById("giveOffline").innerHTML = offline.map(function (g) {
+      return '<div class="card"><p class="eyebrow">' + esc(g.method) + '</p><p style="margin-top:var(--space-3)">' + esc(g.details || "") + "</p></div>";
+    }).join("");
+  }
+
+  /* ------------------------------- watch ------------------------------ */
+  function renderWatch() {
+    if (CHURCH.online && CHURCH.online.url) document.getElementById("watchLiveBtn").href = CHURCH.online.url;
+    if (SERMONS) {
+      document.getElementById("sermonArchive").href = SERMONS.sermonsUrl || "#";
+      document.getElementById("sermonList").innerHTML = (SERMONS.sermons || []).map(function (s) {
+        return '<div class="card row" style="justify-content:space-between">' +
+          "<div><b>" + esc(s.title) + '</b><div class="muted" style="font-size:var(--step--1)">' + esc(s.speaker || "") + (s.date ? " · " + esc(s.date) : "") + "</div></div>" +
+          (s.url ? '<a class="btn btn--quiet" href="' + esc(s.url) + '" target="_blank" rel="noopener">' + ICON("i-play") + "Watch</a>" : "") +
+          "</div>";
+      }).join("");
+    }
+    if (CHURCH.rightNowMedia) {
+      document.getElementById("rightnowCard").hidden = false;
+      document.getElementById("rightnowBtn").href = CHURCH.rightNowMedia;
+    }
+  }
+
+  /* ------------------------------- about ------------------------------ */
+  function renderAbout() {
+    if (!ABOUT) return;
+    var secs = [
+      { eyebrow: "Our story so far", title: "85 years in Bridgeport", body: ABOUT.who, image: "assets/media/about-us-hero.webp" },
+      { eyebrow: "What we believe", title: "Our faith", body: ABOUT.believe },
+      { eyebrow: "Our purpose", title: "Why we're here", body: ABOUT.purpose }
+    ];
+    document.getElementById("aboutSections").innerHTML = secs.filter(function (s) { return s.body; }).map(function (s, i) {
+      var img = (i === 0 && s.image) ? '<img src="' + esc(s.image) + '" alt="" loading="lazy" decoding="async">' : "";
+      var cls = img ? "card photocard reveal" : "card reveal";
+      var body = i === 0 ? paras(s.body) :
+        '<details style="margin-top:var(--space-2)"><summary class="btn btn--quiet" style="list-style:none">Read more</summary><div style="margin-top:var(--space-3)">' + paras(s.body) + "</div></details>" +
+        "<p style='margin-top:var(--space-2)'>" + esc(s.body.split("\n")[0].split(". ")[0]) + ".</p>";
+      if (i > 0) {
+        /* lead sentence visible, remainder behind a disclosure */
+        var first = s.body.split("\n")[0];
+        var lead = first.length > 220 ? first.slice(0, 200).replace(/\s+\S*$/, "") + "…" : first;
+        body = "<p>" + esc(lead) + "</p>" +
+          '<details style="margin-top:var(--space-3)"><summary class="btn btn--quiet" style="list-style:none">Read more</summary><div style="margin-top:var(--space-3)">' + paras(s.body) + "</div></details>";
+      }
+      return '<article class="' + cls + '">' + img +
+        (img ? '<div class="photocard__body">' : "") +
+        '<p class="eyebrow">' + esc(s.eyebrow) + "</p><h3 style=\"margin-top:var(--space-2)\">" + esc(s.title) + "</h3>" + body +
+        (img ? "</div>" : "") + "</article>";
+    }).join("");
+
+    /* Sunday flow */
+    document.getElementById("sundayFlow").innerHTML = (CHURCH.serviceTimes || []).slice(0, 3).map(function (t) {
+      return '<div class="row" style="justify-content:space-between"><b>' + esc(t.label) + '</b><span class="muted tnum">' + esc(t.time) + "</span></div>";
+    }).join("");
+
+    /* Bible Discovery class groupings — from the site's Christian Education page */
+    var groups = ["Nursery (ages 0–3)", "Primary (4–7)", "Primary (8–12)", "Secondary (13–18)", "University (19–25)", "Adults (26–40)", "Middle of the Road (41–60)", "Praise Jesus (60+)"];
+    document.getElementById("classGroups").innerHTML = groups.map(function (g) {
+      return '<div class="row" style="gap:var(--space-3)"><span style="color:var(--accent)">' + ICON("i-check") + "</span><span>" + esc(g) + "</span></div>";
+    }).join("");
+
+    /* Staff */
+    document.getElementById("staffList").innerHTML = (ABOUT.staff || []).map(function (p) {
+      var media = p.image
+        ? '<img class="portrait" src="' + esc(p.image) + '" alt="Portrait of ' + esc(p.name) + '" loading="lazy" decoding="async" style="width:100%;max-width:9rem">'
+        : '<div class="portrait" aria-hidden="true" style="width:9rem;aspect-ratio:3/4;display:grid;place-items:center;background:color-mix(in oklch, var(--accent) 14%, transparent);font-family:var(--font-display);font-size:var(--step-3);font-weight:800;color:var(--accent)">' +
+          esc(p.name.replace(/Rev\.|Dr\.|,.*$/g, "").trim().split(/\s+/).map(function (w) { return w[0]; }).slice(0, 2).join("")) + "</div>";
+      var bio = p.bio ? '<details style="margin-top:var(--space-3)"><summary class="btn btn--quiet" style="list-style:none">About ' + esc(p.name.split(",")[0]) + '</summary><div style="margin-top:var(--space-3)">' + paras(p.bio) + "</div></details>" : "";
+      return '<article class="card pastorcard reveal">' + media +
+        "<div><h3>" + esc(p.name) + '</h3><p class="muted">' + esc(p.title || "") + "</p>" + bio + "</div></article>";
+    }).join("");
+
+    /* Anniversary */
+    if (ABOUT.anniversary) {
+      document.getElementById("annivCard").hidden = false;
+      document.getElementById("annivImg").src = ABOUT.anniversary.image || "";
+      document.getElementById("annivWhen").textContent = ABOUT.anniversary.when || "";
+      document.getElementById("annivTitle").textContent = ABOUT.anniversary.title || "";
+      document.getElementById("annivTheme").textContent = "“" + (ABOUT.anniversary.theme || "") + "” — " + (ABOUT.faithCdc || "");
+    }
+
+    /* socials */
+    var socials = [];
+    if (CHURCH.website) socials.push(['Website', CHURCH.website]);
+    if (CHURCH.facebook) socials.push(['Facebook', CHURCH.facebook]);
+    if (CHURCH.instagram) socials.push(['Instagram', CHURCH.instagram]);
+    document.getElementById("socialRow").innerHTML = socials.map(function (s) {
+      return '<a class="btn btn--quiet" href="' + esc(s[1]) + '" target="_blank" rel="noopener">' + esc(s[0]) + "</a>";
+    }).join("");
+  }
+
   /* ------------------------------ connect ----------------------------- */
+  function renderConnectExtras() {
+    document.getElementById("kidsText").textContent = CHURCH.kids || "";
+    document.getElementById("directionsBtn").href = "https://maps.google.com/?q=" + encodeURIComponent(CHURCH.address || "");
+    document.getElementById("callBtn").href = telHref(CHURCH.phone);
+    document.getElementById("faqList").innerHTML = (FAQ || []).map(function (f) {
+      return '<details class="card" style="padding:var(--space-4) var(--space-5)"><summary style="cursor:pointer;font-weight:700;list-style:none;min-height:calc(var(--tap) - 20px);display:flex;align-items:center">' + esc(f.q) + '</summary><p class="muted" style="margin-top:var(--space-3)">' + esc(f.a) + "</p></details>";
+    }).join("");
+  }
   document.getElementById("connectForm").addEventListener("submit", function (e) {
     e.preventDefault();
     ShilohStore.submitVisitorCard({
@@ -680,27 +1014,44 @@
   });
 
   /* -------------------------------- boot ------------------------------ */
+  function j(path, fallback) {
+    return fetch(path, { cache: "no-cache" }).then(function (r) { return r.json(); }).catch(function () { return fallback; });
+  }
   Promise.all([
     ShilohStore.init(),
-    fetch("data/theme.json", { cache: "no-cache" }).then(function (r) { return r.json(); }),
-    fetch("data/church.json", { cache: "no-cache" }).then(function (r) { return r.json(); }),
-    fetch("data/events.json", { cache: "no-cache" }).then(function (r) { return r.json(); }).catch(function () { return { events: [] }; }),
-    fetch("data/news.json", { cache: "no-cache" }).then(function (r) { return r.json(); }).catch(function () { return { news: [] }; }),
-    fetch("data/ministries.json", { cache: "no-cache" }).then(function (r) { return r.json(); }).catch(function () { return { ministries: [] }; })
+    j("data/theme.json", {}), j("data/church.json", {}),
+    j("data/events.json", { events: [] }), j("data/news.json", { news: [] }),
+    j("data/ministries.json", { ministries: [] }),
+    j("data/giving.json", null), j("data/about.json", null),
+    j("data/sermons.json", null), j("data/faq.json", { faq: [] })
   ]).then(function (res) {
     THEME = res[1]; CHURCH = res[2];
     EVENTS = res[3].events || []; MINISTRIES = res[5].ministries || [];
+    GIVING = res[6]; ABOUT = res[7]; SERMONS = res[8]; FAQ = (res[9] || {}).faq || [];
 
     document.title = THEME.churchName || document.title;
     var full = THEME.churchName || "", shortName = THEME.shortName || full;
     var rest = full.indexOf(shortName) === 0 ? full.slice(shortName.length).trim() : "";
     document.getElementById("barName").innerHTML = esc(shortName) + (rest ? '<span>' + esc(rest) + "</span>" : "");
-    document.getElementById("heroTagline").textContent = THEME.tagline || "";
-    document.getElementById("helpPhone").textContent = CHURCH.phone || "Phone number not added yet — ask a deacon after service.";
+    document.getElementById("helpPhone").textContent = CHURCH.phone
+      ? CHURCH.phone + " · " + (CHURCH.address || "")
+      : "Ask a deacon after service.";
+    document.getElementById("helpCallBtn").href = telHref(CHURCH.phone);
+
+    if (CHURCH.prayerLine && CHURCH.prayerLine.number) {
+      document.getElementById("prayerLineCard").hidden = false;
+      document.getElementById("prayerLineCall").href = telHref(CHURCH.prayerLine.number);
+      document.getElementById("prayerLineCode").textContent = CHURCH.prayerLine.number + " · access code " + CHURCH.prayerLine.accessCode;
+    }
 
     renderServiceTimes();
+    renderPastor();
     renderHeroNext();
     renderNews(res[4].news || []);
+    renderGive();
+    renderWatch();
+    renderAbout();
+    renderConnectExtras();
 
     var cal = document.getElementById("subscribeCal");
     if (cal && location.protocol === "https:") {

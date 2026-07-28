@@ -1,0 +1,42 @@
+{
+  "note": "Real giving methods from shilohchurchbpt.org/give (July 2026). Per the design's non-negotiables, the app only LINKS out to these — it never processes or moves money itself.",
+  "intro": "Thank you for your faithfulness in giving. Every gift supports the ministry and mission of Shiloh Baptist Church.",
+  "methods": [
+    {
+      "method": "In Person",
+      "details": "Bring the Whole Tithe and your Offering with you to church on Sunday: Bring the family and your friends too! Invite someone you don’t know to come as well, Jesus is Calling. He is coming back SOON!",
+      "url": "",
+      "image": "assets/media/give-in-person.webp"
+    },
+    {
+      "method": "Mail",
+      "details": "Mail your Tithe and Offering: Shiloh Baptist Church, 477 Broad Street, Bridgeport, CT. 06604",
+      "url": "",
+      "image": "assets/media/give-mail.webp"
+    },
+    {
+      "method": "PayPal",
+      "details": "paypal.me/shiloh477",
+      "url": "https://www.paypal.com/paypalme/shiloh477",
+      "image": "assets/media/paypal.webp"
+    },
+    {
+      "method": "Givelify",
+      "details": "Shiloh Baptist Church 477 Broad St.",
+      "url": "https://giv.li/mboa42",
+      "image": "assets/media/givelify.webp"
+    },
+    {
+      "method": "CashApp",
+      "details": "$Shilohchurchbpt",
+      "url": "https://cash.app/$Shilohchurchbpt?qr=1",
+      "image": "assets/media/cashapp.webp"
+    },
+    {
+      "method": "Zelle",
+      "details": "Shiloh Baptist Church, (203)-367-4839",
+      "url": "https://enroll.zellepay.com/qr-codes?data=eyJuYW1lIjoiU0hJTE9IIEJBUFRJU1QgQ0hVUkNIIiwiYWN0aW9uIjoicGF5bWVudCIsInRva2VuIjoiMjAzMzY3NDgzOSJ9",
+      "image": "assets/media/zelle.webp"
+    }
+  ]
+}

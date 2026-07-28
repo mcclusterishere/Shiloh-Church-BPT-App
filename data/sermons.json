@@ -1,0 +1,44 @@
+{
+  "note": "Recent messages mirrored from shilohchurchbpt.org/sermons (July 2026). The full archive stays on the website; edit and push to feature new messages.",
+  "sermonsUrl": "https://www.shilohchurchbpt.org/sermons/",
+  "heroImage": "assets/media/pastor-sermon-hero.webp",
+  "recentImage": "assets/media/home-recent-sermon.webp",
+  "sermons": [
+    {
+      "title": "Standing on the Prophecy, The Promises and the Proof",
+      "speaker": "Sr. Pastor Carl McCluster, MDIV",
+      "date": "08/10/2025",
+      "url": "https://shilohchurchbpt.org/sermons/standing-on-the-prophecy-the-promises-and-the-proof/"
+    },
+    {
+      "title": "Actions to Live by & Win With",
+      "speaker": "Sr. Pastor Carl McCluster, MDIV",
+      "date": "08/03/2025",
+      "url": "https://shilohchurchbpt.org/sermons/actions-to-live-by-win-with/"
+    },
+    {
+      "title": "Yes Jesus Loves You",
+      "speaker": "Sr. Pastor Carl McCluster, MDIV",
+      "date": "06/29/2025",
+      "url": "https://shilohchurchbpt.org/sermons/yes-jesus-loves-you/"
+    },
+    {
+      "title": "How to Face Threats, Lions & Fire, and Overcome them All",
+      "speaker": "Sr. Pastor Carl McCluster, MDIV",
+      "date": "06/22/2025",
+      "url": "https://shilohchurchbpt.org/sermons/how-to-face-threats-lions-fire-and-overcome-them-all/"
+    },
+    {
+      "title": "Who’s Fault Is Your Sin",
+      "speaker": "Sr. Pastor Carl McCluster, MDIV",
+      "date": "06/15/2025",
+      "url": "https://shilohchurchbpt.org/sermons/whos-fault-is-your-sin/"
+    },
+    {
+      "title": "Jeremiah",
+      "speaker": "Sr. Pastor Carl McCluster, MDIV",
+      "date": "06/01/2025",
+      "url": "https://shilohchurchbpt.org/sermons/jeremiah/"
+    }
+  ]
+}

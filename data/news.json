@@ -1,11 +1,21 @@
 {
-  "note": "Announcements for the Home feed. Anything older than 18 months hides itself automatically. Edit this file and push to publish.",
+  "note": "Announcements for the Home feed. Seeded from the site's Pastor's Blog and RightNow Media launch (July 2026). Anything older than 18 months hides itself automatically.",
   "news": [
     {
-      "id": "welcome-to-the-app",
-      "date": "2026-07-26",
-      "title": "Welcome to the new Shiloh app",
-      "body": "This app is brand new. If anything is confusing, tap Help at the bottom of the screen any time to watch the tour again, or just ask a deacon after service — someone will always be glad to walk you through it."
+      "id": "rightnow-media",
+      "date": "2026-07-01",
+      "title": "RightNow Media — free for the Shiloh family",
+      "body": "Shiloh now provides free RightNow Media accounts — a huge library of Bible studies and video teaching for every age. Register with the link below and start exploring today.",
+      "link": "https://app.rightnowmedia.org/join/shilohbaptistch",
+      "linkLabel": "Register free"
+    },
+    {
+      "id": "pastors-blog-greetings",
+      "date": "2024-11-05",
+      "title": "From the Pastor's Blog: Greetings",
+      "body": "Greetings to all of our friends, neighbors, colleagues and co-laborers in the Lord's Work. I am Pastor Carl and we have created this blog so that I can share some of the wonderful and challenging thoughts and ideas that God has placed on my heart, as I exercise the privilege of leading God's church at Shiloh.",
+      "link": "https://www.shilohchurchbpt.org/news/",
+      "linkLabel": "Read the blog"
     }
   ]
 }

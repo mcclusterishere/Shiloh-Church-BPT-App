@@ -1,0 +1,46 @@
+{
+  "note": "Mirrored from shilohchurchbpt.org/about-us and the anniversary page (July 2026) — the church's own words. The site's 'Our History' section is still lorem-ipsum placeholder text on the live site, so it is deliberately absent here.",
+  "who": "At Shiloh, we have a simple hope: to see people come to know Jesus Christ and grow in their Christian faith. For 85 years, Shiloh has been helping spread the Gospel here in the City of Bridgeport and throughout the world. We pray that the Lord will continue to use this ministry to impact, influence, and enhance the World by serving as a change agent for God and Christ through the unction of the Holy Spirit as we submit to His Will and to His Way.\n\nWhether you have been walking with the Lord for awhile or you would like to get to know Him, we hope you'll join us on Sunday, if you are looking for a church to welcome you!\n\nWhen you come to join us for the first time, one of our greeters will be glad to assist you. If you would like, they will help you find the fellowship hall for a continental breakfast before service, the restrooms, sanctuary and anything else you may require.\n\nDuring the service, you will hear our faith expressed in the songs we sing, prayers we offer up and our Pastor's preaching. All parts of our service are grounded in the Bible, which we are committed to upholding.",
+  "believe": "At Shiloh, we believe in God the Father, we believe in Jesus Christ the Son, and we believe in the Holy Spirit. We believe that Jesus Christ died for us and has given us new life. We believe in His crucifixion and that Christ has risen from the dead and is seated at the right hand of the Father. We also believe He is coming back again for His bride the Church. Romans 10:9: \"If you confess with your mouth, \"Jesus is Lord\", and believe in your heart that God raised him from the dead, you will be saved.\" 1John 8-10: \"If we claim to be without sin, we deceive ourselves and the truth is not in us. If we confess our sins, He is faithful and just and will forgive our sins and purify us from all unrighteousness. If we claim we have not sinned, we make Him out to be a liar and His Word is not in us.\"",
+  "purpose": "God calls us to be a loving, giving and forgiving fellowship of Christ-centered and Spirit-led ambassadors. We are commissioned to declare God's Truth through teaching, studying, sharing, and living His Word. In doing so, we grow together in unity, through prayer, exhortation and serving one another, as we worship the Lord with Joy!\n\nAfter the service, join us for fellowship and give us a chance to get to know each other. Say hello to our Pastor and anyone else you see. We would all love to hear your story and share ours with you.\n\nAt Shiloh, you will find God's Principle of Individuality welcoming. Each person is uniquely created by God and a blessing to the Lord and to others! We welcome everyone to join us, including you! Our services start with a continental breakfast at 8 AM, consecration in prayer at 8:15 and praise and worship at nine every Sunday. We look forward to you joining us in giving all praise and honor and glory to God as we Worship, Learn and Grow together at Shiloh!",
+  "years": 85,
+  "anniversary": {
+    "title": "Shiloh's 85th Church Anniversary & Pastor Carl's 30th Anniversary",
+    "theme": "Celebrating Our Past and Laying Foundations for Our Future",
+    "when": "November 3–17, 2024",
+    "image": "assets/media/anniversary-hero.webp"
+  },
+  "faithCdc": "Pastor McCluster is the President of Faith Community Development Corporation, chartered by Shiloh Baptist Church.",
+  "staff": [
+    {
+      "name": "Rev. Carl McCluster, MDIV",
+      "title": "Senior Pastor",
+      "bio": "For Thirty years, Reverend Carl McCluster, has faithfully served as the Senior Pastor of Shiloh Baptist Church in Bridgeport, Connecticut. He is the President of Faith Community Development Corporation, chartered by Shiloh Baptist Church.",
+      "image": "assets/media/pastor-mccluster.webp"
+    },
+    {
+      "name": "Rev. Gwendolyn McNair Anderson",
+      "title": "Executive Minister",
+      "bio": "Rev. Gwen McNair Anderson is a life-long resident of Bridgeport, CT. She is a graduate from W.H.H.S.. She earned an Executive Secretarial degree from the Stone School of Business, an Associates Degree in Business Management from Albertus Magnus College and a 4-year Certificate of Completion for the Connecticut Institute of Christian Religion.",
+      "image": ""
+    },
+    {
+      "name": "Lania Boone",
+      "title": "Executive Administrator",
+      "bio": "Lania Boone has worked extensively in both for profit and non-profit organizations. Since graduating with a BBS from Georgia State University, she has served in a variety of industries. While serving as Executive Director of Home Ownership Training Center (HOTC), the company worked with Freddie Mac to provide services for first time homebuyers in the 21 Steps to Home Ownership Program.",
+      "image": "assets/media/lania-boone.webp"
+    },
+    {
+      "name": "Harriet Sharp",
+      "title": "Trustee Chair",
+      "bio": "Harriette Sharp is a lifelong resident of Bridgeport, CT. She attended Central High School and upon graduating she began working at Corvettes. In 1983 she was hired at Sikorsky Aircraft to work in the Composites Department and then advanced up the line as a riveter and onto a Aircraft Mechanic. Miss Harriette had the distinct privilege of working on the Presidential Helicopter line as an upholsterer. She retired from Sikorsky after 31 years of service.",
+      "image": ""
+    },
+    {
+      "name": "Tracey Moales",
+      "title": "Deaconate & Music Ministry Chair",
+      "bio": "Tracy A Moales, is a lifelong resident of Bridgeport, CT. and a graduate of Bassick High School. He began his post high school education at South Central Community College in New Haven, CT. where he met his wife Regina and they have been married Forty years. Together they five biological children, one foster child, and fifteen grandchildren.",
+      "image": ""
+    }
+  ]
+}

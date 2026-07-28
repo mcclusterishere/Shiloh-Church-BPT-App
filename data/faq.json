@@ -1,0 +1,37 @@
+{
+  "note": "The church's own FAQ, verbatim from shilohchurchbpt.org (July 2026). Note it says prayer begins 8:15 AM — the homepage hero says 8:30; see data/church.json note.",
+  "faq": [
+    {
+      "q": "Where are you located?",
+      "a": "We are located at 477 Broad Street, Bridgeport, CT 06604. You'll find us in the heart of downtown, easily accessible from all major routes."
+    },
+    {
+      "q": "What time is service?",
+      "a": "On Sundays, our Prayer service begins at 8:15 AM, followed by Worship at 9:00 AM. We also offer Monday–Friday prayer at 6:00 AM and 8:00 PM."
+    },
+    {
+      "q": "Where do I park?",
+      "a": "We offer free parking in the church lot and nearby designated areas. Look for parking attendants to guide you when you arrive."
+    },
+    {
+      "q": "Is there something for my kids?",
+      "a": "Absolutely! Our Children's Ministry offers safe, engaging, and age-appropriate activities where kids can learn about God's love while having fun."
+    },
+    {
+      "q": "What does a Typical Service Look Like?",
+      "a": "Services include uplifting worship, prayer, and a Bible-based message designed to encourage and inspire. Expect a warm, friendly environment where you can come as you are."
+    },
+    {
+      "q": "How do I join a ministry?",
+      "a": "We have many ministry opportunities—from music to outreach to hospitality. Speak to a ministry leader after service or contact our office to get connected."
+    },
+    {
+      "q": "How do I join a small group?",
+      "a": "Small groups meet during the week for Bible study, prayer, and fellowship. Visit our welcome center or sign up online to find a group that fits your schedule."
+    },
+    {
+      "q": "How can I get involved in serving?",
+      "a": "Serving is a great way to grow and connect with others. We have opportunities in worship, children's programs, outreach, and more. Fill out a volunteer form or talk to our leaders to get started."
+    }
+  ]
+}

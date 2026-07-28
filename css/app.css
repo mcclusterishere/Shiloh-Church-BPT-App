@@ -58,8 +58,8 @@ main { padding: var(--space-6) 0 var(--space-8); }
   /* A single directional wash, matching the ambient field's own light
      direction — warm from the top left, one cool note falling away. */
   background:
-    radial-gradient(120% 85% at 8% -5%, color-mix(in oklch, var(--amber) 15%, transparent), transparent 60%),
-    radial-gradient(100% 75% at 96% 108%, color-mix(in oklch, var(--teal) 11%, transparent), transparent 62%),
+    radial-gradient(120% 85% at 8% -5%, color-mix(in oklch, var(--shiloh) 16%, transparent), transparent 60%),
+    radial-gradient(100% 75% at 96% 108%, color-mix(in oklch, var(--amber) 12%, transparent), transparent 62%),
     color-mix(in oklch, var(--surface) var(--glass), transparent);
   box-shadow: 0 1px 0 0 var(--edge-light) inset, 0 24px 60px -34px var(--shadow);
 }
@@ -124,10 +124,12 @@ main { padding: var(--space-6) 0 var(--space-8); }
   text-align: center;
   border-radius: var(--radius-md);
   border: 1px solid color-mix(in oklch, var(--accent) 34%, transparent);
-  background: color-mix(in oklch, var(--accent) 12%, transparent);
-  color: var(--accent);
+  background: color-mix(in oklch, var(--accent) 10%, transparent);
+  /* Mixed toward body text: pure accent-on-accent-tint measured 2.7:1 in
+     light mode against rendered pixels — this clears 4.5:1 in both themes. */
+  color: color-mix(in oklch, var(--accent) 32%, var(--text));
 }
-.datechip .m { display: block; font-size: var(--step--2); font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+.datechip .m { display: block; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text); }
 .datechip .d {
   display: block;
   font-family: var(--font-display);
@@ -372,3 +374,85 @@ main { padding: var(--space-6) 0 var(--space-8); }
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ------------------------------------------------------------ photography - */
+/* Real photographs from shilohchurchbpt.org. Two rules keep them legible:
+   text never sits on a photo except inside .photohero, and there it sits on
+   a scrim that runs to near-solid ground colour at the text's position. */
+.photohero {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--edge);
+  box-shadow: 0 1px 0 0 var(--edge-light) inset, 0 24px 60px -34px var(--shadow);
+  min-height: 21rem;
+  display: flex; align-items: flex-end;
+}
+.photohero > img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover;
+}
+.photohero__scrim {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(to top, var(--ground) 0%, var(--ground) 14%, color-mix(in oklch, var(--ground) 88%, transparent) 42%, transparent 76%),
+    linear-gradient(to top, color-mix(in oklch, var(--ground-deep) 45%, transparent), transparent 50%);
+}
+.photohero__body { position: relative; width: 100%; padding: var(--space-6); padding-top: var(--space-8); }
+.photohero__body h1 { font-size: var(--step-4); margin: var(--space-2) 0 var(--space-2); }
+.photohero__body p { color: var(--text); font-weight: 700; }
+.photohero__body .eyebrow { color: var(--text); }
+.photohero__logo { height: 2.2rem; width: auto; margin-bottom: var(--space-2); }
+
+/* Media-top cards: photo above, text on solid glass below. */
+.photocard { overflow: hidden; padding: 0; }
+.photocard > img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; }
+.photocard__body { padding: var(--space-5); }
+.photocard__body h3 { margin-bottom: var(--space-2); }
+.photocard__body p { color: var(--text-muted); }
+.photocard--wide > img { aspect-ratio: 21 / 9; }
+
+/* Ministry grid photo cards */
+.ministrycard { overflow: hidden; padding: 0; }
+.ministrycard > img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.ministrycard__body { padding: var(--space-5); display: flex; flex-direction: column; flex: 1; }
+
+/* Portraits — the pastor's greeting, staff */
+.pastorcard { display: grid; grid-template-columns: minmax(7rem, 10rem) 1fr; gap: var(--space-5); align-items: start; }
+@media (max-width: 30rem) { .pastorcard { grid-template-columns: 1fr; } .pastorcard .portrait { max-width: 11rem; } }
+.portrait { border-radius: var(--radius-md); border: 1px solid var(--edge); box-shadow: 0 10px 26px -16px var(--shadow); }
+
+/* Giving methods */
+.givegrid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+@media (min-width: 34rem) { .givegrid { grid-template-columns: repeat(3, 1fr); } }
+.givemethod {
+  display: flex; flex-direction: column; align-items: center; gap: var(--space-3);
+  padding: var(--space-5);
+  text-align: center;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--edge);
+  background: color-mix(in oklch, var(--surface) var(--glass), transparent);
+  color: var(--text); text-decoration: none;
+  transition: transform var(--dur-fast) var(--ease-spring), border-color var(--dur-fast);
+}
+.givemethod:active { transform: scale(0.97); }
+.givemethod img { height: 3rem; width: auto; max-width: 100%; object-fit: contain; border-radius: 8px; }
+.givemethod b { font-size: var(--step-0); }
+.givemethod small { font-size: var(--step--1); color: var(--text-muted); overflow-wrap: anywhere; }
+
+/* Staff row on About */
+.staffgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr)); gap: var(--space-4); }
+.staffcard { text-align: center; }
+.staffcard img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: var(--radius-md); border: 1px solid var(--edge); }
+.staffcard b { display: block; margin-top: var(--space-3); font-size: var(--step--1); }
+.staffcard small { color: var(--text-muted); font-size: var(--step--2); }
+
+/* Scripture lines on ministry cards — the church's own verses. */
+.scripture {
+  font-style: italic;
+  color: var(--text-muted);
+  font-size: var(--step--1);
+  border-left: 2px solid color-mix(in oklch, var(--accent) 45%, transparent);
+  padding-left: var(--space-4);
+  margin-top: var(--space-2);
+}

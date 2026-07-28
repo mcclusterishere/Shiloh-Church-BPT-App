@@ -32,9 +32,9 @@ window.ShilohAmbient = (function () {
      consciously notice it at all.
      `w` is each pool's weight — its share of the total light. */
   var LIGHTS = [
-    { hue: 34,  sat: 70, x: 0.26, y: 0.06, r: 1.05, drift: 0.10, period: 79,  phase: 0.0, w: 1.00 },
-    { hue: 352, sat: 62, x: 0.10, y: 0.34, r: 0.80, drift: 0.09, period: 103, phase: 2.1, w: 0.62 },
-    { hue: 196, sat: 45, x: 0.86, y: 0.82, r: 0.90, drift: 0.11, period: 127, phase: 3.9, w: 0.44 }
+    { hue: 214, sat: 55, x: 0.24, y: 0.06, r: 1.05, drift: 0.10, period: 79,  phase: 0.0, w: 1.00 },
+    { hue: 36,  sat: 66, x: 0.88, y: 0.30, r: 0.78, drift: 0.09, period: 103, phase: 2.1, w: 0.55 },
+    { hue: 352, sat: 55, x: 0.12, y: 0.88, r: 0.85, drift: 0.11, period: 127, phase: 3.9, w: 0.38 }
   ];
 
   function prefersReducedMotion() {

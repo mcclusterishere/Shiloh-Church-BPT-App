@@ -7,7 +7,8 @@
    instead of a stale cache. */
 "use strict";
 
-var CACHE_VERSION = "shiloh-v2";
+var CACHE_VERSION = "shiloh-v4";
+var MEDIA_CACHE = "shiloh-media-v1";
 var SHELL = [
   "./",
   "index.html",
@@ -38,7 +39,7 @@ self.addEventListener("install", function (event) {
 self.addEventListener("activate", function (event) {
   event.waitUntil(
     caches.keys().then(function (keys) {
-      return Promise.all(keys.filter(function (k) { return k !== CACHE_VERSION; }).map(function (k) { return caches.delete(k); }));
+      return Promise.all(keys.filter(function (k) { return k !== CACHE_VERSION && k !== MEDIA_CACHE; }).map(function (k) { return caches.delete(k); }));
     }).then(function () { return self.clients.claim(); })
   );
 });
@@ -46,6 +47,22 @@ self.addEventListener("activate", function (event) {
 self.addEventListener("fetch", function (event) {
   var url = new URL(event.request.url);
   if (event.request.method !== "GET" || url.origin !== self.location.origin) return;
+
+  /* Photos: cache-first, populated on first view rather than at install
+     (59 images ~2.7MB — precaching all of them would punish cellular users). */
+  if (url.pathname.indexOf("/assets/media/") !== -1) {
+    event.respondWith(
+      caches.open(MEDIA_CACHE).then(function (cache) {
+        return cache.match(event.request).then(function (hit) {
+          return hit || fetch(event.request).then(function (res) {
+            cache.put(event.request, res.clone());
+            return res;
+          });
+        });
+      })
+    );
+    return;
+  }
 
   var isData = url.pathname.indexOf("/data/") !== -1 && url.pathname.endsWith(".json");
   if (isData) {

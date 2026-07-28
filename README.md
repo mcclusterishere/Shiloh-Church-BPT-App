@@ -36,8 +36,8 @@ another congregation. See `docs/MANAGE.md`.
   choice, never a forced tour, with a permanent "Watch the tour again" in Help. Built
   for people who have never really used an app before.
 - **Elder-first design**, ported from the Faith & Results sister app: self-hosted
-  Atkinson Hyperlegible body type, Bitter display type, 20px base size, 48px+ tap
-  targets, no fine print anywhere.
+  Atkinson Hyperlegible body type, Fraunces display type, 20px base size, 48px+ tap
+  targets, no fine print anywhere — plus a one-tap Comfort mode.
 
 ## The admin backend (`admin.html`)
 
@@ -67,8 +67,9 @@ size, so it's here from day one), a read-only **Brand & Settings** preview, and
 - `docs/APPLIANCE-SETUP.md` — turning a Mac mini into the Church OS "brain and pipe" appliance
 - `scripts/appliance/gateway.js` — the local service that runs on that box
 - `manifest.webmanifest` / `sw.js` — install metadata and the offline service worker
-- `assets/icons/` — home-screen icons (**placeholder** — see "Still needed," below)
-- `assets/fonts/` — self-hosted type, copied from the Faith & Results sister app
+- `assets/icons/` — home-screen icons: a stained-glass-window mark in the blues of the church's own logo
+- `assets/media/` — all 60 photos from shilohchurchbpt.org
+- `assets/fonts/` — self-hosted type: Atkinson Hyperlegible (body) + Fraunces variable (display)
 
 ## Go live
 
@@ -85,19 +86,22 @@ size, so it's here from day one), a read-only **Brand & Settings** preview, and
    `data/config.json` to Supabase mode when it's time for a real, shared database —
    see `docs/BACKEND.md`.
 
-## Still needed before this is really Shiloh's app
+## Real content
 
-- **Real branding** — an actual logo, a firmer color preference, and a tagline. The
-  palette in `data/theme.json` right now is the design proposal's starting direction,
-  not a final answer, and the icons in `assets/icons/` are a plain placeholder mark —
-  regenerate them once real branding lands.
-- **Real church facts** — address, phone, pastor's name, and service times in
-  `data/church.json` are blank on purpose rather than guessed.
-- **The real ministries list** — `data/ministries.json` is seeded with common
-  Baptist-church ministry names as placeholders, not Shiloh's actual ones.
-- **The on-premises appliance question** — this build is cloud-first (Supabase) per
-  the design proposal, with the data layer built to point at a local box later without
-  a rewrite. Whether to also pursue that hardware track now is still open.
+Everything church-specific is now mirrored from the church's own website,
+shilohchurchbpt.org (July 2026): the tagline ("Where Christ Is Lifted Up"), address,
+phone, service times, the prayer line, 14 real ministries with their scripture and
+mission statements, staff with bios, six giving methods with the church's real
+handles, recent sermons, the pastor's greeting, and the site's own FAQ — plus all 60
+photos, in `assets/media/`. The accent palette and app icon now follow the blues of
+Shiloh's own stained-glass-window logo.
 
-See `docs/DESIGN.md` for the complete list of open questions and the roadmap for
-everything after Phase 1.
+Known content notes (also flagged in the data files):
+- The site disagrees with itself on Sunday prayer time (hero says 8:30 AM, FAQ and
+  About say 8:15 AM) — the app uses 8:15; confirm with the office.
+- The website's "Our History" section is lorem-ipsum placeholder on the live site, so
+  the app deliberately has no history section yet.
+- Sunday services are seeded as events through early September 2026; the recurring
+  event engine is a Phase 2 feature.
+
+See `docs/DESIGN.md` for the roadmap for everything after Phase 1.

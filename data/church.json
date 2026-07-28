@@ -1,13 +1,33 @@
 {
-  "note": "Real church facts, kept separate from theme.json (which is pure branding). Fields are left blank rather than guessed — fill in the real address, phone, and service times before launch. See docs/MANAGE.md.",
+  "note": "Real church facts, sourced from shilohchurchbpt.org (verified July 2026). Sunday prayer time: the site's FAQ and About page both say 8:15 AM while the homepage hero strip says 8:30 AM — the detailed pages (2 vs 2 sources) plus the safer-to-arrive-early direction won; confirm with the church office. Kept separate from theme.json (pure branding). See docs/MANAGE.md.",
   "name": "Shiloh Baptist Church",
   "denomination": "Baptist",
-  "pastor": "",
-  "address": "",
-  "phone": "",
-  "email": "",
+  "pastor": "Rev. Carl McCluster, MDiv",
+  "pastorShort": "Pastor Carl",
+  "pastorTenure": "Senior Pastor for thirty years",
+  "address": "477 Broad Street, Bridgeport, CT 06604",
+  "phone": "(203) 579-1504",
+  "email": "shilohadmnbpt@gmail.com",
+  "website": "https://www.shilohchurchbpt.org",
+  "facebook": "https://www.facebook.com/SHILOHBPT",
+  "instagram": "https://www.instagram.com/shilohfamily/",
+  "rightNowMedia": "https://app.rightnowmedia.org/join/shilohbaptistch",
+  "prayerLine": {
+    "number": "+1 (605) 313-5088",
+    "accessCode": "1054312#",
+    "note": "Dial-in prayer line"
+  },
+  "online": {
+    "label": "Facebook Live",
+    "when": "Sundays at 9:00 AM",
+    "url": "https://www.facebook.com/SHILOHBPT"
+  },
   "serviceTimes": [
-    { "label": "Sunday Worship", "time": "" },
-    { "label": "Bible Study", "time": "" }
-  ]
+    { "label": "Continental breakfast", "time": "Sun 8:00 AM" },
+    { "label": "Consecration in prayer", "time": "Sun 8:15 AM" },
+    { "label": "Praise & worship", "time": "Sun 9:00 AM" },
+    { "label": "Prayer line (Mon–Fri)", "time": "6:00 AM & 8:00 PM" }
+  ],
+  "kids": "Childcare is provided from newborn to 12 years old for all services, with safe, engaging, age-appropriate activities.",
+  "parking": "Free parking in the church lot and nearby designated areas. Parking attendants will guide you when you arrive."
 }

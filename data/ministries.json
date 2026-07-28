@@ -1,12 +1,147 @@
 {
-  "note": "PLACEHOLDER DATA — these are common Baptist-church ministry names, not Shiloh's real ones. Replace with the actual ~4-6 ministries and bookable spaces before launch (open question in the design proposal). Each entry with \"bookable\": true shows a 'Request to book' action in the app instead of 'I'm interested'.",
+  "note": "Shiloh's real ministries, mirrored from shilohchurchbpt.org/ministries (July 2026) — names, scripture, and mission statements are the church's own words. The two bookable facilities power the reservation feature. Edit and push to update; see docs/MANAGE.md.",
   "ministries": [
-    { "id": "usher-board", "type": "ministry", "name": "Usher Board", "leader": "", "meets": "", "description": "Welcomes guests and helps Sunday service run smoothly.", "bookable": false },
-    { "id": "deacon-ministry", "type": "ministry", "name": "Deacon Ministry", "leader": "", "meets": "", "description": "Supports the pastor and cares for the congregation.", "bookable": false },
-    { "id": "prayer-ministry", "type": "ministry", "name": "Prayer Ministry", "leader": "", "meets": "", "description": "Prays over the requests shared in the app and in service.", "bookable": false },
-    { "id": "music-ministry", "type": "ministry", "name": "Music Ministry", "leader": "", "meets": "", "description": "Choir and musicians leading worship.", "bookable": false },
-    { "id": "sunday-school", "type": "ministry", "name": "Sunday School", "leader": "", "meets": "", "description": "Bible study for all ages before or after service.", "bookable": false },
-    { "id": "sanctuary", "type": "facility", "name": "Sanctuary", "leader": "", "meets": "", "description": "Main worship space.", "bookable": true, "capacity": null },
-    { "id": "fellowship-hall", "type": "facility", "name": "Fellowship Hall", "leader": "", "meets": "", "description": "Meals, meetings, and gatherings.", "bookable": true, "capacity": null }
+    {
+      "id": "children-s-ministry",
+      "type": "ministry",
+      "name": "Children's Ministry",
+      "scripture": "Start children off on the way they should go, and even when they are old they will not turn from it. — Proverbs 22:6",
+      "description": "The mission of the Children’s ministry is for our teacher's to share God's Word with each class. It is our hope that the children will develop a firm foundation in the knowledge of the Word of God and accept Jesus as Lord and Savior or deepen their relationship with Him.\nThe children will participate in interactive age appropriate activities which will tie together the weekly Bible lesson, Scripture memory verse, and a craft.\nAs age, class and/or child's ability to participate allows field trips and community service will be an extension of the classroom where learning is either continued as in a field trip or Faith is put into action when the student engages in community service and sharing Jesus in Word and deed.\n\nMINISTRY INITIATIVES, PROJECTS & PROGRAMS\n- Dynamic Monthly “Children’s Night Out” event with games, food, learning & fun\n- Quarterly learning & fellowship outings for Children’s to visit local/regional sites\n- Regular Periodic Joint Events with Other Churches – Competitions & Fellowships\n- Establish Mechanisms and Activities to Grow the Children’s Ministry\n- Special Workshops to Encourage and Enable Closer Relationships to Christ\n- Activities to encourage & develop Godly relationships between Children’s\n- Conduct Annual Yearlong Community Engagement Project to encourage and develop social awareness and responsibility",
+      "image": "assets/media/children-ministry.webp",
+      "bookable": false
+    },
+    {
+      "id": "youth-ministry",
+      "type": "ministry",
+      "name": "Youth Ministry",
+      "scripture": "But you are a chosen generation, a royal priesthood, a holy nation, His own special people, that you may proclaim the praises of Him who called you out of darkness into His marvelous light. — 1 Peter 2:9 (NKJV)",
+      "description": "To build the youth ministry by experiencing the presence of God and to be rooted and grounded in God’s Word, God’s Principles and His Love. The youth ministry desires to develop and nurture their relationship with Jesus, not only as their Savior, but as their friend. One with whom they meet with daily, talk to, listen to and sit with knowing He is on the way, as soon as you call His Name. Jesus is faster than 5G, AI or W.W.W. for He is the A.O. The Alpha and The Omega the Beginning and the End.\nShiloh desires to be a safe haven for the youth so that they may grow and abound becoming Faith Filled Servants of God. Children who will be the church, build our community and lead others to Christ.\n\nMINISTRY INITIATIVES, PROJECTS & PROGRAMS\n- Quarterly Newsletter – Highlighting Activities and Accomplishments of Shiloh Youth\n- College Tour - Visited Brown U, New England Tech, Lincoln College, Temple U, Morgan State U and Johns Hopkins U\n- Boot Camp – Special Spiritual Training for Youth\n- SAT Prep - Tests conducted at Shiloh on selected Saturdays\n- Abstinence Sunday – “True Love Waits” types of training for personal Holiness and Chastity\n- Back to School and Graduation Sunday\n- Bible Bowl – Local and Regional Competition on Bible Knowledge in Fun Format\n- Alternative 4th Sunday Youth Sunday Where Youth Lead Worship",
+      "image": "assets/media/youth-ministry.webp",
+      "bookable": false
+    },
+    {
+      "id": "young-adults",
+      "type": "ministry",
+      "name": "Young Adults",
+      "scripture": "I am the gate; whoever enters through me will be saved. They will come in and go out, and find pasture. The thief comes only to steal and kill and destroy; I have come that they may have life, and have it to the full.“ — John 10:9-10",
+      "description": "To be the manifest reflection of the light that is the Way and Truth of Jesus Christ in all of our activities, programs and initiatives. We desire to build a solid foundation in our relationship with the Lord and be true Disciples, walking out our Faith in the world as followers of Christ, and leaders in our schools, communities, positions of government, serving our nation, and those in the world who are less fortunate.\nWe ask that God would prepare us for all He has instore for to experience, visit and/or live. We wholeheartedly desire to promote and experience excellence through fellowship with the Holy Spirit and in concert with fellow believers, impacting the world while fulfilling God’s call in our personal lives.",
+      "image": "assets/media/young-adults.webp",
+      "bookable": false
+    },
+    {
+      "id": "women-s-ministry",
+      "type": "ministry",
+      "name": "Women's Ministry",
+      "scripture": "Charm is deceptive, and beauty is fleeting; but a woman who fears the Lord is to be praised. — Proverbs 31:30",
+      "description": "The Mission of the Women’s Ministry at Shiloh Baptist Church is to develop meaningful relationships that provide support and encouragement to women, and girls through prayer, Bible Study, fellowship and Godly friendships.\nWe will reach out to women in the Church, our families and all areas of our community where women gather, live and receive care and nurturing support.\nWe will seek to build strong and lasting connections with women locally, nationally and globally. As sisters in the Lord we must always work to unify women in the Body of Christ and in the Spirit of Peace so that the Great Commission might be fulfilled.\n\nMINISTRY INITIATIVES, PROJECTS & PROGRAMS\n- Develop Leadership Team\n- Participate in a Women’s Conference, which is presented to empower, educate and equip women and women in ministry. i.e. The Women’s Day Weekend Conference\n- Identify and participate in outside conferences and training for women.\n- Participate in developing quarterly special women’s empowerment worship days.\n- Hold special activities for fellowship and recruiting.\n- Identify a “Mission” or Project that is conceived by the Holy Spirit, consistent with Women’s Ministry.",
+      "image": "assets/media/womens-ministry.webp",
+      "bookable": false
+    },
+    {
+      "id": "men-s-ministry",
+      "type": "ministry",
+      "name": "Men's Ministry",
+      "scripture": "MEN who understand the times and what needed to be done. — 1 Chronicles 12",
+      "description": "The Men of Issachar workshop is designed for every man who faces the daily demands of life, work, family, and friends. Instead of being stressed out by the burdens of life, we teach each man to learn from Biblical teachings to never accept less than excellence fro themselves in every area of their lives. Our goal is to provide a bedrock of support and education for men who are seeking to up level themselves so they may lift up their families and their communities by harnessing what god has placed inside of them.\n\nMINISTRY INITIATIVES, PROJECTS & PROGRAMS\n- Men of Honor – How to Step Into Your Divine Destiny\n- Men to Boyz – Father and Son Day",
+      "image": "assets/media/mens-ministry.webp",
+      "bookable": false
+    },
+    {
+      "id": "pastor-s-aide",
+      "type": "ministry",
+      "name": "Pastor's Aide",
+      "scripture": "The elders who direct the affairs of the church well are worthy of double honor, especially those whose work is preaching and teaching. For Scripture says, “Do not muzzle an ox while it is treading out the grain,” and “The worker deserves his wages. — 1 Timothy 5:17-18",
+      "description": "The Pastor’s Aide Ministry mission is to assist the Pastor and his family, as well as, visiting Pastors and Ministers. We will endeavor to meet their personal, professional and vocational needs and by example will lead the congregation in doing the same. We prayerfully accept the responsibility of ‘bearing their armor’, as they minister to Shiloh and the community, providing God inspired leadership.\n\nMINISTRY INITIATIVES, PROJECTS & PROGRAMS\n- Provide support for the garments and other personal necessities related to clothing.\n- Prepare refreshments as is appropriate and necessary.\n- Seek special training opportunities to improve our ministry and effectiveness.\n- Provide special outreach and hospitality for visiting Clergy members and their families.\n- Meet regularly with the Pastor to review needs and update activities.\n- Ensure appropriate financial support for Pastoral Ministry.",
+      "image": "assets/media/pastor-aide.webp",
+      "bookable": false
+    },
+    {
+      "id": "music-ministry",
+      "type": "ministry",
+      "name": "Music Ministry",
+      "scripture": "Shout for joy to God, all the earth! Sing the glory of his name; make his praise glorious. Say to God, “How awesome are your deeds! So great is your power that your enemies cringe before you.. — Psalms 66:1-3",
+      "description": "The Music Ministry is a helps ministry. As the Musicians and Worship Team lead us in songs of Worship and Praise, they help to usher us through His Gates with songs of thanksgiving and into His Courts with songs of praise.\nWe dedicate ourselves to practice so that we may demonstrate our expressive praise to God through song. We are committed to ministering to those at home, as well as, other churches and in our community as God provides the opportunities. We will be a living epistle and a testimony of God’s Grace and Love by sharing His Word and the Love of Jesus through Praise and Worship.\n\nMINISTRY INITIATIVES, PROJECTS & PROGRAMS\n- Continue to grow a broad portfolio of songs/music for ministering on all occasions\n- Quarterly outreach events to encourage and positively impact the local community\n- Annual music ministry “Revival” as Special Intensive Week of Consecration & Training\n- Weekly prayer and re-commitment sessions to maintain focus and calling\n- Special collaborative events with other ministries to strengthen & encourage believers.",
+      "image": "assets/media/music-ministry.webp",
+      "bookable": false
+    },
+    {
+      "id": "culinary-ministry",
+      "type": "ministry",
+      "name": "Culinary Ministry",
+      "scripture": "Do not forget to show hospitality to strangers, for by so doing some people have shown hospitality to angels without knowing it. — Hebrews 13:2",
+      "description": "The mission of the Culinary Arts Ministry is to glorify God by providing excellence in food service through prayer, praise and faith.\nWe are committed to the practice of high quality standards in the preparation and the serving of food and beverages as required for health and safety and for upholding the high standard of God.\nWe will provide compassionate oversight of food services for home going services, weddings, special programs and activities and other important days and significant events in the life of Shiloh Baptist Church, its members and the broader community, as Jesus has taught us and with the guidance and approval of our Pastor.\n\nMINISTRY INITIATIVES, PROJECTS & PROGRAMS\n- Annual Family Day Cookout and Fun Day\n- Special holiday and special events\n- Monthly leadership prayer breakfast\n- Monthly 1st Sunday special birthday celebrations\n- Special event support for ministry anniversaries\n- Special Event support for missionary off site evangelism and outreach\n- Special event support for student outreach for college ministries.",
+      "image": "assets/media/culinary-ministry.webp",
+      "bookable": false
+    },
+    {
+      "id": "deaconate-ministry",
+      "type": "ministry",
+      "name": "Deaconate Ministry",
+      "scripture": "In the same way, deacons are to be worthy of respect, sincere, not indulging in much wine, and not pursuing dishonest gain. They must keep hold of the deep truths of the faith with a clear conscience. They must first be tested; and then if there is nothing against them, let them serve as deacons. In the same way, the women are to be worthy of respect, not malicious talkers. but temperate and trustworthy in everything. A deacon must be faithful to their spouse and must manage their children and their household well. Those who have served well gain an excellent standing and great assurance in their faith in Christ Jesus. — 1 Timothy 3:8-13",
+      "description": "The Deacon’s mission is to visibly practice and demonstrate our love for God, each other and our neighbors. The Deaconate will also work constantly to deepen our relationship with God and each other, through prayer, bible study and exercising of God’s spiritual gifts and our learned talents and developed abilities. The Deaconate will support our Pastor and ministerial staff, assisting in baptism, communion, visitation of the sick and shut-in, encouraging community believers to become active Disciples of Christ and in other ways as directed by God through the Pastor. The Deaconate shall strive to meet the needs of the congregation and uphold the church vision and display the fruits of the Holy Spirit through our everyday lives.\n\nMINISTRY INITIATIVES, PROJECTS & PROGRAMS\n- Provide organization and leadership through Deacon family ministries.\n- Lead Evangelism events to share the Gospel with believers and non-believers alike.\n- Provide coverage services and special events.\n- Present and participate in workshops to continue to grow and become more like Christ for Church Members and Leaders.\n- Encourage and support existing ministries through active participation therein.\n- Lead Intercessory Prayer and assist as needed.\n- Provide organization and leadership for monthly church-wide special prayer events.",
+      "image": "assets/media/deaconate-ministry.webp",
+      "bookable": false
+    },
+    {
+      "id": "trustee-ministry",
+      "type": "ministry",
+      "name": "Trustee Ministry",
+      "scripture": "Now it is required that those who have been given a trust must prove faithful. — 1 Corinthians 4:2",
+      "description": "The Trustee Ministry will exercise sound stewardship of the people, facilities and resources of the Shiloh Baptist Church by adhering to the Biblical principles and God given morals and values outlined in the Holy Bible. Through the unction of the Holy Spirit, we will apply those principles to all areas of finance, administration, as well as, maintenance and improvement of the Church, it's resources and facilities. We commit to demonstrate those same principles in our daily lives as a means of exhorting and encouraging others to develop a stronger relationship with the Lord.\nAs we place our trust in the Lord, being faithful with little, God will surely give us greater! We will become great stewards of ALL God has given us to take dominion over.\nMatthew 25:23 \"Well done, good and faithful servant! You have been faithful with a few things; I will put you in charge of many things.\"",
+      "image": "assets/media/trustee-ministry.webp",
+      "bookable": false
+    },
+    {
+      "id": "ushers-ministry",
+      "type": "ministry",
+      "name": "Ushers Ministry",
+      "scripture": "Better is one day in your courts than a thousand elsewhere; I would rather be a doorkeeper in the house of my God than dwell in the tents of the wicked. For the Lord God is a sun and shield; the Lord bestows favor and honor; no good thing does he withhold from those whose walk is blameless. Lord Almighty, blessed is the one who trusts in you.“ — Psalms 84:10-12",
+      "description": "The Ushers and Health and Wellness Ministry of Shiloh Baptist Church serves both members and visitors who attend activities/services at church. We enjoy welcoming you and helping you in any way, in order to make you feel right at home. If there is anything you need, let us know, we would be happy to get it for you or show you the way. We love inviting people to participate in programs and hope they will return again to share with us, or become part of the Shiloh family. All of this is done with pleasant and courteous communication, careful observation and the love of Christ.\n\nMINISTRY INITIATIVES, PROJECTS & PROGRAMS\n- Intergenerational leadership training program.\n- Church beautification initiative.\n- Encourage Inter-denominational Ministry City/Statewide.\n- Provide ongoing support and care for all services.\n- Develop consistent worship support activity.\n- Support prison and halfway house correspondence.",
+      "image": "assets/media/ushers-ministry.webp",
+      "bookable": false
+    },
+    {
+      "id": "adult-ministry",
+      "type": "ministry",
+      "name": "Adult Ministry",
+      "scripture": "To equip his people for works of service, so that the body of Christ may be built up until we all reach unity in the faith and in the knowledge of the Son of God and become mature, attaining to the whole measure of the fullness of Christ. — Ephesians 4:12-13",
+      "description": "The Mission of the Adult Ministry is to band together in unity as fellow Christians to seek, to study, learn, practice, and to live God’s Word through loving one another and being our Sister and Brother’s keeper. We desire to enhance and maintain quality of life and spiritual growth all the while pursing others to come to the Saving Knowledge of Christ.\n\nMINISTRY INITIATIVES, PROJECTS & PROGRAMS\n- Monthly special topical Bible Study training sessions.\n- Weekly prayer calls for adult members and friends\n- Quarterly outings and trips to develop relationships within ministry\n- Annual special day to highlight accomplishments of adults\n- Cultural training/social events for increasing ethnic & social sensitivity\n- Annual ongoing community outreach and impact project",
+      "image": "assets/media/adults-ministry.webp",
+      "bookable": false
+    },
+    {
+      "id": "missionary-ministry",
+      "type": "ministry",
+      "name": "Missionary Ministry",
+      "scripture": "Praise be to the God and Father of our Lord Jesus Christ, the Father of compassion and the God of all comfort, who comforts us in all our troubles, so that we can comfort those in any trouble with the comfort we ourselves receive from God.“ — 2 Corinthians 1:3-4",
+      "description": "The Missionary Ministry of Shiloh Baptist Church ministers to sick, shut in, elderly, disabled, and less fortunate people through prayer, visitation and giving encouragement. As a body of believers as we show others the love and compassion Jesus has shown us and serve others faithfully, both members of Shiloh, their families, as well as, the community as the Lord guides.\n\nMINISTRY INITIATIVES, PROJECTS & PROGRAMS\n- Shiloh Junior School Support – Uganda\n- Quarterly Clothes Giveaway\n- Annual Community Clean-Up\n- Thanksgiving Basket Giveaway\n- Angel Tree Christmas Gifts for Children\n- Community wide Missionary Anniversary Event",
+      "image": "assets/media/missionary-ministry.webp",
+      "bookable": false
+    },
+    {
+      "id": "christian-education",
+      "type": "ministry",
+      "name": "Christian Education",
+      "scripture": "Train up a child in the way he should go: and when he is old, he will not depart from it. — Proverbs 22:6",
+      "description": "The Christian Education Ministry of Shiloh Baptist Church ministers to all of Gods children from the youngest to the oldest. Our classes range from Nursery 0-3 years of age to Seniors aged...60-Praise Jesus!\nYou may already have some knowledge in the Word of God and Jesus may already be your Lord and Savior or this may be your first time coming to church and you would like to find out more about Jesus. Either way you are in the right place!\n\nMINISTRY INITIATIVES, PROJECTS & PROGRAMS\n- Discover Jesus as Lord and Savior\n- Learn how to Share Jesus with Others (Evangelize)\n- Become a Soul winner for Jesus (Invite others to church)\n- Become a Prayer Warrior",
+      "image": "assets/media/christian-education.webp",
+      "bookable": false
+    },
+    {
+      "id": "sanctuary",
+      "type": "facility",
+      "name": "Sanctuary",
+      "description": "Main worship space at 477 Broad Street.",
+      "image": "assets/media/home-inperson.webp",
+      "bookable": true
+    },
+    {
+      "id": "fellowship-hall",
+      "type": "facility",
+      "name": "Fellowship Hall",
+      "description": "Where the church family gathers — including continental breakfast before Sunday service.",
+      "image": "assets/media/culinary-ministry.webp",
+      "bookable": true
+    }
   ]
 }
