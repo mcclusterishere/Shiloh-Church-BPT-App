@@ -42,5 +42,21 @@
       "bio": "Tracy A Moales, is a lifelong resident of Bridgeport, CT. and a graduate of Bassick High School. He began his post high school education at South Central Community College in New Haven, CT. where he met his wife Regina and they have been married Forty years. Together they five biological children, one foster child, and fifteen grandchildren.",
       "image": ""
     }
-  ]
+  ],
+  "pastorExtended": {
+    "note": "From Rev. McCluster's leadership biography on faithandresults.com. That page states his 24th year at Shiloh and is older than the church's own site, which says thirty years — the year count is deliberately omitted here to avoid repeating a stale figure.",
+    "roles": [
+      "Founder of Faith Community Development Corporation, chartered by Shiloh Baptist Church",
+      "Managing Director of F.R.E.E.D.O.M., Inc. — a national consulting firm initiated while at Shiloh, with projects and affiliates in fifteen cities",
+      "Former Chairperson, South End Neighborhood Revitalization Zone, Bridgeport",
+      "Advisory Board Chair, Faith Acts — the faith-based educational advocacy organization headquartered in Bridgeport",
+      "Lecturer on Financial Affairs and Consultant for Housing & Development, Connecticut State Missionary Baptist Convention",
+      "Former Economic Development Coordinator, New England Missionary Baptist Convention — nine states",
+      "Former board member: Greater Bridgeport Chamber of Commerce, Neighborhood Housing Services of Bridgeport, United Way of Greater New Haven, and H.O.M.E. Inc."
+    ],
+    "beforeMinistry": "Before ministry he was an Assistant Vice President in the former Manufacturers Hanover investment banking division, and worked at Xerox and Procter & Gamble. A former U.S. Air Force Academy cadet, he received the Meritorious Service Medal on his honorable discharge from the United States Army.",
+    "education": "B.A. in Political Economy, Colorado College; Master of Divinity, Samuel DeWitt Proctor School of Theology at Virginia Union University.",
+    "consulting": "Through F.R.E.E.D.O.M., he has consulted for the FDIC, HUD and the Federal Home Loan Bank, and serves as a trainer for NeighborWorks America, the largest HUD national housing intermediary."
+  },
+  "logo": "assets/media/shiloh-logo-stacked.jpg"
 }

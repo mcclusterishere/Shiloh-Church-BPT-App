@@ -104,4 +104,29 @@ Known content notes (also flagged in the data files):
 - Sunday services are seeded as events through early September 2026; the recurring
   event engine is a Phase 2 feature.
 
+## The community-impact story
+
+`data/impact.json` carries the part of Shiloh's story its own website doesn't tell,
+sourced from the Faith & Results / Freedom, Inc. records and shown on the About
+screen with citations attached to every claim:
+
+- **The monopole fight.** United Illuminating's Docket 516R would have run
+  high-voltage transmission monopoles past Shiloh's building and the historic Mary &
+  Eliza Freeman Houses. The Connecticut Siting Council denied the application 5–3 on
+  October 16, 2025, rejected UI's appeal, and closed the docket on February 5, 2026 —
+  independently verified against CT Mirror and the Council's own record.
+- **First African-American church in Connecticut to go solar**, under Pastor
+  McCluster, and a recognized state leader in the EPA's "God Goes Green" initiative.
+- **Faith Community Development Corporation**, chartered by Shiloh.
+- Pastor McCluster's fuller civic and professional record, from his leadership
+  biography.
+
+**A note on photography.** Shiloh's own website mixes real congregation photos with
+stock imagery. The genuinely-Shiloh photos are used where they matter (About, the
+fellowship hall, staff portraits). The impact section's image comes from the Freedom,
+Inc. archive and shows clergy and community leaders in a sanctuary — it is *not*
+confirmed to be Shiloh's sanctuary or any specific event, so it carries a caption
+saying exactly that rather than being attached to a named event. Swap it for a
+confirmed Shiloh photo when one is available.
+
 See `docs/DESIGN.md` for the roadmap for everything after Phase 1.

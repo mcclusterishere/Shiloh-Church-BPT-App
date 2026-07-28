@@ -456,3 +456,34 @@ main { padding: var(--space-6) 0 var(--space-8); }
   padding-left: var(--space-4);
   margin-top: var(--space-2);
 }
+
+/* Community-impact story: an outcome line that reads as a result, not prose. */
+.outcome {
+  margin-top: var(--space-4);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid color-mix(in oklch, var(--ok) 32%, transparent);
+  background: color-mix(in oklch, var(--ok) 9%, transparent);
+  font-size: var(--step--1);
+}
+.outcome b { color: var(--ok); }
+.rolelist { margin: var(--space-3) 0 var(--space-4); padding-left: var(--space-5); }
+.rolelist li { margin-bottom: var(--space-2); color: var(--text-muted); font-size: var(--step--1); }
+
+/* Impact section image — captioned with its provenance, because the specific
+   event it shows is unconfirmed. Never present an unattributed photo as if
+   it documents a named event. */
+.impactfig { margin: 0 0 var(--space-5); }
+.impactfig img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius-lg); border: 1px solid var(--edge); }
+.impactfig figcaption { margin-top: var(--space-3); font-size: var(--step--1); color: var(--text-muted); }
+.sources { margin-top: var(--space-5); padding-top: var(--space-4); border-top: 1px solid var(--edge); }
+.sources ul { margin: var(--space-3) 0 0; padding-left: var(--space-5); }
+.sources li { margin-bottom: var(--space-3); font-size: var(--step--1); }
+.sources a { display: inline-block; min-height: 1.6em; overflow-wrap: anywhere; }
+
+/* Grid children must be allowed to shrink below their content width, and
+   disclosure summaries carry long names ("About Rev. Gwendolyn McNair
+   Anderson") that must wrap rather than force the card wider than the screen. */
+.pastorcard > * { min-width: 0; }
+summary.btn { white-space: normal; text-align: center; height: auto; padding-block: 0.55em; }
+.ministrycard__body, .photocard__body { min-width: 0; }

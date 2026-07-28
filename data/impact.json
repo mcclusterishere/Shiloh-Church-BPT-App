@@ -1,0 +1,68 @@
+{
+  "note": "Shiloh's community-impact story — the part the church's own website doesn't tell. Sourced from the Faith & Results / Freedom, Inc. records (faithandresults.com and the sister repo), with the monopole outcome independently verified against CT Mirror and the Connecticut Siting Council's own Docket 516R record (July 2026). Every claim here is press-citable; if something can't be cited, it doesn't belong in this file. PHOTO PROVENANCE: the section image is from the Freedom, Inc. media library and shows clergy and community leaders standing together in a sanctuary — it is NOT confirmed to be Shiloh's sanctuary or any specific event, so it is captioned generically and deliberately not attached to the Equity Uprise item. Replace it with a confirmed Shiloh photo when one is available.",
+  "intro": "Shiloh's ministry has never stopped at the sanctuary door. Through the Faith Community Development Corporation — chartered by Shiloh and led by Pastor McCluster — the church has spent decades working on housing, economic development, sustainability, and justice for the City of Bridgeport.",
+  "items": [
+    {
+      "id": "equity-uprise",
+      "year": "2025",
+      "title": "The church that stood in the way — and won",
+      "body": "United Illuminating's Docket 516R plan would have run high-voltage transmission monopoles through Bridgeport and Fairfield's residential and historic districts — threatening Shiloh's own building and the historic Mary & Eliza Freeman Houses. Anchored by Pastor McCluster, 85-year-old Shiloh became ground zero for the community's stand. Residents and clergy were joined by a bipartisan delegation including Senator Tony Hwang, Representative Jennifer Leeper, city council members, and Freeman Center president Maisa Tisdale, raising transparency and environmental-justice concerns the process had ignored.",
+      "outcome": "On October 16, 2025 the Connecticut Siting Council voted 5–3 to deny the application. UI asked the Council to reconsider; on February 5, 2026 the Council rejected that appeal and closed Docket 516R. The community's unified front was recognized as a major factor in the decision.",
+      "links": [
+        {
+          "label": "CT Mirror — CT rejects controversial UI monopoles plan",
+          "url": "https://ctmirror.org/2025/10/16/monopoles-denied-ct-siting-council-united-illuminating/"
+        },
+        {
+          "label": "CT Mirror — Siting Council rejects UI's appeal",
+          "url": "https://ctmirror.org/2026/02/05/ct-siting-council-rejects-united-illuminatings-monopole-appeal/"
+        },
+        {
+          "label": "Easton Courier — Bridgeport church at risk",
+          "url": "https://eastoncourier.news/2025/03/13/bridgeport-church-at-risk-by-united-illuminatings-monopoles-project/"
+        },
+        {
+          "label": "Connecticut Siting Council — Docket 516R record",
+          "url": "https://portal.ct.gov/csc/1_applications-and-other-pending-matters/applications/4_docketnos500s/docket-no-516r"
+        }
+      ]
+    },
+    {
+      "id": "solar",
+      "year": "Under Pastor McCluster",
+      "title": "The first African-American church in Connecticut to go solar",
+      "body": "Committed to sustainability, Pastor McCluster led Shiloh to become the first African-American church in the State of Connecticut to become energy self-sufficient through solar power. Shiloh is cited as a recognized Connecticut leader in the EPA's \"God Goes Green\" initiative, and the milestone is listed as the lead accomplishment of Freedom, Inc.'s sustainability work.",
+      "links": [
+        {
+          "label": "Faith & Results — leadership",
+          "url": "https://faithandresults.com/about-us/principals/"
+        },
+        {
+          "label": "Faith & Results — history",
+          "url": "https://faithandresults.com/about-us/history/"
+        }
+      ]
+    },
+    {
+      "id": "faith-cdc",
+      "year": "Ongoing",
+      "title": "Faith Community Development Corporation",
+      "body": "Chartered by Shiloh Baptist Church and led by Pastor McCluster as its President, Faith CDC carries the church's work into housing, economic development, and capacity building — training faith-based organizations nationwide in governance, program design, and revenue that renews itself, so a mission outlasts any single grant.",
+      "links": [
+        {
+          "label": "Faith & Results — Faith CDC",
+          "url": "https://faithandresults.com/fcdc/"
+        }
+      ]
+    },
+    {
+      "id": "sustainability",
+      "year": "2018",
+      "title": "Bridgeport Regional Sustainability Summit",
+      "body": "Shiloh hosted part of the 7th Annual Bridgeport Regional Sustainability Summit — \"Learning to breathe easier and build better\" — a full day of community training, a clergy luncheon, and an evening community conversation, held with the University of Bridgeport.",
+      "links": []
+    }
+  ],
+  "image": "assets/media/impact-solidarity.jpg",
+  "imageCaption": "Clergy and community leaders standing together. From the Freedom, Inc. archive."
+}

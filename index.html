@@ -304,6 +304,16 @@
         <p style="margin-top:var(--space-3)">Christian Education — one of the "backbone" ministries of the church — has classes for every age:</p>
         <div class="stack" style="--gap: var(--space-2); margin-top: var(--space-4)" id="classGroups"></div>
       </div>
+      <div id="impactWrap" hidden>
+        <p class="eyebrow" style="margin-bottom: var(--space-2)">Beyond the sanctuary door</p>
+        <p class="muted" id="impactIntro" style="margin-bottom: var(--space-5)"></p>
+        <figure class="impactfig" id="impactFig" hidden>
+          <img id="impactImg" src="" alt="" loading="lazy" decoding="async">
+          <figcaption id="impactCap"></figcaption>
+        </figure>
+        <div class="stack" id="impactList"></div>
+      </div>
+
       <div>
         <p class="eyebrow" style="margin-bottom: var(--space-4)">The people who serve here</p>
         <div class="stack" id="staffList"></div>
@@ -476,7 +486,7 @@
 <script>
 (function () {
   "use strict";
-  var CHURCH = null, THEME = null, EVENTS = [], MINISTRIES = [], GIVING = null, ABOUT = null, SERMONS = null, FAQ = [];
+  var CHURCH = null, THEME = null, EVENTS = [], MINISTRIES = [], GIVING = null, ABOUT = null, SERMONS = null, FAQ = [], IMPACT = null;
   var ICON = function (id) {
     return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#' + id + '"/></svg>';
   };
@@ -889,13 +899,52 @@
       return '<div class="row" style="gap:var(--space-3)"><span style="color:var(--accent)">' + ICON("i-check") + "</span><span>" + esc(g) + "</span></div>";
     }).join("");
 
+    /* Community impact — the story the church's own site doesn't tell.
+       Every item carries its sources; the links are the point. */
+    if (IMPACT && IMPACT.items && IMPACT.items.length) {
+      document.getElementById("impactWrap").hidden = false;
+      document.getElementById("impactIntro").textContent = IMPACT.intro || "";
+      if (IMPACT.image) {
+        document.getElementById("impactFig").hidden = false;
+        document.getElementById("impactImg").src = IMPACT.image;
+        /* Captioned, not claimed: this photo's specific event is unconfirmed,
+           so the caption says what it shows and where it came from. */
+        document.getElementById("impactCap").textContent = IMPACT.imageCaption || "";
+      }
+      document.getElementById("impactList").innerHTML = IMPACT.items.map(function (it) {
+        /* Citations wrap as a list, not as pills — these labels are long, and
+           a nowrap pill row overflows the card. */
+        var links = (it.links || []).length
+          ? '<div class="sources"><p class="eyebrow">Sources</p><ul>' + it.links.map(function (l) {
+              return '<li><a href="' + esc(l.url) + '" target="_blank" rel="noopener">' + esc(l.label) + "</a></li>";
+            }).join("") + "</ul></div>"
+          : "";
+        var outcome = it.outcome
+          ? '<p class="outcome"><b>Outcome.</b> ' + esc(it.outcome) + "</p>"
+          : "";
+        return '<article class="card reveal">' +
+          '<div>' +
+          '<p class="eyebrow">' + esc(it.year || "") + "</p>" +
+          '<h3 style="margin-top:var(--space-2)">' + esc(it.title) + "</h3>" +
+          "<p>" + esc(it.body) + "</p>" + outcome + links +
+          "</div></article>";
+      }).join("");
+    }
+
     /* Staff */
-    document.getElementById("staffList").innerHTML = (ABOUT.staff || []).map(function (p) {
+    document.getElementById("staffList").innerHTML = (ABOUT.staff || []).map(function (p, i) {
       var media = p.image
         ? '<img class="portrait" src="' + esc(p.image) + '" alt="Portrait of ' + esc(p.name) + '" loading="lazy" decoding="async" style="width:100%;max-width:9rem">'
         : '<div class="portrait" aria-hidden="true" style="width:9rem;aspect-ratio:3/4;display:grid;place-items:center;background:color-mix(in oklch, var(--accent) 14%, transparent);font-family:var(--font-display);font-size:var(--step-3);font-weight:800;color:var(--accent)">' +
           esc(p.name.replace(/Rev\.|Dr\.|,.*$/g, "").trim().split(/\s+/).map(function (w) { return w[0]; }).slice(0, 2).join("")) + "</div>";
-      var bio = p.bio ? '<details style="margin-top:var(--space-3)"><summary class="btn btn--quiet" style="list-style:none">About ' + esc(p.name.split(",")[0]) + '</summary><div style="margin-top:var(--space-3)">' + paras(p.bio) + "</div></details>" : "";
+      var extra = "";
+      if (i === 0 && ABOUT.pastorExtended) {
+        var pe = ABOUT.pastorExtended;
+        extra = '<p class="eyebrow" style="margin-top:var(--space-5)">Service beyond Shiloh</p><ul class="rolelist">' +
+          (pe.roles || []).map(function (r) { return "<li>" + esc(r) + "</li>"; }).join("") + "</ul>" +
+          [pe.consulting, pe.beforeMinistry, pe.education].filter(Boolean).map(function (t) { return "<p>" + esc(t) + "</p>"; }).join("");
+      }
+      var bio = p.bio ? '<details style="margin-top:var(--space-3)"><summary class="btn btn--quiet" style="list-style:none">About ' + esc(p.name.split(",")[0]) + '</summary><div style="margin-top:var(--space-3)">' + paras(p.bio) + extra + "</div></details>" : "";
       return '<article class="card pastorcard reveal">' + media +
         "<div><h3>" + esc(p.name) + '</h3><p class="muted">' + esc(p.title || "") + "</p>" + bio + "</div></article>";
     }).join("");
@@ -1023,11 +1072,12 @@
     j("data/events.json", { events: [] }), j("data/news.json", { news: [] }),
     j("data/ministries.json", { ministries: [] }),
     j("data/giving.json", null), j("data/about.json", null),
-    j("data/sermons.json", null), j("data/faq.json", { faq: [] })
+    j("data/sermons.json", null), j("data/faq.json", { faq: [] }),
+    j("data/impact.json", null)
   ]).then(function (res) {
     THEME = res[1]; CHURCH = res[2];
     EVENTS = res[3].events || []; MINISTRIES = res[5].ministries || [];
-    GIVING = res[6]; ABOUT = res[7]; SERMONS = res[8]; FAQ = (res[9] || {}).faq || [];
+    GIVING = res[6]; ABOUT = res[7]; SERMONS = res[8]; FAQ = (res[9] || {}).faq || []; IMPACT = res[10];
 
     document.title = THEME.churchName || document.title;
     var full = THEME.churchName || "", shortName = THEME.shortName || full;

@@ -15,6 +15,7 @@ for any of this.
 | Change **about / staff / anniversary** | `data/about.json` | Staff photos live in `assets/media/`. |
 | Feature **recent sermons** | `data/sermons.json` | Links out to the site's sermon pages / Facebook Live. |
 | Edit the **visitor FAQ** | `data/faq.json` | Mirrored verbatim from the site's own FAQ. |
+| Change the **community-impact story** | `data/impact.json` | Every item should carry its `links` (sources). Don't add a claim you can't cite, and don't attach a photo to an event unless it actually documents that event. |
 | Add or swap **photos** | `assets/media/` | All 60 images from shilohchurchbpt.org live here; cached on first view, not at install. |
 | Change **backend mode / webhook / admin passcode** | `data/config.json` | See `docs/BACKEND.md` for going live with Supabase + automations. |
 | Replace the **app icon / logo** | `assets/icons/` | The current icon is a stained-glass-window mark drawn in the blues of the church's own logo (see `assets/icons/source.svg`) — a crisp stand-in until the church's real vector art is available. To change it, edit the SVG and regenerate the five PNG sizes; icons are fetched statically, so this is the one branding piece that isn't just a JSON edit. |
