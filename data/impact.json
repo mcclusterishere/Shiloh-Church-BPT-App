@@ -1,5 +1,5 @@
 {
-  "note": "Shiloh's community-impact story — the part the church's own website doesn't tell. Sourced from the Faith & Results / Freedom, Inc. records (faithandresults.com and the sister repo), with the monopole outcome independently verified against CT Mirror and the Connecticut Siting Council's own Docket 516R record (July 2026). Every claim here is press-citable; if something can't be cited, it doesn't belong in this file. PHOTO PROVENANCE: the section image is from the Freedom, Inc. media library and shows clergy and community leaders standing together in a sanctuary — it is NOT confirmed to be Shiloh's sanctuary or any specific event, so it is captioned generically and deliberately not attached to the Equity Uprise item. Replace it with a confirmed Shiloh photo when one is available.",
+  "note": "Shiloh's community-impact story — the part the church's own website doesn't tell. Sourced from faithandresults.com (Freedom, Inc.) and its linked project one-pagers, with the monopole outcome independently verified against CT Mirror and the Connecticut Siting Council's Docket 516R record (July 2026). Every claim carries a citable source; if something can't be cited, it doesn't belong here. PHOTO PROVENANCE: the section image is verifiably Rev. McCluster (matches the church's own portrait), but its location and occasion are not confirmed, so the caption claims neither. assets/media/impact-solidarity.jpg is a second archive photo of clergy in a sanctuary — also unconfirmed as Shiloh, currently unused.",
   "intro": "Shiloh's ministry has never stopped at the sanctuary door. Through the Faith Community Development Corporation — chartered by Shiloh and led by Pastor McCluster — the church has spent decades working on housing, economic development, sustainability, and justice for the City of Bridgeport.",
   "items": [
     {
@@ -31,7 +31,7 @@
       "id": "solar",
       "year": "Under Pastor McCluster",
       "title": "The first African-American church in Connecticut to go solar",
-      "body": "Committed to sustainability, Pastor McCluster led Shiloh to become the first African-American church in the State of Connecticut to become energy self-sufficient through solar power. Shiloh is cited as a recognized Connecticut leader in the EPA's \"God Goes Green\" initiative, and the milestone is listed as the lead accomplishment of Freedom, Inc.'s sustainability work.",
+      "body": "Freedom, Inc. partnered with Shiloh to make it the first African-American house of worship in Connecticut — and the first church in Southern Connecticut — to be completely powered by solar energy, with technical assistance and financing from the Connecticut Green Bank. Shiloh is a recognized Connecticut leader in the EPA's \"God Goes Green\" initiative, and the milestone launched Freedom's whole sustainability practice.",
       "links": [
         {
           "label": "Faith & Results — leadership",
@@ -40,6 +40,24 @@
         {
           "label": "Faith & Results — history",
           "url": "https://faithandresults.com/about-us/history/"
+        }
+      ],
+      "outcome": "The \"Shiloh Goes Solar\" unveiling also announced Solar for All — a Freedom/PosiGen partnership backed by the CT Green Bank, described as the only zero-down-payment, no-credit-check solar program in the state."
+    },
+    {
+      "id": "shiloh-bethel-centre",
+      "year": "In development",
+      "title": "The Shiloh Bethel Centre",
+      "body": "A mixed-use apartment development in Bridgeport: 66 units across four floors over a podium level, on a footprint of roughly 16,500 square feet — 15 studios, 25 one-bedrooms and 20 two-bedrooms, plus 6 live/work units, about 4,000 square feet of commercial and retail space, 1,200 square feet of conference and office space, a 30-space parking garage and bicycle storage. Architect Powell & Partners uses a panelized, off-site prefabricated green building system that cuts waste and carbon footprint and brings units to market substantially faster than traditional development.",
+      "outcome": "As the first church in Southern Connecticut on fully solar power, Shiloh intends to extend that renewable model from its South End facility into the Centre.",
+      "links": [
+        {
+          "label": "Shiloh Bethel Centre — project one-pager (PDF)",
+          "url": "https://faithandresults.com/wp-content/uploads/2018/09/PROGRAMS-INITIATIVES-Econ-Devp-Shiloh-Bethel.pdf"
+        },
+        {
+          "label": "Faith & Results — programs & initiatives",
+          "url": "https://faithandresults.com/programs-initiatives/"
         }
       ]
     },
@@ -56,6 +74,22 @@
       ]
     },
     {
+      "id": "civic",
+      "year": "Ongoing",
+      "title": "A voice for the city",
+      "body": "Identified in the press as Shiloh's pastor, Rev. McCluster has been a founding member and organizer of Faith Acts for Education; pressed for a transparent Bridgeport police chief search; joined other clergy in charging that PSEG broke its promises to Bridgeport over the gas plant; called on the Connecticut legislature to act on the CCJEF school-funding decision; and took part in the Indiaspora Civil Rights Town Hall convened after the death of George Floyd, alongside DJ Patil, the first U.S. Chief Data Scientist, and Vanita Gupta, president and CEO of The Leadership Conference on Civil and Human Rights.",
+      "links": [
+        {
+          "label": "Faith & Results — news",
+          "url": "https://faithandresults.com/news/"
+        },
+        {
+          "label": "Video — Rev. Carl McCluster on Black History Month",
+          "url": "https://www.youtube.com/watch?v=MGueUQC4bcc"
+        }
+      ]
+    },
+    {
       "id": "sustainability",
       "year": "2018",
       "title": "Bridgeport Regional Sustainability Summit",
@@ -63,6 +97,6 @@
       "links": []
     }
   ],
-  "image": "assets/media/impact-solidarity.jpg",
-  "imageCaption": "Clergy and community leaders standing together. From the Freedom, Inc. archive."
+  "image": "assets/media/pastor-speaking.jpg",
+  "imageCaption": "Pastor McCluster speaking. From the Freedom, Inc. archive."
 }

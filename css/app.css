@@ -478,8 +478,10 @@ main { padding: var(--space-6) 0 var(--space-8); }
 .impactfig figcaption { margin-top: var(--space-3); font-size: var(--step--1); color: var(--text-muted); }
 .sources { margin-top: var(--space-5); padding-top: var(--space-4); border-top: 1px solid var(--edge); }
 .sources ul { margin: var(--space-3) 0 0; padding-left: var(--space-5); }
-.sources li { margin-bottom: var(--space-3); font-size: var(--step--1); }
-.sources a { display: inline-block; min-height: 1.6em; overflow-wrap: anywhere; }
+.sources li { margin-bottom: var(--space-4); font-size: var(--step--1); line-height: 1.45; }
+/* Anchors stay inline so the list marker aligns to the FIRST line of a
+   wrapped citation rather than centering against the whole block. */
+.sources a { overflow-wrap: anywhere; }
 
 /* Grid children must be allowed to shrink below their content width, and
    disclosure summaries carry long names ("About Rev. Gwendolyn McNair

@@ -115,18 +115,28 @@ screen with citations attached to every claim:
   Eliza Freeman Houses. The Connecticut Siting Council denied the application 5–3 on
   October 16, 2025, rejected UI's appeal, and closed the docket on February 5, 2026 —
   independently verified against CT Mirror and the Council's own record.
-- **First African-American church in Connecticut to go solar**, under Pastor
-  McCluster, and a recognized state leader in the EPA's "God Goes Green" initiative.
+- **First African-American church in Connecticut to go solar** — and the first church
+  in Southern Connecticut on fully solar power — with CT Green Bank financing, a
+  recognized state leader in the EPA's "God Goes Green" initiative. The unveiling also
+  launched Solar for All with PosiGen.
+- **The Shiloh Bethel Centre** — a 66-unit mixed-use development (15 studios, 25
+  one-bed, 20 two-bed, 6 live/work units, retail, conference space, parking) using a
+  panelized off-site green building system, from the project one-pager.
 - **Faith Community Development Corporation**, chartered by Shiloh.
+- **A voice for the city** — Faith Acts for Education, the police chief search, the
+  PSEG gas plant, CCJEF school funding, and the Indiaspora Civil Rights Town Hall
+  alongside DJ Patil and Vanita Gupta.
 - Pastor McCluster's fuller civic and professional record, from his leadership
   biography.
 
 **A note on photography.** Shiloh's own website mixes real congregation photos with
-stock imagery. The genuinely-Shiloh photos are used where they matter (About, the
-fellowship hall, staff portraits). The impact section's image comes from the Freedom,
-Inc. archive and shows clergy and community leaders in a sanctuary — it is *not*
-confirmed to be Shiloh's sanctuary or any specific event, so it carries a caption
-saying exactly that rather than being attached to a named event. Swap it for a
-confirmed Shiloh photo when one is available.
+stock imagery — the Ushers and Music ministry images and the About page's "PASSION LED
+US HERE" shot are stock. The genuinely-Shiloh photos are used where they matter (the
+congregation on About, the fellowship hall, staff portraits). The impact section's
+image is verifiably Rev. McCluster — it matches the church's own portrait — but its
+location and occasion are unconfirmed, so the caption claims neither. A second archive
+photo of clergy in a sanctuary (`impact-solidarity.jpg`) is kept but unused for the
+same reason. Getting real photographs of the ushers, the choir and the building is the
+single biggest content upgrade still available to this app.
 
 See `docs/DESIGN.md` for the roadmap for everything after Phase 1.
