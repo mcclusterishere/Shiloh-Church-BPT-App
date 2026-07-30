@@ -17,5 +17,9 @@
     "text": "We go live every Sunday at 9:00 AM Eastern.",
     "linkLabel": "Watch on Facebook",
     "linkUrl": "https://www.facebook.com/SHILOHBPT"
+  },
+  "whip": {
+    "note": "The church's OWN broadcast ingest (WebRTC/WHIP) — this is what golive.html publishes the phone camera to, and what replaces Restream: a MediaMTX server on the Mac mini appliance (or any small box) receives the phone's stream here and fans it out to YouTube/Facebook over RTMP for free. See docs/GO-LIVE.md 'Your own box'. Only the URL lives here (it is public by nature); the publish username/password are entered once on each staff phone in the Go Live studio and never leave that device. Empty url = studio runs in rehearsal mode (camera check, no broadcast).",
+    "url": ""
   }
 }

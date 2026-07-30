@@ -1,0 +1,88 @@
+# MediaMTX on the Shiloh appliance — the broadcast relay.
+#
+# Second job for the same Mac mini that runs the assistant gateway: receive
+# the phone's camera (golive.html publishes WebRTC/WHIP to this box) and fan
+# it out to YouTube + Facebook over RTMP(S) with ffmpeg. This is what
+# replaces a paid restreaming service — see docs/GO-LIVE.md, "Route D".
+# Install/run/tunnel instructions: docs/APPLIANCE-SETUP.md, "The broadcast
+# relay". MediaMTX treats this file as a partial config: only the settings
+# that differ from its defaults are listed; everything else stays default.
+#
+# Two placeholders to fill in before first use, both ALL-CAPS below:
+#   CHANGE-ME-TO-A-LONG-RANDOM-STRING  — the publish password staff phones use
+#   YT_KEY / FB_KEY                    — the two persistent stream keys
+
+# ---------------------------------------------------------------------------
+# Who may do what. Anyone may WATCH (that lets the app's Watch screen and the
+# box's own player page at /live play with no login); only the one publisher
+# account may BROADCAST. golive.html sends this login as HTTP Basic auth —
+# it is typed once on each staff phone and lives in that phone's
+# localStorage only, never in the app's data files.
+# ---------------------------------------------------------------------------
+authMethod: internal
+authInternalUsers:
+  # Anonymous viewers: read-only.
+  - user: any
+    pass:
+    permissions:
+      - action: read
+      - action: playback
+
+  # The single staff publisher login. CHANGE THE PASSWORD before exposing
+  # this box through the tunnel — with the placeholder left in place, anyone
+  # who reads this repo can broadcast as the church.
+  - user: shiloh
+    pass: CHANGE-ME-TO-A-LONG-RANDOM-STRING
+    permissions:
+      - action: publish
+        path: live
+
+  # MediaMTX's own API/metrics stay reachable from this box only.
+  - user: any
+    ips: ['127.0.0.1', '::1']
+    permissions:
+      - action: api
+      - action: metrics
+      - action: pprof
+
+# ---------------------------------------------------------------------------
+# WebRTC / WHIP listener (MediaMTX default port :8889). The phone publishes to
+#   http://<this-box>:8889/live/whip           on the local network, or
+#   https://stream.yourchurchdomain.org/live/whip   through the tunnel.
+# The https form is the one that goes into data/live.json -> whip.url: the
+# app is served over https, and a secure page cannot POST to plain http.
+# Note the tunnel carries only the WHIP handshake — the video itself flows
+# phone-to-box directly, which is why the broadcasting phone belongs on the
+# church's Wi-Fi. To publish from OFF-site, forward UDP 8189 on the router
+# to this box and advertise the public address here:
+# webrtcAdditionalHosts: [broadcast.yourchurchdomain.org]
+# ---------------------------------------------------------------------------
+webrtcAddress: :8889
+
+# ---------------------------------------------------------------------------
+# The one broadcast path. The moment a phone starts publishing, ffmpeg pulls
+# the stream back off this same MediaMTX (local RTSP — the $RTSP_PORT and
+# $MTX_PATH below are filled in by MediaMTX) and pushes YouTube and Facebook
+# simultaneously via the tee muxer. onfail=ignore keeps one destination
+# alive if the other rejects its key.
+#
+# Paste the real keys over the placeholders:
+#   YT_KEY — YouTube Live Control Room (youtube.com/livestreaming) -> "Stream key"
+#   FB_KEY — facebook.com/live/producer -> "Persistent stream key"
+#
+# Codecs, honestly: -c:v copy assumes the phone sent H.264, which iPhones
+# and most recent Androids negotiate. If a phone negotiated VP8 instead,
+# RTMP can't carry it — swap "-c:v copy" for the Mac's hardware encoder:
+#   -c:v h264_videotoolbox -b:v 4500k
+# WebRTC audio always arrives as Opus, which RTMP can't carry either, so
+# audio is unconditionally re-encoded to AAC below.
+# ---------------------------------------------------------------------------
+paths:
+  live:
+    runOnReady: >
+      ffmpeg -rtsp_transport tcp -i rtsp://localhost:$RTSP_PORT/$MTX_PATH
+      -c:v copy -c:a aac -b:a 128k -map 0:v -map 0:a -f tee
+      "[f=flv:onfail=ignore]rtmp://a.rtmp.youtube.com/live2/YT_KEY|[f=flv:onfail=ignore]rtmps://live-api-s.facebook.com:443/rtmp/FB_KEY"
+    # If ffmpeg exits (a destination hiccup, a mistyped key), start it again
+    # for as long as the phone is still publishing.
+    runOnReadyRestart: yes

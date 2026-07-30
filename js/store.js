@@ -31,7 +31,8 @@ window.ShilohStore = (function () {
     volunteers: "shiloh.volunteers",
     localEvents: "shiloh.localEvents",
     onboarding: "shiloh.onboardingDone",
-    session: "shiloh.adminSession"
+    session: "shiloh.adminSession",
+    role: "shiloh.staffRole"
   };
 
   function read(key, fallback) {
@@ -282,6 +283,61 @@ window.ShilohStore = (function () {
     }).then(function (data) { return data.response; });
   }
 
+  /* ---------------- staff roles: admin vs editor ----------------
+     Two tiers, per the Church OS tiered-access principle. EDITOR runs the
+     public face of the church: events, announcements, the ministry catalog,
+     facility reservations, and the live broadcast. ADMIN adds everything
+     people-sensitive on top: visitor cards, member profiles, prayer at the
+     team/pastor tiers, volunteer safety status, settings, and automations.
+     Pastoral data stays behind the tightest gate — an editor never sees it.
+
+     Demo mode: the passcode itself picks the role (adminPasscode vs
+     editorPasscode in data/config.json). Supabase mode: the signed-in
+     email is looked up in the `staff` table (docs/supabase-setup.sql) and
+     the role comes from there — no row, no access. The client-side check
+     is UX; in supabase mode Row Level Security enforces it for real. */
+  var STAFF_PERMS = {
+    editor: ["dashboard", "inbox", "content", "reservations", "live", "assistant"],
+    admin: ["dashboard", "inbox", "content", "reservations", "live", "assistant",
+            "people", "prayer", "volunteers", "settings", "automations"]
+  };
+  function staffSignIn(passcode) {
+    var role = null;
+    if (passcode && config.adminPasscode && passcode === config.adminPasscode) role = "admin";
+    else if (passcode && config.editorPasscode && passcode === config.editorPasscode) role = "editor";
+    if (!role) return Promise.reject(new Error("That passcode didn't match."));
+    write(LS.role, { role: role, at: new Date().toISOString() });
+    return Promise.resolve(role);
+  }
+  function staffSignInSupabase(email, password) {
+    return adminSignIn(email, password).then(function () {
+      return sb("/rest/v1/staff?select=role&email=eq." + encodeURIComponent(email), { token: adminToken() });
+    }).then(function (rows) {
+      var role = rows && rows[0] && rows[0].role;
+      if (role !== "admin" && role !== "editor") {
+        localStorage.removeItem(LS.session);
+        throw new Error("That account isn't on the staff list yet — an admin can add it in the staff table.");
+      }
+      write(LS.role, { role: role, at: new Date().toISOString() });
+      return role;
+    });
+  }
+  function staffRole() {
+    var s = read(LS.role, null);
+    var role = s && s.role;
+    if (role !== "admin" && role !== "editor") return null;
+    if (isSupabase() && !adminToken()) return null; /* real auth expired -> role expires with it */
+    return role;
+  }
+  function staffSignOut() {
+    localStorage.removeItem(LS.role);
+    localStorage.removeItem(LS.session);
+  }
+  function can(permission) {
+    var role = staffRole();
+    return !!role && STAFF_PERMS[role].indexOf(permission) !== -1;
+  }
+
   /* ---------------- admin auth ---------------- */
   function adminSignIn(email, password) {
     if (!isSupabase()) return Promise.resolve({ demo: true });
@@ -377,6 +433,8 @@ window.ShilohStore = (function () {
     updateReservationRequest: updateReservationRequest, hasConflict: hasConflict,
     listVolunteers: listVolunteers, addVolunteer: addVolunteer, updateVolunteer: updateVolunteer,
     applianceConfigured: applianceConfigured, askAppliance: askAppliance,
+    staffSignIn: staffSignIn, staffSignInSupabase: staffSignInSupabase, staffRole: staffRole,
+    staffSignOut: staffSignOut, can: can,
     adminSignIn: adminSignIn, adminSignOut: adminSignOut, isAdminSignedIn: isAdminSignedIn, listProfiles: listProfiles,
     fireWebhook: fireWebhook, downloadCsv: downloadCsv, downloadEventIcs: downloadEventIcs
   };

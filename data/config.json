@@ -1,11 +1,12 @@
 {
-  "note": "Backend configuration. mode: 'demo' stores everything in this browser (zero setup, perfect for the pilot). 'supabase' uses a real database + real admin login. Webhook automations fire in ANY mode when webhookUrl is set: point it at Zapier/Make/n8n/Resend to fan out to email, texts, or a CRM. See docs/BACKEND.md. applianceUrl/applianceToken point Admin -> Assistant at the church's local Ollama box once it exists — see docs/APPLIANCE-SETUP.md. Both blank is a normal, fully-supported state (Assistant just shows 'not connected yet').",
+  "note": "Backend configuration. mode: 'demo' stores everything in this browser (zero setup, perfect for the pilot). 'supabase' uses a real database + real admin login. Webhook automations fire in ANY mode when webhookUrl is set: point it at Zapier/Make/n8n/Resend to fan out to email, texts, or a CRM. See docs/BACKEND.md. applianceUrl/applianceToken point Admin -> Assistant at the church's local Ollama box once it exists — see docs/APPLIANCE-SETUP.md. Both blank is a normal, fully-supported state (Assistant just shows 'not connected yet'). Staff roles: adminPasscode signs in as ADMIN (everything), editorPasscode as EDITOR (events, announcements, ministries, reservations, go-live — no people/prayer/settings). CHANGE BOTH before handing the link around; they are courtesy locks until supabase mode is on.",
   "mode": "demo",
   "supabaseUrl": "",
   "supabaseAnonKey": "",
   "webhookUrl": "",
   "notifyEmail": "",
   "adminPasscode": "shiloh2026",
+  "editorPasscode": "shilohmedia2026",
   "applianceUrl": "",
   "applianceToken": ""
 }

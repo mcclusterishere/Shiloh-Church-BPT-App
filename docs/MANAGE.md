@@ -17,7 +17,7 @@ for any of this.
 | Edit the **visitor FAQ** | `data/faq.json` | Mirrored verbatim from the site's own FAQ. |
 | Change the **community-impact story** | `data/impact.json` | Every item should carry its `links` (sources). Don't add a claim you can't cite, and don't attach a photo to an event unless it actually documents that event. |
 | Add or swap **photos** | `assets/media/` | All 60 images from shilohchurchbpt.org live here; cached on first view, not at install. |
-| Change **backend mode / webhook / admin passcode** | `data/config.json` | See `docs/BACKEND.md` for going live with Supabase + automations. |
+| Change **backend mode / webhook / staff passcodes** | `data/config.json` | See `docs/BACKEND.md` for going live with Supabase + automations, and "Who can do what" below for the two passcodes. |
 | Replace the **app icon / logo** | `assets/icons/` | The current icon is a stained-glass-window mark drawn in the blues of the church's own logo (see `assets/icons/source.svg`) — a crisp stand-in until the church's real vector art is available. To change it, edit the SVG and regenerate the five PNG sizes; icons are fetched statically, so this is the one branding piece that isn't just a JSON edit. |
 | Review **visitor cards / RSVPs / prayer requests / reservations** | `/admin.html` | Demo passcode is in `data/config.json`. |
 | **Re-skin this whole app for another church** | Fork the repo, then edit `data/theme.json`, `data/church.json`, `data/ministries.json`, and `assets/icons/` | That's the entire rebranding process — no other file should need church-specific edits. If you find yourself editing `index.html` or `admin.html` to change something church-specific, something drifted from this convention; fix the data file instead so future template updates still merge cleanly. |
@@ -25,3 +25,27 @@ for any of this.
 **The one rule:** keep JSON valid — a missing comma stops that file from loading.
 Check any edit at jsonlint.com if unsure, or edit through the Admin panel where
 possible.
+
+## Who can do what — staff roles
+
+The back office (`admin.html` and the Go Live studio) has two sign-ins, two
+tiers:
+
+| Role | Signs in with | What it opens |
+| --- | --- | --- |
+| **Editor** | `editorPasscode` (`shilohmedia2026` until you change it) | The public face of the church: events, announcements, the ministry catalog, facility reservations, the live broadcast studio, and the assistant. |
+| **Admin** | `adminPasscode` (`shiloh2026` until you change it) | Everything the editor has, plus everything people-sensitive: visitor cards, member profiles, prayer requests at the team and pastor tiers, volunteer safety status, settings, and automations. |
+
+The line that matters: **pastoral data is the tightest tier.** An editor never
+sees team- or pastor-visibility prayer requests, and never sees visitor-card
+contact details. Give the media volunteer the editor passcode and they can run
+Sunday without ever holding what people trusted only the pastor with.
+
+Both passcodes live in `data/config.json`. Two things to hold in mind:
+
+- They are **courtesy locks** — checked in the browser, readable by anyone who
+  opens the file — until `"mode": "supabase"` is on, at which point the
+  `staff` table plus Row Level Security enforce the same two tiers for real
+  (see `docs/BACKEND.md`).
+- **Change both** before handing out any links. The defaults above are in a
+  public repo.

@@ -1,0 +1,792 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Broadcast studio · Shiloh Baptist Church</title>
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#0a0c14">
+  <link rel="icon" href="assets/icons/favicon-32.png" type="image/png">
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/atkinson-hyperlegible-latin-400-normal.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/fraunces-latin-var.woff2" crossorigin>
+  <link rel="stylesheet" href="css/system.css">
+  <script>
+    /* The studio is pinned dark on the <html> tag — a control room keeps the
+       lights down so the operator's eyes stay on the picture. Comfort mode is
+       still honored; only the light/dark toggle is deliberately absent here. */
+    (function () {
+      try {
+        if (localStorage.getItem("shiloh.comfort") === "on") document.documentElement.setAttribute("data-comfort", "on");
+      } catch (e) {}
+    })();
+  </script>
+  <style>
+    html, body { height: 100%; }
+    body { background: var(--ground-deep); overscroll-behavior: none; }
+
+    /* ------------------------------ gate -------------------------------- */
+    .gate { position: fixed; inset: 0; display: grid; place-items: center; padding: var(--space-5); overflow-y: auto; }
+    .gate__card {
+      width: min(100%, 23rem);
+      padding: var(--space-6);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--edge);
+      background: color-mix(in oklch, var(--surface) var(--glass), transparent);
+      box-shadow: 0 1px 0 0 var(--edge-light) inset, 0 24px 60px -34px var(--shadow);
+    }
+    @supports (backdrop-filter: blur(1px)) {
+      :root:not([data-comfort="on"]) .gate__card { backdrop-filter: blur(18px) saturate(150%); }
+    }
+    .gate__card h1 { font-size: var(--step-3); margin-top: var(--space-2); }
+    .err { display: none; color: var(--danger); font-weight: 700; margin-top: var(--space-4); }
+    .err.on { display: block; }
+
+    /* ------------------------------ stage ------------------------------- */
+    #studio { position: fixed; inset: 0; }
+    .cam {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover;
+      background: var(--ground-deep);
+    }
+    /* The preview flips like a mirror so framing feels natural on the front
+       camera; the broadcast itself is never mirrored. */
+    .cam.mirror { transform: scaleX(-1); }
+    .filmgrain {
+      position: absolute; inset: 0; pointer-events: none;
+      mix-blend-mode: overlay; opacity: 0.22;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    }
+    :root[data-comfort="on"] .filmgrain { display: none; }
+    /* Scrims top and bottom keep chips and controls readable over whatever
+       the camera happens to be pointed at. */
+    .veil {
+      position: absolute; inset: 0; pointer-events: none;
+      background:
+        linear-gradient(to bottom, color-mix(in oklch, var(--ground-deep) 80%, transparent), transparent 26%),
+        linear-gradient(to top, color-mix(in oklch, var(--ground-deep) 88%, transparent), transparent 48%);
+    }
+
+    /* ----------------------------- top bar ------------------------------ */
+    .topbar {
+      position: absolute; inset-inline: 0; top: 0;
+      display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-3);
+      padding: calc(env(safe-area-inset-top, 0px) + var(--space-4)) var(--space-5) 0;
+    }
+    .topbar__id { min-width: 0; line-height: 1.15; }
+    .topbar__id b {
+      display: block;
+      font-family: var(--font-display);
+      font-variation-settings: var(--display-settings);
+      font-weight: 800; font-size: var(--step-1); letter-spacing: -0.015em;
+    }
+    .topbar__status {
+      margin-left: auto;
+      display: flex; align-items: center; flex-wrap: wrap; justify-content: flex-end;
+      gap: var(--space-3);
+    }
+    .topbar .btn { min-height: var(--tap); font-size: var(--step--1); }
+    .roundbtn {
+      flex: none; width: var(--tap); height: var(--tap);
+      display: grid; place-items: center;
+      border-radius: var(--radius-pill);
+      border: 1.5px solid var(--edge);
+      background: color-mix(in oklch, var(--surface) 55%, transparent);
+      color: var(--text);
+      transition: transform var(--dur-fast) var(--ease-spring);
+    }
+    .roundbtn:active { transform: scale(0.92); }
+    .roundbtn svg { width: 22px; height: 22px; }
+    .clock { font-weight: 700; font-variant-numeric: tabular-nums; }
+    .livedot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--danger); flex: none; }
+    @media (prefers-reduced-motion: no-preference) {
+      .livedot { animation: livepulse 1.8s var(--ease-out) infinite; }
+      @keyframes livepulse {
+        0% { box-shadow: 0 0 0 0 color-mix(in oklch, var(--danger) 55%, transparent); }
+        70% { box-shadow: 0 0 0 9px transparent; }
+        100% { box-shadow: 0 0 0 0 transparent; }
+      }
+    }
+
+    /* ------------------------------ deck --------------------------------- */
+    /* Heavier glass than the app's panes: the backdrop here is a live camera,
+       not the calm light field, so legibility needs more body behind it. */
+    .deck {
+      position: absolute; left: 50%; transform: translateX(-50%);
+      bottom: calc(var(--space-3) + env(safe-area-inset-bottom, 0px));
+      width: min(100% - 1rem, 30rem);
+      max-height: calc(100dvh - 7rem);
+      overflow-y: auto; overscroll-behavior: contain;
+      padding: var(--space-5);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--edge);
+      background: color-mix(in oklch, var(--surface) 86%, transparent);
+      box-shadow: 0 1px 0 0 var(--edge-light) inset, 0 22px 50px -28px var(--shadow);
+    }
+    @supports (backdrop-filter: blur(1px)) {
+      :root:not([data-comfort="on"]) .deck { backdrop-filter: blur(22px) saturate(150%); }
+    }
+    :root[data-comfort="on"] .deck { background: var(--surface); }
+    .deckrow { display: flex; align-items: center; gap: var(--space-3); }
+    .ctl {
+      flex: none; width: 54px; height: 54px;
+      display: grid; place-items: center;
+      border-radius: var(--radius-pill);
+      border: 1.5px solid var(--edge);
+      background: color-mix(in oklch, var(--surface) 55%, transparent);
+      color: var(--text);
+      transition: transform var(--dur-fast) var(--ease-spring),
+                  background-color var(--dur-fast) var(--ease-out),
+                  border-color var(--dur-fast) var(--ease-out),
+                  color var(--dur-fast) var(--ease-out);
+    }
+    .ctl:active { transform: scale(0.92); }
+    .ctl svg { width: 24px; height: 24px; }
+    .ctl[disabled] { opacity: 0.45; pointer-events: none; }
+    .ctl[aria-pressed="true"] {
+      color: var(--danger);
+      border-color: color-mix(in oklch, var(--danger) 55%, transparent);
+      background: color-mix(in oklch, var(--danger) 16%, transparent);
+    }
+    .qual {
+      flex: 1; display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 2px; padding: 3px;
+      border-radius: var(--radius-pill);
+      background: color-mix(in oklch, var(--text) 8%, transparent);
+    }
+    .qual button {
+      min-height: var(--tap);
+      border-radius: var(--radius-pill);
+      font-weight: 700; font-size: var(--step--1);
+      color: var(--text-muted);
+      transition: color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out);
+    }
+    .qual button[aria-pressed="true"] { color: var(--text); background: color-mix(in oklch, var(--text) 14%, transparent); }
+    .qual button[disabled] { opacity: 0.45; pointer-events: none; }
+
+    /* The one loud control in the room. Its red is local: the dark theme's
+       danger token is a pale tint meant for text, not for a button pressed
+       on air. */
+    .golive {
+      --rec: #c22a35; --rec: oklch(50% 0.19 22);
+      display: flex; align-items: center; justify-content: center; gap: var(--space-3);
+      width: 100%; min-height: 62px;
+      margin-top: var(--space-4);
+      border-radius: var(--radius-pill);
+      background: var(--rec); color: #ffffff;
+      font-weight: 700; font-size: var(--step-1);
+      box-shadow: 0 14px 34px -14px var(--rec), 0 1px 0 0 rgb(255 255 255 / 0.14) inset;
+      transition: transform var(--dur-fast) var(--ease-spring), opacity var(--dur-fast) var(--ease-out);
+    }
+    .golive:active { transform: scale(0.97); }
+    .golive[disabled] { opacity: 0.6; pointer-events: none; }
+    .golive svg { width: 24px; height: 24px; }
+    .golive--end {
+      background: color-mix(in oklch, var(--rec) 24%, transparent);
+      color: var(--danger);
+      border: 1.5px solid color-mix(in oklch, var(--danger) 50%, transparent);
+      box-shadow: none;
+    }
+
+    .quietcard {
+      margin-top: var(--space-4);
+      padding: var(--space-4) var(--space-5);
+      border: 1.5px dashed color-mix(in oklch, var(--warn) 45%, transparent);
+      border-radius: var(--radius-lg);
+      font-size: var(--step--1); color: var(--text-muted);
+    }
+    .quietcard b { color: var(--warn); }
+    .quietcard code { font-size: 0.92em; }
+
+    #liveRow { margin-top: var(--space-4); }
+    .watchline { text-align: center; font-size: var(--step--1); color: var(--text-muted); margin-bottom: var(--space-3); }
+    .deckmsg { margin-top: var(--space-4); font-weight: 700; font-size: var(--step--1); color: var(--warn); }
+    .deckmsg--bad { color: var(--danger); }
+
+    .camcard h3 { font-size: var(--step-2); }
+    .camcard p { color: var(--text-muted); margin-top: var(--space-3); }
+
+    .sheet { margin-top: var(--space-5); border-top: 1px solid var(--edge); }
+    .sheet summary {
+      list-style: none;
+      display: flex; align-items: center; gap: var(--space-3);
+      min-height: var(--tap);
+      margin-top: var(--space-2);
+      font-weight: 700; font-size: var(--step--1); color: var(--text-muted);
+      cursor: pointer; border-radius: var(--radius-sm);
+    }
+    .sheet summary::-webkit-details-marker { display: none; }
+    .sheet summary svg { width: 20px; height: 20px; }
+    .sheet[open] summary { color: var(--text); }
+    .sheet__body { padding: var(--space-2) 0; }
+    .sheet .field { margin-bottom: var(--space-4); }
+    .sheet .deckrow { align-items: flex-start; }
+    .sheet .deckrow .field { flex: 1; min-width: 0; }
+  </style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <g id="i-back"><path d="M14.6 5.4 8 12l6.6 6.6"/></g>
+  <g id="i-flip"><path d="M19.6 12a7.6 7.6 0 1 1-2.2-5.36"/><path d="M19.9 3.6v3.5h-3.5"/><circle cx="12" cy="12" r="2.7"/></g>
+  <g id="i-mic"><rect x="9.3" y="3.2" width="5.4" height="9.6" rx="2.7"/><path d="M5.8 11.6a6.2 6.2 0 0 0 12.4 0M12 17.8v3M9.2 20.8h5.6"/></g>
+  <g id="i-micoff"><rect x="9.3" y="3.2" width="5.4" height="9.6" rx="2.7"/><path d="M5.8 11.6a6.2 6.2 0 0 0 12.4 0M12 17.8v3M9.2 20.8h5.6"/><path d="M4.4 4.4l15.2 15.2"/></g>
+  <g id="i-air"><circle cx="12" cy="12" r="2.2"/><path d="M7.8 16.2a6 6 0 0 1 0-8.4M16.2 7.8a6 6 0 0 1 0 8.4M5 19a10 10 0 0 1 0-14M19 5a10 10 0 0 1 0 14"/></g>
+  <g id="i-sliders"><path d="M4.4 8h2.9M11.8 8h7.8M4.4 16h7.8M16.6 16h3"/><circle cx="9.6" cy="8" r="2.1"/><circle cx="14.4" cy="16" r="2.1"/></g>
+</defs></svg>
+
+<!-- ================================ gate ================================ -->
+<div class="gate" id="gate" hidden>
+  <form class="gate__card rise" id="gateForm">
+    <p class="eyebrow" id="gateChurch">Shiloh Baptist Church</p>
+    <h1>Broadcast studio</h1>
+    <p class="muted" id="gateBlurb" style="margin-top:var(--space-3)">Enter the staff passcode and this phone becomes the church's camera.</p>
+    <div class="field" id="gateDemo" style="margin-top:var(--space-5)">
+      <label for="gatePass">Staff passcode</label>
+      <input id="gatePass" type="password" autocomplete="current-password">
+    </div>
+    <div id="gateSb" hidden style="margin-top:var(--space-5)">
+      <div class="field"><label for="gateEmail">Email</label><input id="gateEmail" type="email" autocomplete="email"></div>
+      <div class="field"><label for="gatePw">Password</label><input id="gatePw" type="password" autocomplete="current-password"></div>
+    </div>
+    <p class="err" id="gateErr" role="alert"></p>
+    <button class="btn btn--primary btn--block" type="submit">Open the studio</button>
+    <a class="btn btn--quiet btn--block" href="index.html" style="margin-top:var(--space-3)">Back to the app</a>
+  </form>
+</div>
+
+<!-- =============================== studio =============================== -->
+<div id="studio" hidden>
+  <video class="cam" id="cam" autoplay playsinline muted hidden aria-label="Camera preview"></video>
+  <div class="filmgrain" id="filmgrain" aria-hidden="true" hidden></div>
+  <div class="veil" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="roundbtn" id="backBtn" href="index.html" aria-label="Back to the app">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-back"/></svg>
+    </a>
+    <div class="topbar__id">
+      <span class="eyebrow" id="topChurch">Shiloh</span>
+      <b>Broadcast studio</b>
+    </div>
+    <div class="topbar__status">
+      <span class="chip chip--warn" id="chipRehearse" hidden>Rehearsal</span>
+      <span class="chip" id="chipConn" aria-live="polite" hidden><span class="livedot" id="connDot" hidden></span><span id="connText"></span></span>
+      <span class="clock tnum" id="clock" hidden>00:00</span>
+      <button class="btn btn--quiet" id="signOut" type="button">Sign out</button>
+    </div>
+  </header>
+
+  <div class="deck">
+    <div class="camcard" id="camCard" hidden>
+      <h3 id="camTitle">Waking the camera…</h3>
+      <p id="camText">If the browser asks, allow the camera and microphone — the preview appears right here.</p>
+      <button class="btn btn--primary" id="camRetry" type="button" style="margin-top:var(--space-4)" hidden>Try again</button>
+    </div>
+
+    <div id="controls" hidden>
+      <div class="deckrow">
+        <button class="ctl" id="flipBtn" type="button" aria-label="Flip camera">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-flip"/></svg>
+        </button>
+        <div class="qual" id="qual" role="group" aria-label="Video quality">
+          <button type="button" data-q="480" aria-pressed="false">480p</button>
+          <button type="button" data-q="720" aria-pressed="true">720p</button>
+          <button type="button" data-q="1080" aria-pressed="false">1080p</button>
+        </div>
+        <button class="ctl" id="micBtn" type="button" aria-label="Mute microphone" aria-pressed="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use id="micIcon" href="#i-mic"/></svg>
+        </button>
+      </div>
+
+      <button class="golive" id="goBtn" type="button" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-air"/></svg>
+        <span id="goLabel">Go live</span>
+      </button>
+
+      <div class="quietcard" id="rehearseCard" hidden><b>Camera check only.</b> <span id="rehearseText"></span></div>
+
+      <div id="liveRow" hidden>
+        <p class="watchline">Members watch on the app's Watch screen.</p>
+        <button class="golive golive--end" id="endBtn" type="button">End broadcast</button>
+      </div>
+    </div>
+
+    <p class="deckmsg" id="deckMsg" role="status" hidden></p>
+
+    <details class="sheet" id="sheet" hidden>
+      <summary>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-sliders"/></svg>
+        Broadcast target
+      </summary>
+      <div class="sheet__body">
+        <p class="hint" style="margin:0 0 var(--space-4)">The WHIP address of the church's own streaming box, plus its publish login. These stay on this phone — never uploaded, never written to a shared file.</p>
+        <div class="field">
+          <label for="tUrl">WHIP address</label>
+          <input id="tUrl" type="text" inputmode="url" autocapitalize="none" autocorrect="off" spellcheck="false" autocomplete="off" placeholder="https://stream.example.org/live/whip">
+        </div>
+        <div class="deckrow">
+          <div class="field"><label for="tUser">Username</label><input id="tUser" type="text" autocapitalize="none" autocomplete="off"></div>
+          <div class="field"><label for="tPass">Password or token</label><input id="tPass" type="password" autocomplete="off"></div>
+        </div>
+        <div class="row">
+          <button class="btn btn--primary" id="tSave" type="button">Save to this phone</button>
+          <button class="btn btn--quiet" id="tClear" type="button">Clear</button>
+        </div>
+      </div>
+    </details>
+  </div>
+</div>
+
+<script src="js/store.js"></script>
+<script src="js/ambient.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var BROADCAST_KEY = "shiloh.broadcast";
+  var QUALITY = {
+    "480":  { w: 854,  h: 480 },
+    "720":  { w: 1280, h: 720 },
+    "1080": { w: 1920, h: 1080 }
+  };
+
+  var THEME = null, LIVE = null;
+  var studio = {
+    stream: null,
+    facing: "environment",   /* the service, not the operator, is the default shot */
+    quality: "720",
+    micOn: true,
+    camState: "idle",        /* idle | starting | ok | denied | missing | busy | error */
+    camDetail: "",
+    acquiring: false,
+    busy: false,             /* a WHIP POST is in flight */
+    live: false,             /* true ONLY after the ingest accepted the offer — never before */
+    connState: null,
+    pc: null,
+    resource: null,
+    publishedTo: "",
+    publishedAuth: null,
+    startedAt: 0,
+    timerId: null,
+    wakeLock: null
+  };
+
+  var els = {};
+  ["gate", "gateForm", "gateChurch", "gateBlurb", "gateDemo", "gateSb", "gatePass", "gateEmail", "gatePw", "gateErr",
+   "studio", "cam", "filmgrain", "topChurch", "chipRehearse", "chipConn", "connDot", "connText", "clock", "backBtn",
+   "signOut", "camCard", "camTitle", "camText", "camRetry", "controls", "flipBtn", "micBtn", "micIcon", "qual",
+   "goBtn", "goLabel", "rehearseCard", "rehearseText", "liveRow", "endBtn", "deckMsg",
+   "sheet", "tUrl", "tUser", "tPass", "tSave", "tClear"
+  ].forEach(function (id) { els[id] = document.getElementById(id); });
+
+  /* ------------------------------- boot -------------------------------- */
+  Promise.all([
+    ShilohStore.init(),
+    fetch("data/theme.json", { cache: "no-cache" }).then(function (r) { return r.json(); }).catch(function () { return {}; }),
+    fetch("data/live.json", { cache: "no-cache" }).then(function (r) { return r.json(); }).catch(function () { return {}; })
+  ]).then(function (res) {
+    THEME = res[1]; LIVE = res[2];
+    var name = THEME.churchName || "Shiloh Baptist Church";
+    els.gateChurch.textContent = name;
+    els.topChurch.textContent = THEME.shortName || name;
+    document.title = "Broadcast studio · " + name;
+    if (ShilohStore.isSupabase()) {
+      els.gateDemo.hidden = true;
+      els.gateSb.hidden = false;
+      els.gateBlurb.textContent = "Sign in with your staff account.";
+    }
+    if (ShilohStore.staffRole()) enterStudio(); else showGate();
+  });
+
+  function showGate() {
+    els.studio.hidden = true;
+    els.gate.hidden = false;
+    ShilohAmbient.mount();
+  }
+
+  els.gateForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    els.gateErr.classList.remove("on");
+    var signIn = ShilohStore.isSupabase()
+      ? ShilohStore.staffSignInSupabase(els.gateEmail.value.trim(), els.gatePw.value)
+      : ShilohStore.staffSignIn(els.gatePass.value);
+    signIn.then(function () { enterStudio(); }).catch(function (err) {
+      els.gateErr.textContent = (err && err.message) || "That didn't work — try again.";
+      els.gateErr.classList.add("on");
+    });
+  });
+
+  function enterStudio() {
+    els.gate.hidden = true;
+    els.studio.hidden = false;
+    els.rehearseText.textContent = ShilohStore.can("settings")
+      ? "No broadcast target is connected yet — frame the shot and check the sound. When the church's streaming box is ready, paste its address under Broadcast target below (docs/GO-LIVE.md, \"Your own box\")."
+      : "No broadcast target is connected yet — frame the shot and check the sound. An admin connects the church's streaming box from their phone (docs/GO-LIVE.md, \"Your own box\").";
+    prefillSheet();
+    render();
+    startCamera();
+  }
+
+  els.signOut.addEventListener("click", function () {
+    if (studio.pc) return; /* hidden while live; belt and suspenders */
+    if (studio.stream) studio.stream.getTracks().forEach(function (t) { t.stop(); });
+    ShilohStore.staffSignOut();
+    location.reload();
+  });
+
+  /* -------------------------- broadcast target -------------------------- */
+  /* Effective config: this phone's saved target first, then the public WHIP
+     url from data/live.json with no credentials. Credentials only ever live
+     in this device's localStorage — that is the whole security model. */
+  function readTarget() {
+    try {
+      var t = JSON.parse(localStorage.getItem(BROADCAST_KEY));
+      return t && typeof t.url === "string" ? t : null;
+    } catch (e) { return null; }
+  }
+  function effectiveTarget() {
+    var saved = readTarget();
+    if (saved && saved.url.trim()) return { url: saved.url.trim(), user: saved.user || "", pass: saved.pass || "" };
+    var url = (LIVE && LIVE.whip && LIVE.whip.url) ? String(LIVE.whip.url).trim() : "";
+    return { url: url, user: "", pass: "" };
+  }
+  function authHeaders(t) {
+    if (t.user) return { "Authorization": "Basic " + btoa(t.user + ":" + (t.pass || "")) };
+    if (t.pass) return { "Authorization": "Bearer " + t.pass }; /* a lone token rides in the pass field */
+    return {};
+  }
+  function prefillSheet() {
+    var saved = readTarget();
+    els.tUrl.value = saved ? saved.url : ((LIVE && LIVE.whip && LIVE.whip.url) || "");
+    els.tUser.value = saved ? (saved.user || "") : "";
+    els.tPass.value = saved ? (saved.pass || "") : "";
+  }
+  els.tSave.addEventListener("click", function () {
+    var t = { url: els.tUrl.value.trim(), user: els.tUser.value.trim(), pass: els.tPass.value };
+    try { localStorage.setItem(BROADCAST_KEY, JSON.stringify(t)); } catch (e) {}
+    els.sheet.open = false;
+    setMsg(t.url ? "Broadcast target saved to this phone." : "Target cleared — no address is set.", false);
+    render();
+  });
+  els.tClear.addEventListener("click", function () {
+    try { localStorage.removeItem(BROADCAST_KEY); } catch (e) {}
+    prefillSheet();
+    var fallback = LIVE && LIVE.whip && LIVE.whip.url;
+    setMsg(fallback ? "Saved target cleared — using the address from data/live.json." : "Saved target cleared.", false);
+    render();
+  });
+
+  /* ------------------------------- camera ------------------------------- */
+  async function startCamera() {
+    if (studio.acquiring) return;
+    studio.acquiring = true;
+    if (!studio.stream) studio.camState = "starting";
+    render();
+    /* Phones can't open two cameras at once, so the old tracks stop first. */
+    if (studio.stream) studio.stream.getTracks().forEach(function (t) { t.stop(); });
+    try {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        var unsupported = new Error("no camera API");
+        unsupported.name = "NotFoundError";
+        throw unsupported;
+      }
+      var q = QUALITY[studio.quality];
+      var stream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+        video: { facingMode: studio.facing, width: { ideal: q.w }, height: { ideal: q.h } }
+      });
+      studio.stream = stream;
+      stream.getAudioTracks().forEach(function (t) { t.enabled = studio.micOn; });
+      var vt = stream.getVideoTracks()[0];
+      if (vt) vt.addEventListener("ended", onCamEnded);
+      els.cam.srcObject = stream;
+      els.cam.muted = true;
+      els.cam.classList.toggle("mirror", studio.facing === "user");
+      if (studio.pc) {
+        /* Mid-broadcast flips swap the outgoing tracks — no renegotiation. */
+        studio.pc.getSenders().forEach(function (sender) {
+          if (!sender.track) return;
+          var next = sender.track.kind === "video" ? stream.getVideoTracks()[0] : stream.getAudioTracks()[0];
+          if (next) sender.replaceTrack(next);
+        });
+      }
+      studio.camState = "ok";
+      ShilohAmbient.unmount();
+    } catch (err) {
+      studio.stream = null;
+      els.cam.srcObject = null;
+      var n = err && err.name;
+      studio.camState = (n === "NotAllowedError" || n === "SecurityError") ? "denied"
+        : (n === "NotFoundError" || n === "OverconstrainedError") ? "missing"
+        : (n === "NotReadableError") ? "busy" : "error";
+      studio.camDetail = (err && err.message) || "";
+      if (studio.live) endBroadcast(false, "The camera stopped, so the broadcast has ended.", true);
+      ShilohAmbient.mount();
+    }
+    studio.acquiring = false;
+    render();
+  }
+
+  function onCamEnded() {
+    /* The OS pulled the camera out from under us — a phone call, usually. */
+    if (studio.acquiring) return;
+    if (studio.live) endBroadcast(false, "The camera stopped, so the broadcast has ended.", true);
+    studio.stream = null;
+    els.cam.srcObject = null;
+    studio.camState = "error";
+    studio.camDetail = "The camera stopped.";
+    render();
+  }
+
+  function camCopy() {
+    switch (studio.camState) {
+      case "idle":
+      case "starting":
+        return ["Waking the camera…",
+          "If the browser asks, allow the camera and microphone — the preview appears right here."];
+      case "denied":
+        return ["Camera access is blocked",
+          "Tap the camera or padlock icon beside the address bar, set Camera and Microphone to Allow, then try again. On iPhone it's under the aA menu, in Website Settings."];
+      case "missing":
+        return ["No camera found",
+          "This device doesn't have a camera the browser can reach. Open this page on the phone that will film the service."];
+      case "busy":
+        return ["The camera is busy",
+          "Another app is holding the camera. Close it, then try again."];
+      default:
+        return ["The camera couldn't start",
+          studio.camDetail || "Something unexpected went wrong. Try again."];
+    }
+  }
+
+  els.camRetry.addEventListener("click", function () { startCamera(); });
+  els.flipBtn.addEventListener("click", function () {
+    studio.facing = studio.facing === "user" ? "environment" : "user";
+    startCamera();
+  });
+  els.micBtn.addEventListener("click", function () {
+    studio.micOn = !studio.micOn;
+    if (studio.stream) studio.stream.getAudioTracks().forEach(function (t) { t.enabled = studio.micOn; });
+    render();
+  });
+  els.qual.addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-q]");
+    if (!b || b.disabled) return;
+    var q = b.getAttribute("data-q");
+    if (q === studio.quality) return;
+    studio.quality = q;
+    startCamera();
+  });
+
+  /* --------------------------- WHIP publisher --------------------------- */
+  async function publish(stream, url, headers) {
+    const pc = new RTCPeerConnection({ iceServers: [{ urls: "stun:stun.l.google.com:19302" }] });
+    try {
+      stream.getTracks().forEach(t => pc.addTrack(t, stream));
+      pc.getTransceivers().forEach(t => {
+        if (t.sender && t.sender.track && t.sender.track.kind === "video" && t.setCodecPreferences) {
+          const caps = RTCRtpSender.getCapabilities("video");
+          if (caps) {
+            const h264 = caps.codecs.filter(c => /h264/i.test(c.mimeType));
+            const rest = caps.codecs.filter(c => !/h264/i.test(c.mimeType));
+            if (h264.length) t.setCodecPreferences(h264.concat(rest)); /* relay without transcoding on the box */
+          }
+        }
+      });
+      await pc.setLocalDescription(await pc.createOffer());
+      await new Promise(res => { /* WHIP wants the full SDP: wait for ICE gathering (2s cap) */
+        if (pc.iceGatheringState === "complete") return res();
+        pc.addEventListener("icegatheringstatechange", () => { if (pc.iceGatheringState === "complete") res(); });
+        setTimeout(res, 2000);
+      });
+      const resp = await fetch(url, {
+        method: "POST",
+        headers: Object.assign({ "Content-Type": "application/sdp" }, headers),
+        body: pc.localDescription.sdp
+      });
+      if (!resp.ok) throw new Error("The broadcast server answered " + resp.status + ".");
+      await pc.setRemoteDescription({ type: "answer", sdp: await resp.text() });
+      return { pc: pc, resource: resp.headers.get("Location") };
+    } catch (err) {
+      pc.close();
+      throw err;
+    }
+  }
+
+  async function goLive() {
+    if (studio.live || studio.busy || !studio.stream) return;
+    var t = effectiveTarget();
+    if (!t.url) return;
+    setMsg("");
+    studio.busy = true;
+    render();
+    try {
+      var out = await publish(studio.stream, t.url, authHeaders(t));
+      studio.pc = out.pc;
+      studio.resource = out.resource;
+      studio.publishedTo = t.url;
+      studio.publishedAuth = authHeaders(t);
+      studio.live = true; /* the ingest accepted the offer — only now */
+      studio.connState = out.pc.connectionState === "connected" ? "connected" : "connecting";
+      studio.startedAt = Date.now();
+      out.pc.addEventListener("connectionstatechange", onPcState);
+      startClock();
+      lockScreen();
+    } catch (err) {
+      var msg = (err && err.message) || "";
+      if (/answered (401|403)/.test(msg)) msg += " Check the username and password under Broadcast target.";
+      else if (!/answered \d+/.test(msg)) msg = "Couldn't reach the broadcast server" + (msg ? " (" + msg + ")" : "") + ". Check the WHIP address, and that the box is on.";
+      setMsg(msg, true);
+    }
+    studio.busy = false;
+    render();
+  }
+
+  function onPcState() {
+    if (!studio.pc) return;
+    var s = studio.pc.connectionState;
+    if (s === "failed") {
+      endBroadcast(false, "The connection to the broadcast server failed — the stream has ended.", true);
+      return;
+    }
+    if (s === "connected" || s === "connecting" || s === "disconnected") {
+      studio.connState = s;
+      render();
+    }
+  }
+
+  function resourceUrl() {
+    if (!studio.resource) return null;
+    try { return new URL(studio.resource, studio.publishedTo).toString(); } catch (e) { return null; }
+  }
+
+  function endBroadcast(ask, note, bad) {
+    if (!studio.pc) return;
+    if (ask && !window.confirm("End the broadcast?")) return;
+    var res = resourceUrl();
+    if (res) {
+      try { fetch(res, { method: "DELETE", headers: studio.publishedAuth || {} }).catch(function () {}); } catch (e) {}
+    }
+    try { studio.pc.close(); } catch (e) {}
+    studio.pc = null;
+    studio.resource = null;
+    studio.live = false;
+    studio.connState = null;
+    stopClock();
+    unlockScreen();
+    if (note) setMsg(note, !!bad);
+    render(); /* the preview stays up — the room doesn't go dark */
+  }
+
+  els.goBtn.addEventListener("click", function () { goLive(); });
+  els.endBtn.addEventListener("click", function () { endBroadcast(true, "The broadcast has ended.", false); });
+
+  window.addEventListener("pagehide", function () {
+    /* Best effort: tell the box the session ended so it frees the stream. */
+    if (!studio.pc) return;
+    var res = resourceUrl();
+    if (res) {
+      try { fetch(res, { method: "DELETE", headers: studio.publishedAuth || {}, keepalive: true }).catch(function () {}); } catch (e) {}
+    }
+  });
+
+  /* ------------------------------- clock -------------------------------- */
+  function tick() {
+    var s = Math.max(0, Math.floor((Date.now() - studio.startedAt) / 1000));
+    var m = Math.floor(s / 60);
+    s = s % 60;
+    els.clock.textContent = (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s);
+  }
+  function startClock() {
+    tick();
+    studio.timerId = setInterval(tick, 500);
+  }
+  function stopClock() {
+    if (studio.timerId) { clearInterval(studio.timerId); studio.timerId = null; }
+    els.clock.textContent = "00:00";
+  }
+
+  /* ----------------------------- wake lock ------------------------------ */
+  function lockScreen() {
+    if (!("wakeLock" in navigator)) return;
+    navigator.wakeLock.request("screen")
+      .then(function (lock) { studio.wakeLock = lock; })
+      .catch(function () {}); /* denied is fine — the phone may still sleep */
+  }
+  function unlockScreen() {
+    if (!studio.wakeLock) return;
+    try { studio.wakeLock.release().catch(function () {}); } catch (e) {}
+    studio.wakeLock = null;
+  }
+  document.addEventListener("visibilitychange", function () {
+    /* The lock auto-releases when the screen turns off or the tab hides;
+       take it back the moment the operator returns mid-broadcast. */
+    if (!document.hidden && studio.live) lockScreen();
+  });
+
+  /* ------------------------------- render ------------------------------- */
+  function setMsg(text, bad) {
+    els.deckMsg.hidden = !text;
+    els.deckMsg.textContent = text || "";
+    els.deckMsg.classList.toggle("deckmsg--bad", !!bad);
+  }
+
+  function render() {
+    var t = effectiveTarget();
+    var hasTarget = !!t.url;
+    var camOk = studio.camState === "ok";
+    var lock = studio.acquiring || studio.busy;
+
+    els.chipRehearse.hidden = hasTarget;
+    var cs = studio.busy ? "connecting" : (studio.live ? (studio.connState || "connecting") : null);
+    if (cs) {
+      els.chipConn.hidden = false;
+      if (cs === "connected") {
+        els.chipConn.className = "chip chip--danger";
+        els.connDot.hidden = false;
+        els.connText.textContent = "LIVE";
+      } else {
+        els.chipConn.className = "chip chip--warn";
+        els.connDot.hidden = true;
+        els.connText.textContent = cs === "disconnected" ? "Reconnecting…" : "Connecting…";
+      }
+    } else {
+      els.chipConn.hidden = true;
+    }
+    els.clock.hidden = !studio.live;
+    els.backBtn.hidden = studio.live;
+    els.signOut.hidden = studio.live;
+
+    els.cam.hidden = !camOk;
+    els.filmgrain.hidden = !camOk;
+
+    els.camCard.hidden = camOk;
+    els.controls.hidden = !camOk;
+    if (!camOk) {
+      var copy = camCopy();
+      els.camTitle.textContent = copy[0];
+      els.camText.textContent = copy[1];
+      els.camRetry.hidden = studio.camState === "starting" || studio.camState === "idle";
+    }
+
+    els.flipBtn.disabled = lock;
+    els.micBtn.disabled = lock;
+    els.micBtn.setAttribute("aria-pressed", String(!studio.micOn));
+    els.micBtn.setAttribute("aria-label", studio.micOn ? "Mute microphone" : "Unmute microphone");
+    els.micIcon.setAttribute("href", studio.micOn ? "#i-mic" : "#i-micoff");
+    Array.prototype.forEach.call(els.qual.children, function (b) {
+      b.setAttribute("aria-pressed", String(b.getAttribute("data-q") === studio.quality));
+      b.disabled = lock;
+    });
+
+    els.goBtn.hidden = !camOk || !hasTarget || studio.live;
+    els.goBtn.disabled = lock;
+    els.goLabel.textContent = studio.busy ? "Connecting…" : "Go live";
+    els.rehearseCard.hidden = !camOk || hasTarget;
+    els.liveRow.hidden = !studio.live;
+    els.sheet.hidden = !ShilohStore.can("settings") || studio.live;
+  }
+})();
+</script>
+</body>
+</html>

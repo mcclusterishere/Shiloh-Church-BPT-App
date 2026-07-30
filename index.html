@@ -429,6 +429,9 @@
         <p class="eyebrow" style="margin-bottom: var(--space-4)">Your RSVPs</p>
         <div class="stack" id="myRsvpList"></div>
       </div>
+      <!-- Staff entrance. Last and collapsed on purpose — members never need
+           it, so it stays one quiet line until a staffer opens it. -->
+      <div class="card" id="staffCard"></div>
     </div>
   </section>
 
@@ -1093,6 +1096,7 @@
       return '<div class="card row" style="justify-content:space-between"><b>' + esc(ev ? ev.title : r.eventId) +
         '</b><span class="chip ' + cls + '">' + esc(r.answer) + "</span></div>";
     }).join("") : '<div class="empty">No RSVPs yet.</div>';
+    renderStaffCard();
   }
   document.getElementById("profileForm").addEventListener("submit", function (e) {
     e.preventDefault();
@@ -1101,6 +1105,58 @@
       email: document.getElementById("pEmail").value.trim(),
       phone: document.getElementById("pPhone").value.trim()
     }).then(function () { renderProfile(); toast("Saved."); });
+  });
+
+  /* The staff entrance lives on the profile so the back office needs no
+     discoverable URL of its own. The passcode here is demo mode's courtesy
+     lock (data/config.json); in supabase mode staff sign in with email on
+     admin.html, and this card simply reflects that signed-in state. */
+  function renderStaffCard() {
+    var role = ShilohStore.staffRole();
+    var el = document.getElementById("staffCard");
+    if (!role) {
+      el.innerHTML =
+        '<details><summary class="btn btn--quiet" style="list-style:none">Church staff? Sign in</summary>' +
+        '<form id="staffForm" style="margin-top:var(--space-4)">' +
+        '<div class="field"><label for="staffPass">Staff passcode</label>' +
+        '<input type="password" id="staffPass" autocomplete="current-password" required></div>' +
+        '<button class="btn btn--primary btn--block" type="submit">Sign in</button>' +
+        "</form></details>";
+      return;
+    }
+    var golive = ShilohStore.can("live")
+      ? '<a class="btn btn--block" href="golive.html"><span class="livedot" aria-hidden="true"></span>Go live</a>'
+      : "";
+    el.innerHTML =
+      '<div class="row" style="justify-content:space-between">' +
+        '<span class="eyebrow">Church staff</span>' +
+        '<span class="chip ' + (role === "admin" ? "chip--accent" : "chip--teal") + '">' + esc(role === "admin" ? "Admin" : "Editor") + "</span>" +
+      "</div>" +
+      '<div class="stack" style="--gap: var(--space-3); margin-top: var(--space-4)">' +
+        '<a class="btn btn--primary btn--block" href="admin.html">Open the back office</a>' +
+        golive +
+        '<button class="btn btn--quiet btn--block" id="staffOut" type="button">Sign out</button>' +
+      "</div>";
+  }
+  document.addEventListener("submit", function (e) {
+    var f = e.target.closest("#staffForm");
+    if (!f) return;
+    e.preventDefault();
+    ShilohStore.staffSignIn(document.getElementById("staffPass").value.trim())
+      .then(function (role) {
+        haptic(18);
+        renderStaffCard();
+        toast("Welcome — signed in as " + role + ".");
+      })
+      .catch(function (err) { toast(err.message); });
+  });
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("#staffOut");
+    if (!b) return;
+    haptic();
+    ShilohStore.staffSignOut();
+    renderStaffCard();
+    toast("Signed out.");
   });
 
   /* -------------------------------- help ------------------------------ */

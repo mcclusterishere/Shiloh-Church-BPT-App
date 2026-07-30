@@ -10,16 +10,21 @@ decides where it goes: **`data/config.json`**.
   "supabaseAnonKey": "",
   "webhookUrl": "",
   "notifyEmail": "",
-  "adminPasscode": "shiloh2026"
+  "adminPasscode": "shiloh2026",
+  "editorPasscode": "shilohmedia2026",
+  "applianceUrl": "",
+  "applianceToken": ""
 }
 ```
 
 | Setting | What it does |
 | --- | --- |
 | `mode: "demo"` | Zero setup. Everything lives in the browser's localStorage. Submissions made on a device appear in **that device's** admin only — perfect for trying the app and for the pilot, useless for a real multi-person church. |
-| `mode: "supabase"` | Real database, real admin login (magic link). Visitor cards, RSVPs, prayer requests, and reservations insert from the app; admins sign in to review and act on them. |
+| `mode: "supabase"` | Real database, real admin login. Visitor cards, RSVPs, prayer requests, and reservations insert from the app; staff sign in to review and act on them. |
 | `webhookUrl` | **Automations.** Fires in *any* mode: every visitor card, RSVP, prayer request, and reservation request POSTs JSON to this URL. |
-| `adminPasscode` | Demo mode's courtesy lock for `admin.html`. It is client-side and **not security** — real access control comes with Supabase mode. |
+| `adminPasscode` | Demo mode's courtesy lock for the **admin** tier of the back office. Client-side and **not security** — real access control comes with Supabase mode (see "Staff roles" below). |
+| `editorPasscode` | Same courtesy lock, **editor** tier: the public-face jobs only, nothing people-sensitive. Change both passcodes before handing out links. |
+| `applianceUrl` / `applianceToken` | Points **Admin → Assistant** at the church's own box (or the Gemini edge function) — see `docs/APPLIANCE-SETUP.md`. Both blank is a normal, fully-supported state. |
 
 ## Why one Supabase project per church, not a shared one
 
@@ -62,10 +67,11 @@ Test it from **Admin → Automations → Send a test event**.
    [`supabase-setup.sql`](supabase-setup.sql) — it creates every table with Row Level
    Security **on by default** (a table without an explicit policy is fully open
    through Supabase's auto-generated REST API, so this step is not optional).
-3. In **Authentication → Settings**, turn on email magic-link sign-in, and point
-   custom SMTP at Resend (`smtp.resend.com`, your verified domain, your Resend API key
-   as the SMTP password) so sign-in emails actually land.
-4. In **Authentication → Users**, add the admin user(s).
+3. (Recommended) In **Authentication → Settings**, point custom SMTP at Resend
+   (`smtp.resend.com`, your verified domain, your Resend API key as the SMTP
+   password) so password-reset and invite emails actually land.
+4. In **Authentication → Users**, add each staff login (email + password), then
+   give each one a role row in the `staff` table — see "Staff roles" below.
 5. Edit `data/config.json`:
 
    ```json
@@ -79,6 +85,36 @@ The anon key is designed to be public — safety comes entirely from the RLS pol
 which is why step 2 is not optional. **Never** commit the `service_role` key anywhere;
 it bypasses every RLS policy and belongs only in GitHub Actions/Edge Function secrets
 if a future automation needs it.
+
+## Staff roles — what actually enforces them
+
+Two tiers run the back office. **Editor** handles the public face: events,
+announcements, the ministry catalog, facility reservations, the live
+broadcast. **Admin** adds everything people-sensitive: visitor cards, member
+profiles, prayer at the team/pastor tiers, volunteer safety status, settings,
+automations.
+
+In demo mode, the two passcodes in `data/config.json` pick the role — and
+they are **UX only**. They're checked in the browser, in a file anyone can
+read; they keep honest people in their lane and nothing more. The real lock
+is Supabase + RLS: `supabase-setup.sql` creates a `staff` table (email →
+role) and writes every sensitive policy around it. A signed-in account with
+no staff row can't do anything staff-shaped, and an editor's account cannot
+read members, visitor cards, team/pastor prayer, or safety status — the
+database refuses, no matter what any UI shows or any devtools request asks
+for. That's the Church OS non-negotiable, enforced where it can't be worked
+around.
+
+Adding a staff member is one INSERT, run in the Supabase dashboard's SQL
+Editor (clients can't write the `staff` table — by design):
+
+```sql
+insert into staff (email, role) values ('media@shilohchurchbpt.org', 'editor');
+```
+
+Create the matching login first under **Authentication → Users** (email +
+password). Change a role with an UPDATE, remove access with a DELETE — same
+place. No deploy, no code change.
 
 ## Content management (no code needed)
 

@@ -170,6 +170,114 @@ Use the **same** token as `APPLIANCE_TOKEN` in the launchd plist. Commit and
 push. **Admin → Assistant** now works; with either field blank, it shows a
 plain "not connected yet" message instead of erroring.
 
+## 6. The broadcast relay
+
+The box's second job, when it arrives: receive the live broadcast from a staff
+phone (`golive.html` publishes the camera over WebRTC/WHIP) and fan it out to
+YouTube and Facebook for free — the why, the costs, and what it replaces are
+in `docs/GO-LIVE.md`, "Route D". This section is the how. It reuses everything
+already set up above: the same box, the same launchd pattern, the same
+Cloudflare Tunnel.
+
+### Install MediaMTX and drop in the config
+
+[MediaMTX](https://github.com/bluenviron/mediamtx) is a free, open-source
+(MIT) media server; ffmpeg does the fan-out. Both install with Homebrew, or
+grab the MediaMTX macOS binary from its GitHub releases page:
+
+```sh
+brew install mediamtx ffmpeg
+```
+
+The config ships in this repo — `scripts/appliance/mediamtx.yml`. Open it and
+fill in the three placeholders it flags: the publish password (the ALL-CAPS
+CHANGE-ME string) and the two stream keys (`YT_KEY` from YouTube's Live
+Control Room, `FB_KEY` from the Facebook page's Live Producer — details in
+GO-LIVE.md). Then run it in the foreground once to check it starts clean:
+
+```sh
+mediamtx /Users/YOURUSER/Shiloh-Church-BPT-App/scripts/appliance/mediamtx.yml
+```
+
+### Keep it running: the same launchd pattern
+
+Create `~/Library/LaunchAgents/org.shiloh.broadcast-relay.plist` — same shape
+as the gateway's plist in section 3:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>org.shiloh.broadcast-relay</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/opt/homebrew/bin/mediamtx</string>
+    <string>/Users/YOURUSER/Shiloh-Church-BPT-App/scripts/appliance/mediamtx.yml</string>
+  </array>
+  <key>RunAtLoad</key><true/>
+  <key>KeepAlive</key><true/>
+  <key>StandardOutPath</key><string>/tmp/shiloh-relay.log</string>
+  <key>StandardErrorPath</key><string>/tmp/shiloh-relay.err</string>
+</dict>
+</plist>
+```
+
+(`which mediamtx` prints the exact binary path — Homebrew on Apple Silicon
+uses `/opt/homebrew/bin`, on Intel `/usr/local/bin`.)
+
+```sh
+launchctl load ~/Library/LaunchAgents/org.shiloh.broadcast-relay.plist
+```
+
+### Expose it through the SAME tunnel
+
+The phone's Go Live page is served over HTTPS, so it can only POST to an
+HTTPS ingest URL — exactly the problem the Cloudflare Tunnel already solves
+for the gateway. Add a second hostname to `~/.cloudflared/config.yml`,
+pointing at MediaMTX's WHIP listener on port 8889:
+
+```yaml
+tunnel: shiloh-appliance
+credentials-file: /Users/YOURUSER/.cloudflared/<tunnel-id>.json
+ingress:
+  - hostname: appliance.yourchurchdomain.org
+    service: http://localhost:11535
+  - hostname: stream.yourchurchdomain.org
+    service: http://localhost:8889
+  - service: http_status:404
+```
+
+```sh
+cloudflared tunnel route dns shiloh-appliance stream.yourchurchdomain.org
+```
+
+Then restart the tunnel service so it picks up the new hostname (rebooting
+the box does it too).
+
+One honest limitation to know about: the tunnel carries the WHIP *handshake*;
+the video itself flows phone-to-box directly. That is perfect for the real
+use — a staff phone on the church's Wi-Fi, box in the same building — and it
+means broadcasting from off-site needs extra router work (port-forwarding
+plus the `webrtcAdditionalHosts` line noted in `mediamtx.yml`). Rehearse on
+the church's own Wi-Fi.
+
+### Point the app at it
+
+In `data/live.json`:
+
+```json
+"whip": { "url": "https://stream.yourchurchdomain.org/live/whip" }
+```
+
+Commit and push. Only the URL goes in the file — it's public by nature. The
+publish username/password from `mediamtx.yml` are typed once into each staff
+phone's Go Live studio and stay in that phone's localStorage.
+
+**The one-line test:** open `golive.html` on a phone on the church's Wi-Fi,
+sign in with a staff passcode, go live — and watch the YouTube Live Control
+Room light up within a few seconds. That's the whole pipeline working.
+
 ## About that token sitting in a committed file
 
 Yes, `data/config.json` is a plain file in the repo — same as the demo admin

@@ -21,17 +21,19 @@ AI assistant — in the order to do it. Written so it can be followed tonight.
    NOT touch the existing website — both live side by side.
 5. On a phone, open the link → Share → **Add to Home Screen**. That's the app.
 
-**Demo passcode for admin.html** is in `data/config.json` (`shiloh2026`) — change
-it before handing the link around, and remember it is a courtesy lock until
-Supabase mode is on (docs/BACKEND.md).
+**Demo passcodes for the back office** are in `data/config.json` — `shiloh2026`
+signs in as **admin**, `shilohmedia2026` as **editor** (who gets what:
+docs/MANAGE.md, "Who can do what"). Change both before handing the link around,
+and remember they are courtesy locks until Supabase mode is on (docs/BACKEND.md).
 
 ---
 
 ## 2. Live streaming from the church's own site
 
-**How the pieces fit:** the camera/encoder in the sanctuary (OBS, a hardware
-encoder, or even the Restream mobile app) pushes ONE stream over RTMP to
-Restream. Restream fans it out to destinations. The app's **Watch** screen has a
+**How the pieces fit:** the camera in the sanctuary pushes ONE stream to a
+relay, and the relay fans it out to destinations. Routes A–C rent that relay
+(Restream or Cloudflare); Route D owns it — a staff phone is the camera and
+the church's own box does the fan-out. The app's **Watch** screen has a
 built-in live player that accepts any iframe embed URL — so whichever route you
 pick below, going live on the church's own site is one line in `data/live.json`.
 
@@ -42,11 +44,15 @@ pick below, going live on the church's own site is one line in `data/live.json`.
 | **A. Restream Standard/Pro + YouTube embed** | The stream plays inside the app's Watch screen (YouTube player embedded in our design; viewers never leave the site) and also reaches Facebook simultaneously | ~$19–49/month |
 | **B. Restream Business "website player"** | Restream's own player embedded in the Watch screen — no YouTube branding anywhere | **$199/month (annual) / $239 monthly** |
 | **C. Cloudflare Stream Live** | Cloudflare's player embedded in Watch — no platform branding, pay-per-use | ~$5 per 1,000 minutes watched (≈$50–60/mo at ~30 weekly viewers) |
+| **D. Your own box — MediaMTX + ffmpeg on the appliance** | A staff phone is the camera; the church's own server fans out to YouTube + Facebook. Watch screen plays the box's own player or the YouTube embed | **$0/month** self-hosted (the Mac mini already planned; or a ~$6/mo VPS until it arrives) |
 
-Recommendation: **start with A.** Same premium experience on the site for a
-tenth of the cost; the Business embed player (B) is a later upgrade if the
-YouTube wordmark in the player corner ever bothers anyone. Route C is the
-middle path if YouTube must be avoided entirely without paying $199.
+Recommendation: **A tonight, D as the destination.** If streaming must happen
+before the box exists, Route A gets there tonight for a tenth of Route B's
+cost — and nothing about it is wasted, because Route D pushes to the same
+YouTube channel, so the same embed keeps working when the box takes over the
+fan-out. The Business embed player (B) remains a later upgrade if the YouTube
+wordmark in the player corner ever bothers anyone; Route C is the middle path
+if YouTube must be avoided entirely without paying $199.
 
 ### Route A setup (once, ~30 minutes)
 
@@ -68,6 +74,52 @@ middle path if YouTube must be avoided entirely without paying $199.
 
 Restream dashboard → **Add channel → Embed Player** → copy the iframe `src`
 into `data/live.json` as `embedUrl`. Nothing else changes.
+
+### Route D: your own box — $0/month
+
+This is what the appliance plan was pointing at all along. One plain fact
+shapes the whole design: **a phone browser cannot speak RTMP** — RTMP is a raw
+TCP protocol, and browsers can't open raw sockets — so no web page will ever
+push to YouTube directly. What a phone browser *can* do, natively and well, is
+WebRTC. So the pieces are:
+
+- **The phone is the camera.** `golive.html` — the app's broadcast studio —
+  signs a staff member in and publishes the phone's camera over WebRTC/WHIP.
+- **A tiny free server receives it.** [MediaMTX](https://github.com/bluenviron/mediamtx)
+  (free, open-source, MIT-licensed) runs on the planned Mac mini appliance —
+  or on any small ~$6/month VPS until the box arrives — and accepts the
+  phone's stream at one URL.
+- **ffmpeg fans it out.** The moment the stream lands, MediaMTX runs an ffmpeg
+  command that pushes it to YouTube and Facebook simultaneously over RTMP(S).
+  That is the same fan-out Restream charges monthly for, done by two free
+  programs on hardware the church already planned to buy.
+
+Setup lives in `docs/APPLIANCE-SETUP.md` ("The broadcast relay") and the
+ready-made config in `scripts/appliance/mediamtx.yml`. What Route D honestly
+requires:
+
+1. **Upload bandwidth.** A steady ~5 Mbps of *upload* at the church for 720p
+   (the phone's stream in, plus two RTMP pushes out). Run a speed test on the
+   church's actual connection before committing Sundays to this route.
+2. **HTTPS on the ingest URL.** The app is served over HTTPS, and a secure
+   page cannot POST to a plain `http://` address — the browser blocks the
+   request before it leaves the phone. The appliance's existing Cloudflare
+   Tunnel already solves exactly this for the assistant gateway; the relay
+   rides the same tunnel, no new mechanism.
+3. **Persistent stream keys.** YouTube: Live Control Room
+   (youtube.com/livestreaming) → "Stream key". Facebook: the page's Live
+   Producer → persistent stream key. Both free with an account. Both are
+   pasted into `mediamtx.yml` **on the box** — stream keys never go in the
+   app's data files.
+4. **One full rehearsal before Sunday.** Phone → box → YouTube dashboard →
+   the app's Watch screen, end to end, with someone watching on a second
+   device. Do not discover a mistyped stream key at 8:55 on Sunday morning.
+
+**The zero-click Sunday:** set `data/live.json` to `"mode": "always"` and
+point `embedUrl` at the box's own player page
+(`https://stream.yourchurchdomain.org/live` — MediaMTX serves one per stream).
+The Watch screen then goes live the moment a staff phone starts broadcasting
+and shows the player's offline state otherwise — nobody edits anything, ever.
 
 ### When the player appears
 
@@ -130,7 +182,8 @@ nothing on its own.
 
 - [ ] Branch merged, Pages enabled, site loads over HTTPS
 - [ ] Add to Home Screen tested on one iPhone and one Android
-- [ ] `data/config.json`: `adminPasscode` changed from the default
+- [ ] `data/config.json`: `adminPasscode` **and** `editorPasscode` changed from
+      the defaults
 - [ ] Sunday events in `data/events.json` extend past the current date
 - [ ] Real service-time question settled (site says both 8:15 and 8:30 — the
       app currently says 8:15; confirm with the office and fix both places)

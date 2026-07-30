@@ -3,14 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Admin · Shiloh Baptist Church</title>
+  <title>Back office · Shiloh Baptist Church</title>
   <meta name="robots" content="noindex,nofollow">
   <meta name="theme-color" content="#f7f4ec" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#10131d" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="assets/icons/favicon-32.png" type="image/png">
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/atkinson-hyperlegible-latin-400-normal.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/fraunces-latin-var.woff2" crossorigin>
   <link rel="stylesheet" href="css/system.css">
   <link rel="stylesheet" href="css/admin.css">
   <script>
+    /* Applied before first paint so the page never flashes the wrong theme. */
     (function () {
       try {
         var t = localStorage.getItem("shiloh.theme");
@@ -25,198 +28,214 @@
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
   <g id="i-sun"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.4v2.2M12 19.4v2.2M4.2 12H2M22 12h-2.2M6.5 6.5 4.9 4.9M19.1 19.1l-1.6-1.6M17.5 6.5l1.6-1.6M4.9 19.1l1.6-1.6"/></g>
   <g id="i-moon"><path d="M20.4 13.6A8.6 8.6 0 0 1 10.4 3.6a8.6 8.6 0 1 0 10 10z"/></g>
+  <g id="i-dash"><rect x="3.5" y="3.5" width="7.2" height="7.2" rx="2.2"/><rect x="13.3" y="3.5" width="7.2" height="7.2" rx="2.2"/><rect x="3.5" y="13.3" width="7.2" height="7.2" rx="2.2"/><rect x="13.3" y="13.3" width="7.2" height="7.2" rx="2.2"/></g>
+  <g id="i-inbox"><path d="M3.2 13.2 5.5 5.9a1.7 1.7 0 0 1 1.6-1.2h9.8a1.7 1.7 0 0 1 1.6 1.2l2.3 7.3"/><path d="M3.2 13.2h5.3a3.5 3.5 0 0 0 7 0h5.3v4.3a1.8 1.8 0 0 1-1.8 1.8H5a1.8 1.8 0 0 1-1.8-1.8z"/></g>
+  <g id="i-people"><circle cx="9" cy="8" r="3.4"/><path d="M2.6 20.4a6.4 6.4 0 0 1 12.8 0"/><path d="M16.2 5.2a3.4 3.4 0 0 1 0 6.6M17.6 14.6a6.4 6.4 0 0 1 3.8 5.8"/></g>
+  <g id="i-min"><path d="M4.6 20.4v-8.2L12 6.4l7.4 5.8v8.2"/><path d="M12 6.4V3M10.4 4.4h3.2M2.8 20.4h18.4M9.8 20.4v-3.6a2.2 2.2 0 0 1 4.4 0v3.6"/></g>
+  <g id="i-cal"><rect x="3.2" y="5" width="17.6" height="16" rx="2.6"/><path d="M3.2 10h17.6M8 3v4M16 3v4"/></g>
+  <g id="i-flame"><path d="M12 21.6c3.2 0 5.6-2.5 5.6-5.7 0-4.4-5.6-11-5.6-11S6.4 11.5 6.4 15.9c0 3.2 2.4 5.7 5.6 5.7z"/><path d="M12 17.8a2 2 0 0 0 2-2c0-1.5-2-3.6-2-3.6s-2 2.1-2 3.6a2 2 0 0 0 2 2z"/></g>
+  <g id="i-shield"><path d="M12 2.9 4.8 5.7v5.9c0 4.9 3 7.9 7.2 9.5 4.2-1.6 7.2-4.6 7.2-9.5V5.7z"/><path d="m8.9 12 2.2 2.2 4-4.2"/></g>
+  <g id="i-brand"><path d="M4 7.4h8.2M17.6 7.4H20M4 16.6h2.8M11.4 16.6H20"/><circle cx="14.9" cy="7.4" r="2.3"/><circle cx="8.7" cy="16.6" r="2.3"/></g>
+  <g id="i-bolt"><path d="M13.4 2.8 5.4 13.5h5.1l-1.9 7.7 8-10.7h-5.1z"/></g>
+  <g id="i-spark"><path d="M12 3.2c.5 4 2.1 6.3 6.4 6.8-4.3.5-5.9 2.8-6.4 6.8-.5-4-2.1-6.3-6.4-6.8 4.3-.5 5.9-2.8 6.4-6.8z"/><path d="M18.8 14.8c.3 2.1 1.1 3.3 3.2 3.6-2.1.3-2.9 1.5-3.2 3.6-.3-2.1-1.1-3.3-3.2-3.6 2.1-.3 2.9-1.5 3.2-3.6z"/></g>
+  <g id="i-out"><path d="M14.6 8.2V6a1.8 1.8 0 0 0-1.8-1.8H6.2A1.8 1.8 0 0 0 4.4 6v12a1.8 1.8 0 0 0 1.8 1.8h6.6a1.8 1.8 0 0 0 1.8-1.8v-2.2"/><path d="M9.8 12h10.4M17.2 8.8l3.2 3.2-3.2 3.2"/></g>
 </defs></svg>
 
 <!-- ================================ gate ================================ -->
 <div class="gate" id="gate">
   <div class="gate__glass" aria-hidden="true"></div>
-  <form class="gate__card" id="gateForm">
-    <p class="eyebrow">Back office</p>
-    <h1><span id="gateChurch">Shiloh</span> Admin</h1>
-    <p class="muted" id="gateBlurb" style="margin-top:var(--space-2)">Sign in to run the back office.</p>
-    <div id="gateDemo" hidden style="margin-top:var(--space-5)">
-      <div class="field"><label for="gatePass">Passcode</label><input id="gatePass" type="password" autocomplete="current-password"></div>
+  <form class="gate__card rise" id="gateForm">
+    <p class="eyebrow">The back office</p>
+    <h1 id="gateChurch">Shiloh</h1>
+    <p class="muted gate__blurb" id="gateBlurb">Sign in to run the back office.</p>
+    <div id="gateDemo" hidden>
+      <div class="field"><label for="gatePass">Staff passcode</label><input id="gatePass" type="password" autocomplete="current-password"></div>
     </div>
-    <div id="gateSb" hidden style="margin-top:var(--space-5)">
+    <div id="gateSb" hidden>
       <div class="field"><label for="gateEmail">Email</label><input id="gateEmail" type="email" autocomplete="email"></div>
       <div class="field"><label for="gatePw">Password</label><input id="gatePw" type="password" autocomplete="current-password"></div>
     </div>
-    <p class="err" id="gateErr">That didn't work. Try again.</p>
-    <button class="btn btn--primary btn--block" type="submit" style="margin-top:var(--space-5)">Open the admin</button>
+    <p class="err" id="gateErr" role="alert">That didn't work. Try again.</p>
+    <button class="btn btn--primary btn--block" type="submit">Open the back office</button>
   </form>
 </div>
 
 <!-- =============================== shell ================================ -->
 <div id="adminApp" hidden>
   <header class="adminbar">
-    <div class="adminbar__top">
-      <div class="adminbar__brand" id="barBrand">Shiloh <span>· Admin</span></div>
-      <div class="row" style="gap:var(--space-3)">
-        <span class="chip" id="modeTag">demo</span>
-        <button class="iconbtn" id="themeBtn" type="button" aria-label="Switch between light and dark" style="width:42px;height:42px;display:grid;place-items:center;border:1.5px solid var(--edge);border-radius:999px">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-sun" id="themeIcon"/></svg>
+    <div class="adminbar__inner">
+      <div class="adminbar__brand">
+        <b id="barBrand">Shiloh</b>
+        <span class="adminbar__meta">
+          <span class="chip" id="roleChip" hidden>Admin</span>
+          <span id="modeTag"></span>
+        </span>
+      </div>
+      <div class="adminbar__acts">
+        <a class="golivebtn" id="goLiveBtn" href="golive.html" hidden>
+          <span class="livedot" aria-hidden="true"></span>Go live
+        </a>
+        <button class="iconbtn" id="themeBtn" type="button" aria-label="Switch between light and dark">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-sun" id="themeIcon"/></svg>
         </button>
-        <button class="btn btn--quiet" id="signOut" type="button" style="min-height:42px;font-size:var(--step--1)">Sign out</button>
+        <button class="iconbtn" id="signOut" type="button" aria-label="Sign out" title="Sign out">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-out"/></svg>
+        </button>
       </div>
     </div>
-    <nav class="adminnav" id="nav" aria-label="Admin sections">
-      <button data-pane="dash" aria-current="true">Dashboard</button>
-      <button data-pane="inbox">Inbox</button>
-      <button data-pane="people">People</button>
-      <button data-pane="ministries">Ministries</button>
-      <button data-pane="events">Events</button>
-      <button data-pane="prayer">Prayer</button>
-      <button data-pane="volunteers">Volunteers</button>
-      <button data-pane="brand">Brand</button>
-      <button data-pane="auto">Automations</button>
-      <button data-pane="assistant">Assistant</button>
-    </nav>
   </header>
 
-  <main class="admin">
-    <div class="banner" id="demoBanner" hidden>
-      <b>Demo mode.</b> Everything below lives in this browser only, and the passcode is a courtesy
-      lock, not security. Flip <code>data/config.json</code> to <code>"mode": "supabase"</code> for a
-      real database and real sign-in — see <code>docs/BACKEND.md</code>.
-    </div>
+  <div class="shell">
+    <nav class="adminrail" id="nav" aria-label="Admin sections"></nav>
 
-    <section class="pane on" id="pane-dash">
-      <p class="eyebrow">Today</p>
-      <h2>The day at a glance</h2>
-      <div class="tiles" id="tiles" style="margin-top:var(--space-5)"></div>
-      <h3 style="margin-bottom:var(--space-4)">Needs attention</h3>
-      <div id="dashLatest"></div>
-    </section>
-
-    <section class="pane" id="pane-inbox">
-      <p class="eyebrow">Everything inbound</p>
-      <h2>Inbox</h2>
-      <p class="note">Visitor cards, reservation requests, and prayer requests in one place — the church-sized version of a unified host inbox.</p>
-      <div class="tools">
-        <select id="inboxType">
-          <option value="">Every type</option>
-          <option value="visitor">Visitor cards</option>
-          <option value="reservation">Reservation requests</option>
-          <option value="prayer">Prayer requests</option>
-        </select>
+    <main class="admin">
+      <div class="banner" id="demoBanner" hidden>
+        <b>Demo mode.</b> Everything below lives in this browser only, and the passcodes are courtesy
+        locks, not security. Flip <code>data/config.json</code> to <code>"mode": "supabase"</code> for a
+        real database and real sign-in — see <code>docs/BACKEND.md</code>.
       </div>
-      <div id="inboxList"></div>
-    </section>
 
-    <section class="pane" id="pane-people">
-      <p class="eyebrow">The directory</p>
-      <h2>People</h2>
-      <p class="note">Profiles built in the app. In demo mode this only shows profiles saved on <em>this</em> device — real cross-device sync arrives with Supabase mode.</p>
-      <div class="tools">
-        <input id="pSearch" type="search" placeholder="Search name or email…">
-        <button class="btn btn--quiet" id="exportPeople" type="button">Export CSV</button>
-      </div>
-      <div id="peopleList"></div>
-    </section>
+      <section class="view on" id="pane-dash">
+        <p class="eyebrow">Today</p>
+        <h2>The day at a glance</h2>
+        <a class="broadcast" id="broadcastCard" href="golive.html" hidden>
+          <span class="livedot" aria-hidden="true"></span>
+          <span class="broadcast__body">
+            <b>Start the Sunday broadcast</b>
+            <small>Open the studio, check the picture, and go live from this phone.</small>
+          </span>
+          <span class="broadcast__cta">Open the studio&nbsp;→</span>
+        </a>
+        <div class="tiles" id="tiles"></div>
+        <h3>Needs attention</h3>
+        <div class="sheet" id="dashLatest"></div>
+      </section>
 
-    <section class="pane" id="pane-ministries">
-      <p class="eyebrow">Catalog</p>
-      <h2>Ministries &amp; facilities</h2>
-      <p class="note">The catalog lives in <code>data/ministries.json</code> — edit that file and push to change names, leaders, or descriptions. Requests below come from the app.</p>
-      <div class="cardgrid" id="ministryCatalog"></div>
-      <h3 style="margin-bottom:var(--space-4)">Reservation requests</h3>
-      <div id="reservationList"></div>
-    </section>
-
-    <section class="pane" id="pane-events">
-      <p class="eyebrow">Calendar</p>
-      <h2>Events &amp; RSVPs</h2>
-      <p class="note">Draft events here (stored in this browser), then download <code>events.json</code> and commit it to publish. Each event shows its RSVP roster with a one-tap email blast.</p>
-      <div class="tools">
-        <button class="btn btn--primary" id="evtNew" type="button">+ New event</button>
-        <button class="btn btn--quiet" id="evtDownload" type="button">Download events.json</button>
-        <button class="btn btn--quiet" id="exportRsvps" type="button">Export RSVPs CSV</button>
-      </div>
-      <form class="formcard" id="evtForm" hidden>
-        <div class="field"><label for="evTitle">Title</label><input id="evTitle" required></div>
-        <div class="row" style="gap:var(--space-4);align-items:flex-start">
-          <div class="field" style="flex:1"><label for="evDate">Date</label><input id="evDate" type="date" required></div>
-          <div class="field" style="flex:1"><label for="evTime">Time</label><input id="evTime" placeholder="11:00 AM"></div>
+      <section class="view" id="pane-inbox">
+        <p class="eyebrow">Everything inbound</p>
+        <h2>Inbox</h2>
+        <p class="note" id="inboxNote">Everything inbound from the app, in one place.</p>
+        <div class="tools" id="inboxTools">
+          <select id="inboxType" aria-label="Show one kind of request"></select>
         </div>
-        <div class="field"><label for="evLoc">Location</label><input id="evLoc"></div>
-        <div class="field"><label for="evCat">Category</label>
-          <select id="evCat"><option>Worship</option><option>Community</option><option>Ministry</option><option>Study</option></select>
+        <div class="sheet" id="inboxList"></div>
+      </section>
+
+      <section class="view" id="pane-people">
+        <p class="eyebrow">The directory</p>
+        <h2>People</h2>
+        <p class="note">Profiles built in the app. In demo mode this only shows profiles saved on <em>this</em> device — real cross-device sync arrives with Supabase mode.</p>
+        <div class="tools">
+          <input id="pSearch" type="search" placeholder="Search name or email…" aria-label="Search people">
+          <button class="btn btn--quiet" id="exportPeople" type="button">Export CSV</button>
         </div>
-        <div class="field"><label for="evBody">Description</label><textarea id="evBody" rows="3"></textarea></div>
-        <label class="row" style="font-weight:400"><input id="evRsvp" type="checkbox" checked style="width:auto;min-height:0"> Takes RSVPs</label>
-        <div class="acts">
-          <button class="btn btn--primary" type="submit">Save event</button>
-          <button class="btn btn--quiet" type="button" id="evtCancel">Cancel</button>
+        <div class="sheet" id="peopleList"></div>
+      </section>
+
+      <section class="view" id="pane-ministries">
+        <p class="eyebrow">Catalog</p>
+        <h2>Ministries &amp; facilities</h2>
+        <p class="note">The catalog lives in <code>data/ministries.json</code> — edit that file and push to change names, leaders, or descriptions. Requests below come from the app.</p>
+        <div class="cardgrid" id="ministryCatalog"></div>
+        <h3>Reservation requests</h3>
+        <div class="sheet" id="reservationList"></div>
+      </section>
+
+      <section class="view" id="pane-events">
+        <p class="eyebrow">Calendar</p>
+        <h2>Events &amp; RSVPs</h2>
+        <p class="note">Draft events here (stored in this browser), then download <code>events.json</code> and commit it to publish. Each event shows its RSVP roster with a one-tap email blast.</p>
+        <div class="tools">
+          <button class="btn btn--primary" id="evtNew" type="button">+ New event</button>
+          <button class="btn btn--quiet" id="evtDownload" type="button">Download events.json</button>
+          <button class="btn btn--quiet" id="exportRsvps" type="button">Export RSVPs CSV</button>
         </div>
-      </form>
-      <div id="evtAdminList"></div>
-    </section>
-
-    <section class="pane" id="pane-prayer">
-      <p class="eyebrow">Every tier</p>
-      <h2>Prayer</h2>
-      <p class="note">All requests, at every visibility tier. Only Admin sees this list — never a general ministry-leader login.</p>
-      <div class="tools">
-        <select id="prFilter">
-          <option value="">Every tier</option>
-          <option value="church">Whole church</option>
-          <option value="team">Prayer team</option>
-          <option value="pastor">Pastor only</option>
-        </select>
-      </div>
-      <div id="prayerAdminList"></div>
-    </section>
-
-    <section class="pane" id="pane-volunteers">
-      <p class="eyebrow">Safeguarding</p>
-      <h2>Volunteers &amp; safety status</h2>
-      <p class="note">Background-check and child-safety training status per volunteer. Liability here is independent of church size, so it's tracked from day one.</p>
-      <form class="formcard" id="volForm">
-        <div class="row" style="gap:var(--space-4);align-items:flex-end">
-          <div class="field" style="flex:1;margin-bottom:0"><label for="volName">Name</label><input id="volName" required></div>
-          <div class="field" style="flex:1;margin-bottom:0"><label for="volRole">Role</label><input id="volRole" placeholder="nursery, usher, van driver"></div>
-          <button class="btn btn--primary" type="submit">Add</button>
-        </div>
-      </form>
-      <div id="volunteerList"></div>
-    </section>
-
-    <section class="pane" id="pane-brand">
-      <p class="eyebrow">Identity</p>
-      <h2>Brand &amp; settings</h2>
-      <p class="note">Read-only for now — this is exactly what a future no-code editor would write to. To change any of it today, edit the file and push (see <code>docs/MANAGE.md</code>).</p>
-      <h3 style="margin-bottom:var(--space-3);font-size:var(--step-1)">data/theme.json</h3>
-      <dl class="kv" id="themeKv"></dl>
-      <h3 style="margin-bottom:var(--space-3);font-size:var(--step-1)">data/church.json</h3>
-      <dl class="kv" id="churchKv"></dl>
-    </section>
-
-    <section class="pane" id="pane-auto">
-      <p class="eyebrow">Plumbing</p>
-      <h2>Automations</h2>
-      <p class="note">Every visitor card, RSVP, prayer request, and reservation request POSTs to the webhook. Point it at Zapier, Make, n8n, or Resend — recipes in <code>docs/BACKEND.md</code>.</p>
-      <dl class="kv" id="autoKv"></dl>
-      <div class="acts">
-        <button class="btn btn--primary" id="testHook" type="button">Send a test event</button>
-        <span id="testResult" style="font-weight:700;align-self:center"></span>
-      </div>
-    </section>
-
-    <section class="pane" id="pane-assistant">
-      <p class="eyebrow">On the church's own hardware</p>
-      <h2>Assistant</h2>
-      <p class="note">A local AI model running on the church's own box (see <code>docs/APPLIANCE-SETUP.md</code>), reachable only from here. It answers a question; it never sees member, giving, or prayer data, and it never sends anything on its own.</p>
-      <div id="assistantNotConfigured" class="empty" hidden>Not connected yet. Set <code>applianceUrl</code> and <code>applianceToken</code> in <code>data/config.json</code> once the appliance is running.</div>
-      <div id="assistantUi" hidden>
-        <form class="formcard" id="assistantForm">
-          <div class="field"><label for="assistantPrompt">Ask it something</label>
-            <textarea id="assistantPrompt" rows="3" placeholder="Draft a short note welcoming a new visitor"></textarea></div>
-          <button class="btn btn--primary" type="submit">Ask</button>
+        <form class="formcard" id="evtForm" hidden>
+          <div class="field"><label for="evTitle">Title</label><input id="evTitle" required></div>
+          <div class="duo">
+            <div class="field"><label for="evDate">Date</label><input id="evDate" type="date" required></div>
+            <div class="field"><label for="evTime">Time</label><input id="evTime" placeholder="11:00 AM"></div>
+          </div>
+          <div class="field"><label for="evLoc">Location</label><input id="evLoc"></div>
+          <div class="field"><label for="evCat">Category</label>
+            <select id="evCat"><option>Worship</option><option>Community</option><option>Ministry</option><option>Study</option></select>
+          </div>
+          <div class="field"><label for="evBody">Description</label><textarea id="evBody" rows="3"></textarea></div>
+          <label class="check"><input id="evRsvp" type="checkbox" checked> Takes RSVPs</label>
+          <div class="acts">
+            <button class="btn btn--primary" type="submit">Save event</button>
+            <button class="btn btn--quiet" type="button" id="evtCancel">Cancel</button>
+          </div>
         </form>
-        <div id="assistantAnswer" class="answer" hidden></div>
-      </div>
-    </section>
-  </main>
+        <div class="sheet" id="evtAdminList"></div>
+      </section>
+
+      <section class="view" id="pane-prayer">
+        <p class="eyebrow">Every tier</p>
+        <h2>Prayer</h2>
+        <p class="note">All requests, at every visibility tier. Only Admin sees this list — never an editor or ministry-leader login.</p>
+        <div class="tools">
+          <select id="prFilter" aria-label="Show one visibility tier">
+            <option value="">Every tier</option>
+            <option value="church">Whole church</option>
+            <option value="team">Prayer team</option>
+            <option value="pastor">Pastor only</option>
+          </select>
+        </div>
+        <div class="sheet" id="prayerAdminList"></div>
+      </section>
+
+      <section class="view" id="pane-volunteers">
+        <p class="eyebrow">Safeguarding</p>
+        <h2>Volunteers &amp; safety status</h2>
+        <p class="note">Background-check and child-safety training status per volunteer. Liability here is independent of church size, so it's tracked from day one.</p>
+        <form class="formcard" id="volForm">
+          <div class="volgrid">
+            <div class="field"><label for="volName">Name</label><input id="volName" required></div>
+            <div class="field"><label for="volRole">Role</label><input id="volRole" placeholder="nursery, usher, van driver"></div>
+            <button class="btn btn--primary" type="submit">Add</button>
+          </div>
+        </form>
+        <div class="sheet" id="volunteerList"></div>
+      </section>
+
+      <section class="view" id="pane-brand">
+        <p class="eyebrow">Identity</p>
+        <h2>Brand &amp; settings</h2>
+        <p class="note">Read-only for now — this is exactly what a future no-code editor would write to. To change any of it today, edit the file and push (see <code>docs/MANAGE.md</code>).</p>
+        <h3 class="kvhead">data/theme.json</h3>
+        <dl class="kv" id="themeKv"></dl>
+        <h3 class="kvhead">data/church.json</h3>
+        <dl class="kv" id="churchKv"></dl>
+      </section>
+
+      <section class="view" id="pane-auto">
+        <p class="eyebrow">Plumbing</p>
+        <h2>Automations</h2>
+        <p class="note">Every visitor card, RSVP, prayer request, and reservation request POSTs to the webhook. Point it at Zapier, Make, n8n, or Resend — recipes in <code>docs/BACKEND.md</code>.</p>
+        <dl class="kv" id="autoKv"></dl>
+        <div class="acts">
+          <button class="btn btn--primary" id="testHook" type="button">Send a test event</button>
+          <span id="testResult" class="testresult"></span>
+        </div>
+      </section>
+
+      <section class="view" id="pane-assistant">
+        <p class="eyebrow">On the church's own hardware</p>
+        <h2>Assistant</h2>
+        <p class="note">A local AI model running on the church's own box (see <code>docs/APPLIANCE-SETUP.md</code>), reachable only from here. It answers a question; it never sees member, giving, or prayer data, and it never sends anything on its own.</p>
+        <div id="assistantNotConfigured" class="empty" hidden>Not connected yet. Set <code>applianceUrl</code> and <code>applianceToken</code> in <code>data/config.json</code> once the appliance is running.</div>
+        <div id="assistantUi" hidden>
+          <form class="formcard" id="assistantForm">
+            <div class="field"><label for="assistantPrompt">Ask it something</label>
+              <textarea id="assistantPrompt" rows="3" placeholder="Draft a short note welcoming a new visitor"></textarea></div>
+            <button class="btn btn--primary" type="submit">Ask</button>
+          </form>
+          <div id="assistantAnswer" class="answer" hidden></div>
+        </div>
+      </section>
+    </main>
+  </div>
 </div>
 
 <script src="js/store.js"></script>
@@ -226,6 +245,26 @@
   "use strict";
   var config = null, THEME = null, CHURCH = null, MINISTRIES = [];
   var VISITOR_CARDS = [], RESERVATIONS = [], PRAYERS = [], PEOPLE = [], VOLUNTEERS = [], RSVPS = [], PUBLISHED_EVENTS = [];
+
+  /* Every section, with the staff permission that unlocks it. Nav renders
+     only permitted panes and showPane re-checks on every switch, so a stale
+     hash or leftover UI can never surface an unauthorized pane. */
+  var PANES = [
+    { id: "dash",       label: "Dashboard",   icon: "i-dash",   perm: "dashboard" },
+    { id: "inbox",      label: "Inbox",       icon: "i-inbox",  perm: "inbox" },
+    { id: "people",     label: "People",      icon: "i-people", perm: "people" },
+    { id: "ministries", label: "Ministries",  icon: "i-min",    perm: "reservations" },
+    { id: "events",     label: "Events",      icon: "i-cal",    perm: "content" },
+    { id: "prayer",     label: "Prayer",      icon: "i-flame",  perm: "prayer" },
+    { id: "volunteers", label: "Volunteers",  icon: "i-shield", perm: "volunteers" },
+    { id: "brand",      label: "Brand",       icon: "i-brand",  perm: "settings" },
+    { id: "auto",       label: "Automations", icon: "i-bolt",   perm: "automations" },
+    { id: "assistant",  label: "Assistant",   icon: "i-spark",  perm: "assistant" }
+  ];
+  function allowed(id) {
+    var p = PANES.filter(function (x) { return x.id === id; })[0];
+    return !!p && ShilohStore.can(p.perm);
+  }
 
   function esc(s) {
     return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
@@ -241,6 +280,17 @@
     var label = status ? status.charAt(0).toUpperCase() + status.slice(1) : "New";
     return '<span class="' + cls + '">' + esc(label) + "</span>";
   }
+  /* "Today" in the church's own timezone — with UTC, a Sunday event would
+     read as past at 8 PM Eastern on the day itself. */
+  function churchToday() {
+    try {
+      return new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York",
+        year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
+    } catch (e) { return new Date().toISOString().slice(0, 10); }
+  }
+  var ICON = function (id) {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#' + id + '"/></svg>';
+  };
 
   /* ------------------------------ theme ------------------------------- */
   function isDarkNow() {
@@ -257,18 +307,6 @@
   });
 
   /* ------------------------------- gate ------------------------------- */
-  var UNLOCKED = "shiloh.adminUnlocked";
-  function openAdmin() {
-    document.getElementById("gate").style.display = "none";
-    document.getElementById("adminApp").hidden = false;
-    var live = config.mode === "supabase";
-    var tag = document.getElementById("modeTag");
-    tag.textContent = live ? "live database" : "demo mode";
-    tag.className = live ? "chip chip--ok" : "chip chip--warn";
-    document.getElementById("demoBanner").hidden = live;
-    ShilohAmbient.mount();
-    refresh();
-  }
   Promise.all([
     ShilohStore.init(),
     fetch("data/theme.json", { cache: "no-cache" }).then(function (r) { return r.json(); }),
@@ -277,95 +315,216 @@
   ]).then(function (res) {
     config = res[0]; THEME = res[1]; CHURCH = res[2]; MINISTRIES = res[3].ministries || [];
     document.getElementById("gateChurch").textContent = THEME.shortName || "Church";
-    document.getElementById("barBrand").innerHTML = esc(THEME.shortName || "Church") + ' <span>· Admin</span>';
+    document.getElementById("barBrand").textContent = THEME.shortName || "Church";
     syncThemeIcon();
+    ShilohAmbient.mount();
     if (config.mode === "supabase") {
       document.getElementById("gateSb").hidden = false;
-      document.getElementById("gateBlurb").textContent = "Sign in with your admin account.";
-      if (ShilohStore.isAdminSignedIn()) openAdmin();
+      document.getElementById("gateBlurb").textContent = "Sign in with your staff account.";
     } else {
       document.getElementById("gateDemo").hidden = false;
-      document.getElementById("gateBlurb").textContent = "Demo mode: enter the passcode from data/config.json.";
-      if (sessionStorage.getItem(UNLOCKED) === "yes") openAdmin();
+      document.getElementById("gateBlurb").textContent = "Demo mode: enter a staff passcode from data/config.json.";
     }
+    if (ShilohStore.staffRole()) openAdmin();
   });
+
   document.getElementById("gateForm").addEventListener("submit", function (e) {
     e.preventDefault();
+    if (!config) return; /* submitted before config.json resolved */
     var err = document.getElementById("gateErr");
     err.style.display = "none";
-    if (config.mode === "supabase") {
-      ShilohStore.adminSignIn(document.getElementById("gateEmail").value.trim(), document.getElementById("gatePw").value)
-        .then(openAdmin).catch(function () { err.style.display = "block"; });
-    } else {
-      if (document.getElementById("gatePass").value === (config.adminPasscode || "shiloh2026")) {
-        sessionStorage.setItem(UNLOCKED, "yes");
-        openAdmin();
-      } else { err.style.display = "block"; }
-    }
+    var signin = config.mode === "supabase"
+      ? ShilohStore.staffSignInSupabase(document.getElementById("gateEmail").value.trim(), document.getElementById("gatePw").value)
+      : ShilohStore.staffSignIn(document.getElementById("gatePass").value);
+    signin.then(openAdmin).catch(function (ex) {
+      err.textContent = (ex && ex.message) ? ex.message : "That didn't work. Try again.";
+      err.style.display = "block";
+    });
   });
   document.getElementById("signOut").addEventListener("click", function () {
-    ShilohStore.adminSignOut();
-    sessionStorage.removeItem(UNLOCKED);
+    ShilohStore.staffSignOut();
     location.reload();
   });
 
+  /* ------------------------------- shell ------------------------------ */
+  function openAdmin() {
+    var role = ShilohStore.staffRole();
+    if (!role) return;
+    document.getElementById("gate").hidden = true;
+    document.getElementById("adminApp").hidden = false;
+
+    var rc = document.getElementById("roleChip");
+    rc.hidden = false;
+    rc.textContent = role === "admin" ? "Admin" : "Editor";
+    rc.className = role === "admin" ? "chip chip--accent" : "chip chip--teal";
+    var live = config.mode === "supabase";
+    document.getElementById("modeTag").textContent = live ? "live database" : "demo mode";
+    document.getElementById("demoBanner").hidden = live;
+    document.getElementById("goLiveBtn").hidden = !ShilohStore.can("live");
+    document.getElementById("broadcastCard").hidden = !ShilohStore.can("live");
+
+    buildNav();
+    buildInboxFilter();
+    route();
+    refresh();
+  }
+  function buildNav() {
+    document.getElementById("nav").innerHTML = PANES.filter(function (p) {
+      return ShilohStore.can(p.perm);
+    }).map(function (p) {
+      return '<button type="button" data-pane="' + p.id + '" aria-current="false">' + ICON(p.icon) + "<span>" + esc(p.label) + "</span></button>";
+    }).join("");
+  }
+
   /* -------------------------------- nav ------------------------------- */
-  document.getElementById("nav").addEventListener("click", function (e) {
-    var b = e.target.closest("button");
-    if (!b) return;
-    function swap() {
-      document.querySelectorAll("#nav button").forEach(function (x) { x.setAttribute("aria-current", x === b ? "true" : "false"); });
-      document.querySelectorAll(".pane").forEach(function (p) { p.classList.toggle("on", p.id === "pane-" + b.getAttribute("data-pane")); });
-    }
+  function showPane(id) {
+    if (!allowed(id)) id = "dash";
+    document.querySelectorAll("#nav button").forEach(function (b) {
+      var on = b.getAttribute("data-pane") === id;
+      b.setAttribute("aria-current", on ? "true" : "false");
+      if (on && b.scrollIntoView) b.scrollIntoView({ block: "nearest", inline: "center" });
+    });
+    document.querySelectorAll(".view").forEach(function (v) {
+      v.classList.toggle("on", v.id === "pane-" + id);
+    });
+    window.scrollTo(0, 0);
+  }
+  function route() {
+    var m = /^#\/([a-z]+)$/.exec(location.hash || "");
+    var id = m ? m[1] : "dash";
     if (document.startViewTransition && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      document.startViewTransition(swap);
-    } else { swap(); }
+      document.startViewTransition(function () { showPane(id); });
+    } else { showPane(id); }
+  }
+  window.addEventListener("hashchange", function () {
+    if (!document.getElementById("adminApp").hidden) route();
+  });
+  document.getElementById("nav").addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-pane]");
+    if (!b) return;
+    var id = b.getAttribute("data-pane");
+    if (location.hash !== "#/" + id) location.hash = "#/" + id;
+  });
+  document.addEventListener("click", function (e) {
+    var l = e.target.closest("[data-pane-link]");
+    if (!l) return;
+    location.hash = "#/" + l.getAttribute("data-pane-link");
   });
 
   /* -------------------------------- data ------------------------------ */
   function refresh() {
+    /* Fetch only what this role may see. An editor's session never even
+       REQUESTS people or prayer data — it isn't merely hidden afterwards. */
+    var none = function (v) { return Promise.resolve(v); };
     Promise.all([
-      ShilohStore.listVisitorCards(), ShilohStore.listReservationRequests(), ShilohStore.listAllPrayerRequests(),
-      ShilohStore.listProfiles(), ShilohStore.listVolunteers(), ShilohStore.listRsvps(),
-      fetch("data/events.json", { cache: "no-cache" }).then(function (r) { return r.json(); }).catch(function () { return { events: [] }; })
+      ShilohStore.can("people")       ? ShilohStore.listVisitorCards()        : none([]),
+      ShilohStore.can("reservations") ? ShilohStore.listReservationRequests() : none([]),
+      ShilohStore.can("prayer")       ? ShilohStore.listAllPrayerRequests()   : none([]),
+      ShilohStore.can("people")       ? ShilohStore.listProfiles()            : none([]),
+      ShilohStore.can("volunteers")   ? ShilohStore.listVolunteers()          : none([]),
+      ShilohStore.can("content")      ? ShilohStore.listRsvps()               : none([]),
+      ShilohStore.can("content")
+        ? fetch("data/events.json", { cache: "no-cache" }).then(function (r) { return r.json(); }).catch(function () { return { events: [] }; })
+        : none({ events: [] })
     ]).then(function (res) {
       VISITOR_CARDS = res[0] || []; RESERVATIONS = res[1] || []; PRAYERS = res[2] || [];
       PEOPLE = res[3] || []; VOLUNTEERS = res[4] || []; RSVPS = res[5] || []; PUBLISHED_EVENTS = res[6].events || [];
-      renderDash(); renderInbox(); renderPeople(); renderMinistries(); renderEventsAdmin();
-      renderPrayerAdmin(); renderVolunteers(); renderBrand(); renderAuto(); renderAssistant();
+      renderDash(); renderInbox(); renderAssistant();
+      if (ShilohStore.can("people")) renderPeople();
+      if (ShilohStore.can("reservations")) renderMinistries();
+      if (ShilohStore.can("content")) renderEventsAdmin();
+      if (ShilohStore.can("prayer")) renderPrayerAdmin();
+      if (ShilohStore.can("volunteers")) renderVolunteers();
+      if (ShilohStore.can("settings")) renderBrand();
+      if (ShilohStore.can("automations")) renderAuto();
     });
   }
 
+  function facilityName(id) {
+    var m = MINISTRIES.filter(function (x) { return x.id === id; })[0];
+    return m ? m.name : id;
+  }
+  /* Same overlap rule as the store's hasConflict, but computed against the
+     rows this session actually loaded, so it holds in supabase mode too. */
+  function resConflict(r) {
+    if (!r.date || !r.startTime) return false;
+    return RESERVATIONS.some(function (o) {
+      return o.id !== r.id && o.status === "approved" && o.facilityId === r.facilityId && o.date === r.date &&
+        r.startTime < (o.endTime || "23:59") && (r.endTime || "23:59") > o.startTime;
+    });
+  }
+
+  /* ---------------------------- dashboard ----------------------------- */
   function renderDash() {
     var pendingVisitors = VISITOR_CARDS.filter(function (v) { return v.status === "received"; }).length;
     var pendingRes = RESERVATIONS.filter(function (r) { return r.status === "pending"; }).length;
     var needsCheck = VOLUNTEERS.filter(function (v) { return v.status !== "current"; }).length;
+    var today = churchToday();
+    var upcoming = allEvents().filter(function (ev) { return (ev.date || "") >= today; }).length;
     function tile(n, label, mod) {
       return '<div class="tile' + (mod ? " tile--" + mod : "") + '"><b>' + n + "</b><span>" + label + "</span></div>";
     }
-    document.getElementById("tiles").innerHTML =
-      tile(pendingVisitors, "Awaiting follow-up", pendingVisitors ? "attention" : "good") +
-      tile(pendingRes, "Reservation requests", pendingRes ? "attention" : "good") +
-      tile(needsCheck, "Checks not current", needsCheck ? "attention" : "good") +
-      tile(PRAYERS.length, "Prayer requests") +
-      tile(RSVPS.length, "RSVPs") +
-      tile(PEOPLE.length, "Profiles");
+    /* Tile counts divide evenly into the 2- and 3-column grids — six for
+       admin, three for editor — so a stat never orphans onto its own row. */
+    var tiles = [];
+    if (ShilohStore.can("people")) tiles.push(tile(pendingVisitors, "Awaiting follow-up", pendingVisitors ? "attention" : "good"));
+    if (ShilohStore.can("reservations")) tiles.push(tile(pendingRes, "Reservation requests", pendingRes ? "attention" : "good"));
+    if (ShilohStore.can("volunteers")) tiles.push(tile(needsCheck, "Checks not current", needsCheck ? "attention" : "good"));
+    if (ShilohStore.can("prayer")) tiles.push(tile(PRAYERS.length, "Prayer requests"));
+    if (ShilohStore.can("content")) tiles.push(tile(RSVPS.length, "RSVPs"));
+    if (ShilohStore.can("people")) tiles.push(tile(PEOPLE.length, "Profiles"));
+    else if (ShilohStore.can("content")) tiles.push(tile(upcoming, "Upcoming events"));
+    document.getElementById("tiles").innerHTML = tiles.join("");
 
-    var needs = VISITOR_CARDS.filter(function (v) { return v.status === "received"; }).slice(0, 4);
-    document.getElementById("dashLatest").innerHTML = needs.length ? needs.map(function (v) {
-      return '<div class="rec"><div style="display:flex;gap:var(--space-3);align-items:center;flex-wrap:wrap;padding:var(--space-4) var(--space-5)">' +
-        "<b>" + esc(v.name || "Visitor") + '</b><span class="who">' + esc(v.who || "") + "</span>" +
-        chip(v.status) + '<span class="when">' + fmtDate(v.submittedAt) + "</span></div></div>";
+    var needs = [];
+    if (ShilohStore.can("people")) {
+      VISITOR_CARDS.forEach(function (v) {
+        if (v.status === "received") needs.push({ title: v.name || "Visitor", sub: v.who || "Visitor card", status: v.status, at: v.submittedAt });
+      });
+    }
+    if (ShilohStore.can("reservations")) {
+      RESERVATIONS.forEach(function (r) {
+        if (r.status === "pending") needs.push({ title: facilityName(r.facilityId), sub: r.purpose || r.type || "Reservation request", status: r.status, at: r.submittedAt });
+      });
+    }
+    needs.sort(function (a, b) { return (b.at || "").localeCompare(a.at || ""); });
+    document.getElementById("dashLatest").innerHTML = needs.length ? needs.slice(0, 5).map(function (n) {
+      return '<button class="rowlink" data-pane-link="inbox" type="button"><b>' + esc(n.title) + '</b><span class="who">' + esc(n.sub) + "</span>" +
+        chip(n.status) + '<span class="when">' + fmtDate(n.at) + "</span></button>";
     }).join("") : '<div class="empty">Nothing waiting — you\'re caught up.</div>';
   }
 
   /* ------------------------------- inbox ------------------------------ */
+  function buildInboxFilter() {
+    var kinds = [];
+    if (ShilohStore.can("people")) kinds.push(['visitor', 'Visitor cards']);
+    if (ShilohStore.can("reservations")) kinds.push(['reservation', 'Reservation requests']);
+    if (ShilohStore.can("prayer")) kinds.push(['prayer', 'Prayer requests']);
+    document.getElementById("inboxType").innerHTML = '<option value="">Every type</option>' + kinds.map(function (k) {
+      return '<option value="' + k[0] + '">' + k[1] + "</option>";
+    }).join("");
+    document.getElementById("inboxTools").hidden = kinds.length < 2;
+    document.getElementById("inboxNote").textContent = kinds.length > 1
+      ? "Visitor cards, reservation requests, and prayer requests in one place — the church-sized version of a unified host inbox."
+      : "Reservation and booking requests from the app land here.";
+  }
   function inboxItems() {
     var items = [];
-    VISITOR_CARDS.forEach(function (v) { items.push({ kind: "visitor", at: v.submittedAt, data: v }); });
-    RESERVATIONS.forEach(function (r) { items.push({ kind: "reservation", at: r.submittedAt, data: r }); });
-    PRAYERS.forEach(function (p) { items.push({ kind: "prayer", at: p.submittedAt, data: p }); });
+    if (ShilohStore.can("people")) VISITOR_CARDS.forEach(function (v) { items.push({ kind: "visitor", at: v.submittedAt, data: v }); });
+    if (ShilohStore.can("reservations")) RESERVATIONS.forEach(function (r) { items.push({ kind: "reservation", at: r.submittedAt, data: r }); });
+    if (ShilohStore.can("prayer")) PRAYERS.forEach(function (p) { items.push({ kind: "prayer", at: p.submittedAt, data: p }); });
     return items.sort(function (a, b) { return (b.at || "").localeCompare(a.at || ""); });
+  }
+  function reservationRec(r) {
+    var conflict = r.status === "pending" && resConflict(r)
+      ? '<p class="conflict">Heads up — an approved booking already overlaps this slot.</p>' : "";
+    return '<details class="rec"><summary><b>' + esc(facilityName(r.facilityId)) + '</b><span class="who">' + esc(r.purpose || r.type || "") + "</span>" +
+      chip(r.status) + '<span class="when">' + fmtDate(r.submittedAt) + '</span></summary><div class="rec__body"><dl>' +
+      "<dt>Requested by</dt><dd>" + esc(r.requestedBy || "–") + "</dd>" +
+      (r.date ? "<dt>When</dt><dd>" + esc(r.date) + " " + esc(r.startTime || "") + "–" + esc(r.endTime || "") + "</dd>" : "") +
+      "<dt>Purpose</dt><dd>" + esc(r.purpose || r.type || "–") + "</dd></dl>" + conflict +
+      '<div class="acts"><button class="btn btn--primary" data-res-status="' + esc(r.id) + '" data-status="approved" type="button">Approve</button>' +
+      '<button class="btn btn--quiet" data-res-status="' + esc(r.id) + '" data-status="denied" type="button">Deny</button></div></div></details>';
   }
   function renderInbox() {
     var filter = document.getElementById("inboxType").value;
@@ -381,16 +540,7 @@
           (v.email ? '<a class="btn btn--quiet" href="mailto:' + esc(v.email) + "?subject=" + encodeURIComponent("Welcome from " + (THEME.shortName || "the church")) + '">Email them</a>' : "") +
           "</div></div></details>";
       }
-      if (i.kind === "reservation") {
-        var r = i.data;
-        var m = MINISTRIES.find(function (x) { return x.id === r.facilityId; });
-        return '<details class="rec"><summary><b>' + esc(m ? m.name : r.facilityId) + '</b><span class="who">' + esc(r.purpose || r.type || "") + "</span>" +
-          chip(r.status) + '<span class="when">' + fmtDate(r.submittedAt) + '</span></summary><div class="rec__body"><dl>' +
-          "<dt>Requested by</dt><dd>" + esc(r.requestedBy || "–") + "</dd>" +
-          (r.date ? "<dt>When</dt><dd>" + esc(r.date) + " " + esc(r.startTime || "") + "–" + esc(r.endTime || "") + "</dd>" : "") + "</dl>" +
-          '<div class="acts"><button class="btn btn--primary" data-res-status="' + esc(r.id) + '" data-status="approved" type="button">Approve</button>' +
-          '<button class="btn btn--quiet" data-res-status="' + esc(r.id) + '" data-status="denied" type="button">Deny</button></div></div></details>';
-      }
+      if (i.kind === "reservation") return reservationRec(i.data);
       var p = i.data;
       var tierCls = p.visibility === "pastor" ? "chip chip--accent" : p.visibility === "team" ? "chip chip--violet" : "chip";
       return '<details class="rec"><summary><b>' + esc(p.name || "Anonymous") + '</b><span class="who">Prayer request</span>' +
@@ -424,20 +574,14 @@
     document.getElementById("ministryCatalog").innerHTML = MINISTRIES.map(function (m) {
       return '<div class="minicard"><span class="chip' + (m.bookable ? " chip--teal" : "") + '">' + esc(m.type) + "</span>" +
         "<h3>" + esc(m.name) + "</h3>" +
-        '<p class="muted" style="font-size:var(--step--1)">' + esc(m.description || "") + "</p></div>";
+        '<p class="muted">' + esc(m.description || "") + "</p></div>";
     }).join("");
     renderReservations();
   }
   function renderReservations() {
-    document.getElementById("reservationList").innerHTML = RESERVATIONS.length ? RESERVATIONS.map(function (r) {
-      var m = MINISTRIES.find(function (x) { return x.id === r.facilityId; });
-      return '<details class="rec"><summary><b>' + esc(m ? m.name : r.facilityId) + '</b><span class="who">' + esc(r.requestedBy || "") + "</span>" +
-        chip(r.status) + '<span class="when">' + fmtDate(r.submittedAt) + '</span></summary><div class="rec__body"><dl>' +
-        (r.date ? "<dt>When</dt><dd>" + esc(r.date) + " " + esc(r.startTime || "") + "–" + esc(r.endTime || "") + "</dd>" : "") +
-        "<dt>Purpose</dt><dd>" + esc(r.purpose || r.type || "–") + "</dd></dl>" +
-        '<div class="acts"><button class="btn btn--primary" data-res-status="' + esc(r.id) + '" data-status="approved" type="button">Approve</button>' +
-        '<button class="btn btn--quiet" data-res-status="' + esc(r.id) + '" data-status="denied" type="button">Deny</button></div></div></details>';
-    }).join("") : '<div class="empty">No reservation requests yet.</div>';
+    document.getElementById("reservationList").innerHTML = RESERVATIONS.length
+      ? RESERVATIONS.map(reservationRec).join("")
+      : '<div class="empty">No reservation requests yet.</div>';
   }
 
   /* ---------------------------- events -------------------------------- */
@@ -513,7 +657,7 @@
     document.getElementById("volunteerList").innerHTML = VOLUNTEERS.length ? VOLUNTEERS.map(function (v) {
       var cls = v.status === "current" ? "chip--ok" : v.status === "expired" ? "chip--danger" : "chip--warn";
       return '<div class="volrow"><b>' + esc(v.name) + '</b><span class="role">' + esc(v.role || "") + "</span>" +
-        '<select data-vol-status="' + esc(v.id) + '">' +
+        '<select data-vol-status="' + esc(v.id) + '" aria-label="Safety status for ' + esc(v.name) + '">' +
         ["not started", "in progress", "current", "expired"].map(function (s) {
           return '<option' + (s === v.status ? " selected" : "") + ">" + s + "</option>";
         }).join("") + "</select>" +

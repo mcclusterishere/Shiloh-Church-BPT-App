@@ -49,17 +49,32 @@ host inbox), **People**, **Ministries & facilities** with reservation approve/de
 size, so it's here from day one), a read-only **Brand & Settings** preview, and
 **Automations** (webhook test send).
 
+Two staff tiers share it: an **editor** runs the public face (events,
+announcements, ministries, reservations, the broadcast), an **admin** adds
+everything people-sensitive. Who gets what, and what enforces it, is in
+`docs/MANAGE.md` and `docs/BACKEND.md`.
+
+## The broadcast studio (`golive.html`)
+
+A staff phone is the camera. Open the studio, sign in, tap go live — the phone
+publishes over WebRTC to the church's own streaming box, which fans the service
+out to YouTube and Facebook with no monthly streaming service in the middle
+(the honest costs and requirements are in `docs/GO-LIVE.md`, "Route D"). Until
+that box is set up, the studio runs as a camera check: nothing leaves the
+phone, and it says so plainly.
+
 ## Files
 
 - `index.html` — the app (shell, screens, router, onboarding)
 - `admin.html` — the admin backend
-- `js/store.js` — the shared data layer (demo / Supabase / webhook adapters)
-- `data/config.json` — backend mode, webhook URL, admin passcode
+- `golive.html` — the phone broadcast studio (staff sign-in, WebRTC/WHIP publisher)
+- `js/store.js` — the shared data layer (demo / Supabase / webhook adapters, staff roles)
+- `data/config.json` — backend mode, webhook URL, the two staff passcodes
 - `data/theme.json` — **branding only**: church name, tagline, colors
 - `data/church.json` — real church facts: address, phone, pastor, service times
 - `data/ministries.json` — the ministry/small-group/facility catalog
 - `data/events.json` / `data/news.json` — the calendar and the announcement feed
-- `data/live.json` — the live-stream player config (Restream/YouTube/Facebook/HLS embed)
+- `data/live.json` — the live-stream player config (any iframe embed, plus the church's own WHIP ingest URL)
 - `scripts/build-ics.js` — generates `events.ics` from `data/events.json` at deploy time
 - `supabase/functions/assistant-gemini/` — ready-to-deploy Gemini brain for the admin Assistant
 - `docs/GO-LIVE.md` — the launch runbook: Pages setup, streaming routes and real costs, Workspace vs Gemini API
@@ -69,6 +84,7 @@ size, so it's here from day one), a read-only **Brand & Settings** preview, and
 - `docs/DESIGN.md` — the full design proposal this build follows
 - `docs/APPLIANCE-SETUP.md` — turning a Mac mini into the Church OS "brain and pipe" appliance
 - `scripts/appliance/gateway.js` — the local service that runs on that box
+- `scripts/appliance/mediamtx.yml` — the box's broadcast relay config: phone's WHIP stream in, YouTube + Facebook out
 - `manifest.webmanifest` / `sw.js` — install metadata and the offline service worker
 - `assets/icons/` — home-screen icons: a stained-glass-window mark in the blues of the church's own logo
 - `assets/media/` — all 60 photos from shilohchurchbpt.org
