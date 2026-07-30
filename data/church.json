@@ -4,7 +4,7 @@
   "denomination": "Baptist",
   "pastor": "Rev. Carl McCluster, MDiv",
   "pastorShort": "Pastor Carl",
-  "pastorTenure": "Senior Pastor for thirty years",
+  "pastorTenure": "thirty years at Shiloh",
   "address": "477 Broad Street, Bridgeport, CT 06604",
   "phone": "(203) 579-1504",
   "email": "shilohadmnbpt@gmail.com",
@@ -23,10 +23,22 @@
     "url": "https://www.facebook.com/SHILOHBPT"
   },
   "serviceTimes": [
-    { "label": "Continental breakfast", "time": "Sun 8:00 AM" },
-    { "label": "Consecration in prayer", "time": "Sun 8:15 AM" },
-    { "label": "Praise & worship", "time": "Sun 9:00 AM" },
-    { "label": "Prayer line (Mon–Fri)", "time": "6:00 AM & 8:00 PM" }
+    {
+      "label": "Continental breakfast",
+      "time": "Sun 8:00 AM"
+    },
+    {
+      "label": "Consecration in prayer",
+      "time": "Sun 8:15 AM"
+    },
+    {
+      "label": "Praise & worship",
+      "time": "Sun 9:00 AM"
+    },
+    {
+      "label": "Prayer line (Mon–Fri)",
+      "time": "6:00 AM & 8:00 PM"
+    }
   ],
   "kids": "Childcare is provided from newborn to 12 years old for all services, with safe, engaging, age-appropriate activities.",
   "parking": "Free parking in the church lot and nearby designated areas. Parking attendants will guide you when you arrive."

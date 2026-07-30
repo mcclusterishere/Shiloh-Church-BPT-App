@@ -136,9 +136,16 @@ window.ShilohStore = (function () {
     r.id = uid("RSVP");
     r.submittedAt = new Date().toISOString();
     var all = read(LS.rsvps, []);
+    var mine = read(LS.myRsvps, []);
+    /* One answer per person per event: changing your RSVP replaces this
+       device's previous record instead of stacking a new one — otherwise the
+       control snaps back to the oldest answer and the headcount double-counts. */
+    var replaced = all.filter(function (x) { return x.eventId === r.eventId && mine.indexOf(x.id) !== -1; })
+      .map(function (x) { return x.id; });
+    all = all.filter(function (x) { return replaced.indexOf(x.id) === -1; });
+    mine = mine.filter(function (id) { return replaced.indexOf(id) === -1; });
     all.unshift(r);
     write(LS.rsvps, all);
-    var mine = read(LS.myRsvps, []);
     mine.unshift(r.id);
     write(LS.myRsvps, mine);
     var pushes = [fireWebhook("rsvp", r)];
@@ -323,7 +330,17 @@ window.ShilohStore = (function () {
   function downloadEventIcs(ev) {
     function dt(d, t) {
       var iso = (d || "").replace(/-/g, "");
-      var time = (t || "0000").replace(/[^0-9]/g, "").padEnd(4, "0") + "00";
+      /* Real time parsing: "9:00 AM" must become T090000, not T900000. */
+      var m = /(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?/i.exec(t || "");
+      var h = 0, min = 0;
+      if (m) {
+        h = parseInt(m[1], 10) || 0;
+        min = parseInt(m[2] || "0", 10) || 0;
+        var ap = (m[3] || "").toUpperCase();
+        if (ap === "PM" && h < 12) h += 12;
+        if (ap === "AM" && h === 12) h = 0;
+      }
+      var time = String(h).padStart(2, "0") + String(min).padStart(2, "0") + "00";
       return iso + "T" + time;
     }
     var body = [

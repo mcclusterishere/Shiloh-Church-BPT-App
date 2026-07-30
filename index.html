@@ -442,6 +442,11 @@
 
       <button class="btn btn--primary btn--block" id="replayTour" type="button">Watch the tour again</button>
 
+      <button class="quick" data-nav="profile" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-people"/></svg>
+        <span><b>Your profile &amp; RSVPs</b><small>Your name, contact details, and what you've said yes to</small></span>
+      </button>
+
       <div class="card">
         <p class="eyebrow">Make it easier to use</p>
         <div class="togglerow" style="margin-top: var(--space-3)">
@@ -629,8 +634,16 @@
     document.getElementById("pastorGreetingLead").textContent = greeting[0];
     document.getElementById("pastorGreetingRest").innerHTML = paras(greeting.slice(1).join("\n"));
   }
+  /* "Today" in the church's own timezone — with UTC, a Sunday service would
+     fall off the calendar at 8 PM Eastern on the day itself. */
+  function churchToday() {
+    try {
+      return new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York",
+        year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
+    } catch (e) { return new Date().toISOString().slice(0, 10); }
+  }
   function renderHeroNext() {
-    var today = new Date().toISOString().slice(0, 10);
+    var today = churchToday();
     var next = EVENTS.filter(function (e) { return e.date >= today; })
       .sort(function (a, b) { return a.date.localeCompare(b.date); })[0];
     if (!next) return;
@@ -650,17 +663,18 @@
 
   /* ------------------------------ events ------------------------------ */
   function renderEvents() {
-    var today = new Date().toISOString().slice(0, 10);
+    var today = churchToday();
     var future = EVENTS.filter(function (e) { return e.date >= today; }).sort(function (a, b) { return a.date.localeCompare(b.date); });
     var past = EVENTS.filter(function (e) { return e.date < today; }).sort(function (a, b) { return b.date.localeCompare(a.date); });
-    var rsvps = JSON.parse(localStorage.getItem("shiloh.rsvps") || "[]");
-    var mineIds = JSON.parse(localStorage.getItem("shiloh.myRsvps") || "[]");
+    var rsvps, mineIds;
+    try { rsvps = JSON.parse(localStorage.getItem("shiloh.rsvps") || "[]") || []; } catch (e2) { rsvps = []; }
+    try { mineIds = JSON.parse(localStorage.getItem("shiloh.myRsvps") || "[]") || []; } catch (e2) { mineIds = []; }
     var SEG = { yes: 0, maybe: 1, no: 2 };
     var SEGC = { yes: "var(--ok)", maybe: "var(--warn)", no: "var(--text-faint)" };
 
     function card(e, isPast) {
       var yes = rsvps.filter(function (r) { return r.eventId === e.id && r.answer === "yes"; }).length;
-      var mine = rsvps.filter(function (r) { return r.eventId === e.id && mineIds.indexOf(r.id) !== -1; }).pop();
+      var mine = rsvps.filter(function (r) { return r.eventId === e.id && mineIds.indexOf(r.id) !== -1; })[0];
       var picked = mine && mine.answer;
       var controls = "";
       if (!isPast && e.rsvp !== false) {
@@ -891,6 +905,12 @@
     document.getElementById("liveBanner").hidden = !active;
     var player = document.getElementById("livePlayer");
     player.hidden = !active;
+    if (!active && player.getAttribute("data-mounted")) {
+      /* Tear the iframe down, not just hide it — a display:none embed keeps
+         its media session and could keep playing audio after the window. */
+      document.getElementById("liveFrame").innerHTML = "";
+      player.removeAttribute("data-mounted");
+    }
     if (active && !player.getAttribute("data-mounted")) {
       /* Iframe injected only when live — no third-party requests otherwise. */
       var f = document.createElement("iframe");
@@ -1022,7 +1042,7 @@
       document.getElementById("annivImg").src = ABOUT.anniversary.image || "";
       document.getElementById("annivWhen").textContent = ABOUT.anniversary.when || "";
       document.getElementById("annivTitle").textContent = ABOUT.anniversary.title || "";
-      document.getElementById("annivTheme").textContent = "“" + (ABOUT.anniversary.theme || "") + "” — " + (ABOUT.faithCdc || "");
+      document.getElementById("annivTheme").textContent = ABOUT.anniversary.theme ? "“" + ABOUT.anniversary.theme + "”" : "";
     }
 
     /* socials */

@@ -7,7 +7,7 @@
    instead of a stale cache. */
 "use strict";
 
-var CACHE_VERSION = "shiloh-v7";
+var CACHE_VERSION = "shiloh-v8";
 var MEDIA_CACHE = "shiloh-media-v1";
 var SHELL = [
   "./",
