@@ -94,6 +94,7 @@
         locks, not security. Flip <code>data/config.json</code> to <code>"mode": "supabase"</code> for a
         real database and real sign-in — see <code>docs/BACKEND.md</code>.
       </div>
+      <div class="banner" id="dataErr" role="alert" hidden></div>
 
       <section class="view on" id="pane-dash">
         <p class="eyebrow">Today</p>
@@ -437,7 +438,26 @@
       if (ShilohStore.can("volunteers")) renderVolunteers();
       if (ShilohStore.can("settings")) renderBrand();
       if (ShilohStore.can("automations")) renderAuto();
-    });
+      var errEl = document.getElementById("dataErr");
+      if (errEl) errEl.hidden = true;
+    }).catch(dataFail);
+  }
+
+  /* A silent back office is worse than an honest error. Expired supabase
+     sessions route back to the gate; anything else says what went wrong. */
+  function dataFail(e) {
+    var msg = (e && e.message) || String(e || "");
+    if (/(^|\s|\()40[13]\b/.test(msg) || /jwt|expired/i.test(msg)) {
+      ShilohStore.staffSignOut();
+      location.reload();
+      return;
+    }
+    var el = document.getElementById("dataErr");
+    if (el) {
+      el.innerHTML = "<b>Couldn't load the latest data.</b> Check the connection, then switch panes to retry. " +
+        (msg ? "<code>" + esc(msg.slice(0, 140)) + "</code>" : "");
+      el.hidden = false;
+    }
   }
 
   function facilityName(id) {
@@ -551,9 +571,9 @@
   document.getElementById("inboxType").addEventListener("change", renderInbox);
   document.addEventListener("click", function (e) {
     var vb = e.target.closest("button[data-vc-status]");
-    if (vb) { ShilohStore.updateVisitorCard(vb.getAttribute("data-vc-status"), { status: vb.getAttribute("data-status") }).then(refresh); return; }
+    if (vb) { ShilohStore.updateVisitorCard(vb.getAttribute("data-vc-status"), { status: vb.getAttribute("data-status") }).then(refresh, dataFail); return; }
     var rb = e.target.closest("button[data-res-status]");
-    if (rb) { ShilohStore.updateReservationRequest(rb.getAttribute("data-res-status"), { status: rb.getAttribute("data-status") }).then(refresh); return; }
+    if (rb) { ShilohStore.updateReservationRequest(rb.getAttribute("data-res-status"), { status: rb.getAttribute("data-status") }).then(refresh, dataFail); return; }
   });
 
   /* ------------------------------- people ----------------------------- */
@@ -675,7 +695,7 @@
   document.addEventListener("change", function (e) {
     var sel = e.target.closest("select[data-vol-status]");
     if (!sel) return;
-    ShilohStore.updateVolunteer(sel.getAttribute("data-vol-status"), { status: sel.value }).then(refresh);
+    ShilohStore.updateVolunteer(sel.getAttribute("data-vol-status"), { status: sel.value }).then(refresh, dataFail);
   });
 
   /* ------------------------------- brand ------------------------------ */

@@ -113,8 +113,10 @@ insert into staff (email, role) values ('media@shilohchurchbpt.org', 'editor');
 ```
 
 Create the matching login first under **Authentication → Users** (email +
-password). Change a role with an UPDATE, remove access with a DELETE — same
-place. No deploy, no code change.
+password). The policies compare emails case-insensitively, but keep staff
+emails lowercase anyway — it's what the auth system stores. Change a role
+with an UPDATE, remove access with a DELETE — same place. No deploy, no
+code change.
 
 ## Content management (no code needed)
 

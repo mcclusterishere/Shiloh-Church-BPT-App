@@ -302,6 +302,10 @@ window.ShilohStore = (function () {
             "people", "prayer", "volunteers", "settings", "automations"]
   };
   function staffSignIn(passcode) {
+    /* Passcodes are demo-mode only. In supabase mode a passcode "success"
+       would write a role that staffRole() immediately voids (no token) —
+       a toast saying welcome over a card still signed out. Fail honestly. */
+    if (isSupabase()) return Promise.reject(new Error("This church uses real staff accounts — sign in with your email on the back office page."));
     var role = null;
     if (passcode && config.adminPasscode && passcode === config.adminPasscode) role = "admin";
     else if (passcode && config.editorPasscode && passcode === config.editorPasscode) role = "editor";
@@ -310,8 +314,16 @@ window.ShilohStore = (function () {
     return Promise.resolve(role);
   }
   function staffSignInSupabase(email, password) {
+    /* GoTrue lowercases account emails; match it or the lookup misses. */
+    email = String(email || "").trim().toLowerCase();
     return adminSignIn(email, password).then(function () {
-      return sb("/rest/v1/staff?select=role&email=eq." + encodeURIComponent(email), { token: adminToken() });
+      return sb("/rest/v1/staff?select=role&email=eq." + encodeURIComponent(email), { token: adminToken() })
+        .catch(function (e) {
+          /* Lookup failed (network/5xx): don't leave a live auth token
+             sitting in localStorage on a device that showed "sign-in failed". */
+          localStorage.removeItem(LS.session);
+          throw e;
+        });
     }).then(function (rows) {
       var role = rows && rows[0] && rows[0].role;
       if (role !== "admin" && role !== "editor") {

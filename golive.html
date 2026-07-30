@@ -419,9 +419,7 @@
   function enterStudio() {
     els.gate.hidden = true;
     els.studio.hidden = false;
-    els.rehearseText.textContent = ShilohStore.can("settings")
-      ? "No broadcast target is connected yet — frame the shot and check the sound. When the church's streaming box is ready, paste its address under Broadcast target below (docs/GO-LIVE.md, \"Your own box\")."
-      : "No broadcast target is connected yet — frame the shot and check the sound. An admin connects the church's streaming box from their phone (docs/GO-LIVE.md, \"Your own box\").";
+    els.rehearseText.textContent = "No broadcast target is connected yet — frame the shot and check the sound. When the church's streaming box is ready, paste its address under Broadcast target below (docs/GO-LIVE.md, \"Your own box\").";
     prefillSheet();
     render();
     startCamera();
@@ -599,11 +597,23 @@
         pc.addEventListener("icegatheringstatechange", () => { if (pc.iceGatheringState === "complete") res(); });
         setTimeout(res, 2000);
       });
-      const resp = await fetch(url, {
-        method: "POST",
-        headers: Object.assign({ "Content-Type": "application/sdp" }, headers),
-        body: pc.localDescription.sdp
-      });
+      /* A black-holed ingest (box off, firewall drop) would otherwise hang
+         this fetch for minutes with the whole deck locked behind busy. */
+      const ctl = new AbortController();
+      const kill = setTimeout(function () { ctl.abort(); }, 12000);
+      let resp;
+      try {
+        resp = await fetch(url, {
+          method: "POST",
+          headers: Object.assign({ "Content-Type": "application/sdp" }, headers),
+          body: pc.localDescription.sdp,
+          signal: ctl.signal
+        });
+      } catch (err) {
+        throw (err && err.name === "AbortError") ? new Error("no answer after 12 seconds") : err;
+      } finally {
+        clearTimeout(kill);
+      }
       if (!resp.ok) throw new Error("The broadcast server answered " + resp.status + ".");
       await pc.setRemoteDescription({ type: "answer", sdp: await resp.text() });
       return { pc: pc, resource: resp.headers.get("Location") };
@@ -784,7 +794,10 @@
     els.goLabel.textContent = studio.busy ? "Connecting…" : "Go live";
     els.rehearseCard.hidden = !camOk || hasTarget;
     els.liveRow.hidden = !studio.live;
-    els.sheet.hidden = !ShilohStore.can("settings") || studio.live;
+    /* The target is per-device, so whoever holds the phone that broadcasts
+       must be able to type it in — that's exactly who can("live") covers.
+       The publish password only guards the stream, never member data. */
+    els.sheet.hidden = !ShilohStore.can("live") || studio.live;
   }
 })();
 </script>

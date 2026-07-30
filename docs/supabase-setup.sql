@@ -111,7 +111,7 @@ alter table staff enable row level security;
 -- further down work: those subqueries run as the caller, and RLS hands them
 -- only the caller's own row, which is precisely the row being tested.
 create policy "staff can read their own row" on staff
-  for select to authenticated using (email = auth.jwt()->>'email');
+  for select to authenticated using (lower(email) = lower(auth.jwt()->>'email'));
 
 -- Public app forms may INSERT (anon key) — this is how visitor cards, RSVPs,
 -- prayer requests, and reservation requests reach the database with no login.
@@ -128,6 +128,20 @@ create policy "anon can update own profile by email" on members for update to an
 create policy "anyone can read church-visible prayer requests" on prayer_requests
   for select to anon, authenticated using (visibility = 'church');
 
+-- UPGRADE PATH. Postgres ORs policies together, so a project that ran the
+-- pre-roles version of this file would keep its old any-signed-in-user
+-- policies alongside the tiered ones below — silently defeating them.
+-- Dropping them first is a harmless no-op on a fresh project.
+drop policy if exists "signed-in users can read members" on members;
+drop policy if exists "signed-in users can read visitor cards" on visitor_cards;
+drop policy if exists "signed-in users can update visitor cards" on visitor_cards;
+drop policy if exists "signed-in users can read rsvps" on rsvps;
+drop policy if exists "signed-in users can read all prayer requests" on prayer_requests;
+drop policy if exists "signed-in users can read reservations" on reservations;
+drop policy if exists "signed-in users can update reservations" on reservations;
+drop policy if exists "signed-in users can manage safety status" on safety_status;
+drop policy if exists "anon can read church-visible prayer requests" on prayer_requests; -- renamed below
+
 -- Everything else is tiered by the staff table, per the Church OS
 -- non-negotiable: an EDITOR (any staff row) runs the public face; an ADMIN
 -- staff row adds everything people-sensitive. Pastoral data is the tightest
@@ -139,26 +153,26 @@ create policy "anyone can read church-visible prayer requests" on prayer_request
 
 -- Any staff row, editor or admin: the public-face queues.
 create policy "staff can read rsvps" on rsvps for select to authenticated
-  using (exists (select 1 from staff where staff.email = auth.jwt()->>'email'));
+  using (exists (select 1 from staff where lower(staff.email) = lower(auth.jwt()->>'email')));
 create policy "staff can read reservations" on reservations for select to authenticated
-  using (exists (select 1 from staff where staff.email = auth.jwt()->>'email'));
+  using (exists (select 1 from staff where lower(staff.email) = lower(auth.jwt()->>'email')));
 create policy "staff can update reservations" on reservations for update to authenticated
-  using (exists (select 1 from staff where staff.email = auth.jwt()->>'email'))
-  with check (exists (select 1 from staff where staff.email = auth.jwt()->>'email'));
+  using (exists (select 1 from staff where lower(staff.email) = lower(auth.jwt()->>'email')))
+  with check (exists (select 1 from staff where lower(staff.email) = lower(auth.jwt()->>'email')));
 
 -- Admin staff only: people, prayer at every tier, volunteer safety.
 create policy "admin staff can read members" on members for select to authenticated
-  using (exists (select 1 from staff where staff.email = auth.jwt()->>'email' and staff.role = 'admin'));
+  using (exists (select 1 from staff where lower(staff.email) = lower(auth.jwt()->>'email') and staff.role = 'admin'));
 create policy "admin staff can read visitor cards" on visitor_cards for select to authenticated
-  using (exists (select 1 from staff where staff.email = auth.jwt()->>'email' and staff.role = 'admin'));
+  using (exists (select 1 from staff where lower(staff.email) = lower(auth.jwt()->>'email') and staff.role = 'admin'));
 create policy "admin staff can update visitor cards" on visitor_cards for update to authenticated
-  using (exists (select 1 from staff where staff.email = auth.jwt()->>'email' and staff.role = 'admin'))
-  with check (exists (select 1 from staff where staff.email = auth.jwt()->>'email' and staff.role = 'admin'));
+  using (exists (select 1 from staff where lower(staff.email) = lower(auth.jwt()->>'email') and staff.role = 'admin'))
+  with check (exists (select 1 from staff where lower(staff.email) = lower(auth.jwt()->>'email') and staff.role = 'admin'));
 create policy "admin staff can read all prayer requests" on prayer_requests for select to authenticated
-  using (exists (select 1 from staff where staff.email = auth.jwt()->>'email' and staff.role = 'admin'));
+  using (exists (select 1 from staff where lower(staff.email) = lower(auth.jwt()->>'email') and staff.role = 'admin'));
 create policy "admin staff can manage safety status" on safety_status for all to authenticated
-  using (exists (select 1 from staff where staff.email = auth.jwt()->>'email' and staff.role = 'admin'))
-  with check (exists (select 1 from staff where staff.email = auth.jwt()->>'email' and staff.role = 'admin'));
+  using (exists (select 1 from staff where lower(staff.email) = lower(auth.jwt()->>'email') and staff.role = 'admin'))
+  with check (exists (select 1 from staff where lower(staff.email) = lower(auth.jwt()->>'email') and staff.role = 'admin'));
 
 -- One-tap "Praying" support, atomic so concurrent taps don't lose a count.
 create or replace function increment_praying(request_id text)
