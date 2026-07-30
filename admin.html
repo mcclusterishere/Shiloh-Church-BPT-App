@@ -595,7 +595,7 @@
       var roster = RSVPS.filter(function (r) { return r.eventId === ev.id; });
       var yes = roster.filter(function (r) { return r.answer === "yes"; });
       var emails = roster.map(function (r) { return r.email; }).filter(Boolean);
-      var blast = emails.length ? '<a class="btn btn--primary" href="mailto:?bcc=' + emails.join(",") + "&subject=" + encodeURIComponent(ev.title) + '">Email everyone (' + emails.length + ")</a>" : "";
+      var blast = emails.length ? '<a class="btn btn--primary" href="mailto:?bcc=' + esc(emails.map(encodeURIComponent).join(",")) + "&subject=" + esc(encodeURIComponent(ev.title)) + '">Email everyone (' + emails.length + ")</a>" : "";
       return '<details class="rec"><summary><b>' + esc(ev.title) + '</b><span class="who">' + esc(ev.date) + (ev.location ? " · " + esc(ev.location) : "") + "</span>" +
         '<span class="chip chip--ok">' + yes.length + " yes</span>" +
         '<span class="chip">' + roster.length + " total</span>" +
