@@ -1,0 +1,21 @@
+{
+  "note": "Live streaming configuration — see docs/GO-LIVE.md for the full setup walkthrough. The app plays ANY provider that gives an iframe embed URL: Restream's website player (Business plan), a YouTube live embed, a Facebook video embed, or Cloudflare Stream. Paste the embed URL below and the Watch screen becomes a live player. 'mode' controls when the player shows: 'schedule' shows it during the weekly window below (the player itself shows an offline state if nothing is streaming), 'always' shows it permanently, 'manual' shows it only while liveNow is true, 'off' hides it. Times are America/New_York.",
+  "mode": "schedule",
+  "liveNow": false,
+  "provider": "",
+  "embedUrl": "",
+  "aspectRatio": "16 / 9",
+  "schedule": {
+    "note": "Sunday window opens 15 minutes before the 9:00 AM service and closes at 11:00 AM.",
+    "dayOfWeek": 0,
+    "startMinutes": 525,
+    "endMinutes": 660,
+    "timezone": "America/New_York",
+    "label": "Sundays at 9:00 AM"
+  },
+  "fallback": {
+    "text": "We go live every Sunday at 9:00 AM Eastern.",
+    "linkLabel": "Watch on Facebook",
+    "linkUrl": "https://www.facebook.com/SHILOHBPT"
+  }
+}

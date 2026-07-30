@@ -7,7 +7,7 @@
    instead of a stale cache. */
 "use strict";
 
-var CACHE_VERSION = "shiloh-v6";
+var CACHE_VERSION = "shiloh-v7";
 var MEDIA_CACHE = "shiloh-media-v1";
 var SHELL = [
   "./",
@@ -22,6 +22,7 @@ var SHELL = [
   "data/config.json",
   "data/theme.json",
   "data/church.json",
+  "data/live.json",
   "assets/fonts/atkinson-hyperlegible-latin-400-normal.woff2",
   "assets/fonts/atkinson-hyperlegible-latin-700-normal.woff2",
   "assets/fonts/fraunces-latin-var.woff2",

@@ -59,7 +59,10 @@ size, so it's here from day one), a read-only **Brand & Settings** preview, and
 - `data/church.json` — real church facts: address, phone, pastor, service times
 - `data/ministries.json` — the ministry/small-group/facility catalog
 - `data/events.json` / `data/news.json` — the calendar and the announcement feed
+- `data/live.json` — the live-stream player config (Restream/YouTube/Facebook/HLS embed)
 - `scripts/build-ics.js` — generates `events.ics` from `data/events.json` at deploy time
+- `supabase/functions/assistant-gemini/` — ready-to-deploy Gemini brain for the admin Assistant
+- `docs/GO-LIVE.md` — the launch runbook: Pages setup, streaming routes and real costs, Workspace vs Gemini API
 - `docs/BACKEND.md` — go-live guide for Supabase + automations
 - `docs/MANAGE.md` — the one-page content-editing guide
 - `docs/supabase-setup.sql` — schema + Row Level Security policies for live mode

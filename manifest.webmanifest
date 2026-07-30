@@ -36,6 +36,11 @@
   ],
   "shortcuts": [
     {
+      "name": "Watch live",
+      "url": "./#/watch",
+      "description": "Live worship and recent sermons"
+    },
+    {
       "name": "Events",
       "url": "./#/events",
       "description": "See what's coming up and RSVP"
@@ -46,14 +51,9 @@
       "description": "Share or pray over a request"
     },
     {
-      "name": "Connect",
-      "url": "./#/connect",
-      "description": "New here? Let us know"
-    },
-    {
-      "name": "Help",
-      "url": "./#/help",
-      "description": "Watch the tour again"
+      "name": "Give",
+      "url": "./#/give",
+      "description": "Tithes and offering"
     }
   ]
 }

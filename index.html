@@ -80,6 +80,12 @@
         </div>
       </div>
 
+      <button class="livebanner rise rise-2" id="liveBanner" data-nav="watch" type="button" hidden>
+        <span class="livedot" aria-hidden="true"></span>
+        <b>We're live right now</b>
+        <span class="livebanner__cta">Watch&nbsp;→</span>
+      </button>
+
       <div class="card rise rise-2" id="heroNext" hidden>
         <div class="row" style="justify-content:space-between; align-items:baseline">
           <span class="eyebrow">Next</span>
@@ -262,11 +268,22 @@
         <p class="eyebrow">Sermons &amp; live worship</p>
         <h2>Watch</h2>
       </div>
-      <div class="card photocard">
+      <!-- The live player. Fed by data/live.json — any provider that gives an
+           iframe embed URL (Restream website player, YouTube live, Facebook,
+           Cloudflare Stream) plays right here, on the church's own site. -->
+      <div class="liveplayer" id="livePlayer" hidden>
+        <div class="liveplayer__head">
+          <span class="livedot" aria-hidden="true"></span>
+          <b id="liveHeadline">Live from the sanctuary</b>
+        </div>
+        <div class="liveplayer__frame" id="liveFrame"></div>
+      </div>
+
+      <div class="card photocard" id="liveFallbackCard">
         <img src="assets/media/home-online.webp" alt="" loading="lazy" decoding="async">
         <div class="photocard__body">
-          <h3>Facebook Live — Sundays at 9 AM</h3>
-          <p>Worship with the Shiloh family from anywhere.</p>
+          <h3 id="liveFallbackTitle">Live — Sundays at 9 AM</h3>
+          <p id="liveFallbackText">Worship with the Shiloh family from anywhere.</p>
           <a class="btn btn--primary" id="watchLiveBtn" href="#" target="_blank" rel="noopener" style="margin-top:var(--space-4)">
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-play"/></svg>
             Watch live
@@ -486,7 +503,7 @@
 <script>
 (function () {
   "use strict";
-  var CHURCH = null, THEME = null, EVENTS = [], MINISTRIES = [], GIVING = null, ABOUT = null, SERMONS = null, FAQ = [], IMPACT = null;
+  var CHURCH = null, THEME = null, EVENTS = [], MINISTRIES = [], GIVING = null, ABOUT = null, SERMONS = null, FAQ = [], IMPACT = null, LIVE = null;
   var ICON = function (id) {
     return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#' + id + '"/></svg>';
   };
@@ -843,6 +860,56 @@
     }).join("");
   }
 
+  /* ------------------------------- live ------------------------------- */
+  /* True while the current time (in the church's own timezone) falls inside
+     the weekly window from data/live.json. The player's own offline state
+     covers the case where the window is open but nobody is streaming yet —
+     the app never claims "live" outside what the config says. */
+  function inLiveWindow(sched) {
+    if (!sched) return false;
+    try {
+      var parts = new Intl.DateTimeFormat("en-US", {
+        timeZone: sched.timezone || "America/New_York",
+        weekday: "short", hour: "numeric", minute: "numeric", hour12: false
+      }).formatToParts(new Date());
+      var get = function (t) { var p = parts.find(function (x) { return x.type === t; }); return p ? p.value : ""; };
+      var days = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+      var day = days[get("weekday")];
+      var mins = (parseInt(get("hour"), 10) % 24) * 60 + parseInt(get("minute"), 10);
+      return day === sched.dayOfWeek && mins >= sched.startMinutes && mins < sched.endMinutes;
+    } catch (e) { return false; }
+  }
+  function liveActive() {
+    if (!LIVE || !LIVE.embedUrl) return false;
+    if (LIVE.mode === "off") return false;
+    if (LIVE.mode === "always") return true;
+    if (LIVE.mode === "manual") return LIVE.liveNow === true;
+    return inLiveWindow(LIVE.schedule); /* mode: "schedule" */
+  }
+  function renderLive() {
+    var active = liveActive();
+    document.getElementById("liveBanner").hidden = !active;
+    var player = document.getElementById("livePlayer");
+    player.hidden = !active;
+    if (active && !player.getAttribute("data-mounted")) {
+      /* Iframe injected only when live — no third-party requests otherwise. */
+      var f = document.createElement("iframe");
+      f.src = LIVE.embedUrl;
+      f.setAttribute("allow", "autoplay; fullscreen; encrypted-media; picture-in-picture");
+      f.setAttribute("allowfullscreen", "true");
+      f.setAttribute("title", "Live worship stream");
+      f.style.aspectRatio = LIVE.aspectRatio || "16 / 9";
+      document.getElementById("liveFrame").appendChild(f);
+      player.setAttribute("data-mounted", "1");
+    }
+    document.getElementById("liveFallbackCard").hidden = active;
+    if (LIVE && LIVE.fallback) {
+      if (LIVE.schedule && LIVE.schedule.label) document.getElementById("liveFallbackTitle").textContent = "Live — " + LIVE.schedule.label;
+      document.getElementById("liveFallbackText").textContent = LIVE.fallback.text || "";
+      document.getElementById("watchLiveBtn").href = LIVE.fallback.linkUrl || (CHURCH.online && CHURCH.online.url) || "#";
+    }
+  }
+
   /* ------------------------------- watch ------------------------------ */
   function renderWatch() {
     if (CHURCH.online && CHURCH.online.url) document.getElementById("watchLiveBtn").href = CHURCH.online.url;
@@ -1073,11 +1140,11 @@
     j("data/ministries.json", { ministries: [] }),
     j("data/giving.json", null), j("data/about.json", null),
     j("data/sermons.json", null), j("data/faq.json", { faq: [] }),
-    j("data/impact.json", null)
+    j("data/impact.json", null), j("data/live.json", null)
   ]).then(function (res) {
     THEME = res[1]; CHURCH = res[2];
     EVENTS = res[3].events || []; MINISTRIES = res[5].ministries || [];
-    GIVING = res[6]; ABOUT = res[7]; SERMONS = res[8]; FAQ = (res[9] || {}).faq || []; IMPACT = res[10];
+    GIVING = res[6]; ABOUT = res[7]; SERMONS = res[8]; FAQ = (res[9] || {}).faq || []; IMPACT = res[10]; LIVE = res[11];
 
     document.title = THEME.churchName || document.title;
     var full = THEME.churchName || "", shortName = THEME.shortName || full;
@@ -1099,7 +1166,11 @@
     renderHeroNext();
     renderNews(res[4].news || []);
     renderGive();
+    renderLive();
     renderWatch();
+    /* Re-evaluate the live window once a minute so the banner appears and
+       disappears on time without anyone reloading the app. */
+    setInterval(renderLive, 60000);
     renderAbout();
     renderConnectExtras();
 
