@@ -9,7 +9,7 @@ for any of this.
 | Change the church **name, tagline, or colors** | `data/theme.json` | This is branding *only*. If you change a color here, also update `manifest.webmanifest`'s `theme_color`/`background_color` by hand — the browser fetches that file before any of the app's JavaScript runs, so it can't be re-themed live the way the rest of the app can. |
 | Change the church's **address, phone, pastor, or service times** | `data/church.json` | Kept separate from branding on purpose. |
 | Add or change a **ministry, small group, or bookable space** | `data/ministries.json` | Set `"bookable": true` on anything that should show "Request to book" instead of "I'm interested." |
-| Add or change an **event** | `data/events.json` | Future events rise to the top and past ones archive themselves. Or draft in **Admin → Events** and download the merged file. Pushing regenerates `events.ics` automatically. |
+| Add or change an **event** | `data/events.json` | Future events rise to the top and past ones archive themselves. Or draft in **Admin → Events** and download the merged file. If Pages deploys via the workflow, `events.ics` regenerates automatically; in deploy-from-branch mode, also run `node scripts/build-ics.js` and commit the refreshed `events.ics` alongside your change. |
 | Post **news** | `data/news.json` | Anything older than 18 months hides itself. |
 | Change **giving methods** | `data/giving.json` | Handles/links mirror the church's real accounts; the app only links out, never processes money. |
 | Change **about / staff / anniversary** | `data/about.json` | Staff photos live in `assets/media/`. |
