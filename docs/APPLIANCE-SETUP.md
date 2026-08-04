@@ -55,6 +55,33 @@ ollama pull <model-name-from-the-library>
 ollama run <model-name-from-the-library> "Say hello in one sentence."   # sanity check
 ```
 
+### The upgrade ladder — start small, grow into a Studio
+
+Because the gateway is model-agnostic (one `OLLAMA_MODEL` variable, section 3),
+the church can climb this ladder over years without ever touching the app.
+Approximate fits at ~4-bit quantization, leaving headroom for macOS, context,
+and the featherweight relay/bridge services this same box runs:
+
+| Box | RAM | What runs well |
+| --- | --- | --- |
+| Mac mini (M4) | 24–32GB | The sweet spot for office work: a ~30B mixture-of-experts model (fast — only a few billion parameters active per token) or a strong 9–14B dense model. GLM's 9B-class and Qwen's 30B-MoE-class both live here. |
+| Mac mini (M4 Pro) | 64GB | The ~100B mixture-of-experts class — GLM-4.5-Air territory at 3–4-bit. Tight but real. |
+| Mac Studio (M4 Max) | 128GB | The ~235B MoE class (Qwen's big mid-tier) at 3-bit, 4-bit if you keep context modest. |
+| Mac Studio (M3 Ultra) | 256–512GB | The 350B+ frontier-size open models (GLM-4.5/4.6 class) at a quality 4-bit quantization. |
+
+The swap, whenever a better model lands or a bigger box arrives:
+
+```sh
+ollama pull <new-model>
+# edit OLLAMA_MODEL in the launchd plist (section 3), then:
+launchctl kickstart -k gui/$(id -u)/org.shiloh.gateway
+```
+
+Nothing in the app, the config, or the tunnel changes — the Assistant just
+gets smarter. Exact model names and sizes shift monthly; trust
+[ollama.com/library](https://ollama.com/library) on setup day over any table
+written in advance, this one included.
+
 ## 3. Get the gateway running
 
 The gateway (`scripts/appliance/gateway.js`) is a small, dependency-free Node
