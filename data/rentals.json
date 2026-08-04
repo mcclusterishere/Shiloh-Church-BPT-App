@@ -1,0 +1,35 @@
+{
+  "note": "The spaces Shiloh rents to other churches and community groups. Space ids deliberately match the bookable facility ids in ministries.json so one double-booking check covers member reservations AND outside rentals. Rates are left for the church office to set — the app shows 'Ask about rates' until a rate string is filled in, and it NEVER processes payment (the office invoices; see data/giving.json for how money actually moves). Edit and push; see docs/MANAGE.md.",
+  "intro": "Our building serves the whole city. Congregations without a home, choirs, community groups — Shiloh's doors are open. Request the dates you need and the church office will confirm within a couple of days.",
+  "spaces": [
+    {
+      "id": "sanctuary",
+      "name": "The Sanctuary",
+      "image": "assets/media/home-inperson.webp",
+      "goodFor": "Worship services, weddings, funerals, concerts, and choir rehearsals.",
+      "rate": "",
+      "houseRules": [
+        "Leave the space as you found it — the next congregation is counting on it.",
+        "Sound system and instruments by arrangement with the church office.",
+        "No food or drink in the sanctuary; the Fellowship Hall is made for that."
+      ]
+    },
+    {
+      "id": "fellowship-hall",
+      "name": "The Fellowship Hall",
+      "image": "assets/media/culinary-ministry.webp",
+      "goodFor": "Repasts, banquets, meetings, receptions, and community events — kitchen access by arrangement.",
+      "rate": "",
+      "houseRules": [
+        "Kitchen use must be arranged ahead of time with the Culinary Ministry.",
+        "Take your trash out and wipe the tables down before you lock up.",
+        "Music at a neighborly volume after 9 PM."
+      ]
+    }
+  ],
+  "policy": {
+    "approval": "Every request is reviewed and confirmed by the church office — a request is not a booking until it is approved.",
+    "payment": "Rates and payment are handled directly with the office. The app never takes a payment.",
+    "access": "Approved guests receive a building-access pass for their booked time window — shown in this app under their booking code."
+  }
+}

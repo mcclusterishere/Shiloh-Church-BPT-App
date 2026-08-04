@@ -32,7 +32,11 @@ window.ShilohStore = (function () {
     localEvents: "shiloh.localEvents",
     onboarding: "shiloh.onboardingDone",
     session: "shiloh.adminSession",
-    role: "shiloh.staffRole"
+    role: "shiloh.staffRole",
+    rentals: "shiloh.rentals",
+    myRentals: "shiloh.myRentals",
+    grants: "shiloh.accessGrants",
+    adminTour: "shiloh.adminTourDone"
   };
 
   function read(key, fallback) {
@@ -236,6 +240,172 @@ window.ShilohStore = (function () {
     });
   }
 
+  /* ---------------- space rentals (the "Airbnb" layer) ----------------
+     Outside churches and community groups renting Shiloh's spaces. Space
+     ids match the bookable facility ids in ministries.json, so ONE overlap
+     check covers member reservations and outside rentals. A request is not
+     a booking until the office approves it, the app never takes a payment,
+     and every approved rental can carry a building-access pass. */
+  function rentalCode() {
+    /* Booking codes are references, not secrets — friendly alphabet, no 0/O/1/I. */
+    var abc = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789", s = "";
+    for (var i = 0; i < 4; i++) s += abc.charAt(Math.floor(Math.random() * abc.length));
+    return "SHILOH-" + s;
+  }
+  function listRentalSpaces() {
+    return fetch("data/rentals.json", { cache: "no-cache" })
+      .then(function (r) { return r.json(); })
+      .catch(function () { return { spaces: [] }; });
+  }
+  function submitRentalRequest(r) {
+    r.id = uid("RENT");
+    r.code = rentalCode();
+    r.status = "pending";
+    r.submittedAt = new Date().toISOString();
+    var all = read(LS.rentals, []);
+    all.unshift(r);
+    write(LS.rentals, all);
+    var mine = read(LS.myRentals, []);
+    mine.unshift(r.code);
+    write(LS.myRentals, mine);
+    var pushes = [fireWebhook("rental-request", r)];
+    if (isSupabase()) pushes.push(sb("/rest/v1/rentals", { method: "POST", body: r }));
+    return Promise.all(pushes).then(function () { return r; });
+  }
+  function listRentalRequests() {
+    if (isSupabase()) return sb("/rest/v1/rentals?select=*&order=submittedAt.desc", { token: adminToken() });
+    return Promise.resolve(read(LS.rentals, []));
+  }
+  function updateRentalRequest(id, patch) {
+    patch.reviewedAt = new Date().toISOString();
+    var all = read(LS.rentals, []);
+    var i = all.findIndex(function (a) { return a.id === id; });
+    if (i >= 0) { Object.assign(all[i], patch); write(LS.rentals, all); }
+    var pushes = [fireWebhook("rental-update", Object.assign({ id: id }, patch))];
+    if (isSupabase()) pushes.push(sb("/rest/v1/rentals?id=eq." + encodeURIComponent(id), { method: "PATCH", body: patch, token: adminToken() }));
+    return Promise.all(pushes).then(function () { return i >= 0 ? all[i] : patch; });
+  }
+  function findRentalByCode(code) {
+    var c = String(code || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+    if (!c) return Promise.resolve(null);
+    if (c.indexOf("SHILOH") === 0) c = c.slice(6);
+    var norm = "SHILOH-" + c;
+    if (isSupabase()) {
+      return sb("/rest/v1/rentals?select=*&code=eq." + encodeURIComponent(norm))
+        .then(function (rows) { return (rows && rows[0]) || null; });
+    }
+    var hit = read(LS.rentals, []).filter(function (r) { return r.code === norm; })[0];
+    return Promise.resolve(hit || null);
+  }
+  function myRentalCodes() { return read(LS.myRentals, []); }
+  function rentalConflict(spaceId, date, startTime, endTime) {
+    var clash = read(LS.rentals, []).some(function (r) {
+      return r.status === "approved" && r.spaceId === spaceId && r.date === date &&
+        (startTime || "00:00") < (r.endTime || "23:59") && (endTime || "23:59") > (r.startTime || "00:00");
+    });
+    return clash || hasConflict(spaceId, date, startTime, endTime);
+  }
+
+  /* ---------------- building access (doors, cameras, passes) ----------------
+     The app manages ACCESS PASSES: who may enter, through which doors, in
+     which time window, with a door code. That model is exactly what smart
+     locks speak (a scheduled code is the one credential every major system
+     can be given remotely — fingerprints enroll at the door). The pass list
+     works with no hardware at all; connecting a bridge (docs/ACCESS-SETUP.md)
+     makes the same passes program real locks and surface real cameras. The
+     bridge URL + token live in THIS DEVICE's localStorage only — data files
+     are public. Admin-only, per the Church OS tiered-access principle. */
+  function accessBridge() {
+    try {
+      var b = JSON.parse(localStorage.getItem("shiloh.accessBridge"));
+      return b && typeof b.url === "string" && b.url.trim() ? { url: b.url.trim().replace(/\/$/, ""), token: b.token || "" } : null;
+    } catch (e) { return null; }
+  }
+  function accessBridgeConfigured() { return !!accessBridge(); }
+  function bridgeFetch(path, opts) {
+    var b = accessBridge();
+    if (!b) return Promise.reject(new Error("No security bridge is connected yet."));
+    opts = opts || {};
+    return fetch(b.url + path, {
+      method: opts.method || "GET",
+      headers: Object.assign({ "Content-Type": "application/json" },
+        b.token ? { "Authorization": "Bearer " + b.token } : {}),
+      body: opts.body ? JSON.stringify(opts.body) : undefined
+    }).then(function (r) {
+      if (!r.ok) throw new Error("The security bridge answered " + r.status + ".");
+      return r.status === 204 ? null : r.json();
+    });
+  }
+  function staticAccess() {
+    return fetch("data/access.json", { cache: "no-cache" })
+      .then(function (r) { return r.json(); })
+      .catch(function () { return { doors: [], cameras: [] }; });
+  }
+  function listDoors() {
+    if (accessBridgeConfigured()) {
+      return bridgeFetch("/doors").then(function (d) { return d.doors || d || []; })
+        .catch(function () { return staticAccess().then(function (a) { return a.doors || []; }); });
+    }
+    return staticAccess().then(function (a) { return a.doors || []; });
+  }
+  function listCameras() {
+    if (accessBridgeConfigured()) {
+      return bridgeFetch("/cameras").then(function (d) { return d.cameras || d || []; })
+        .catch(function () { return staticAccess().then(function (a) { return a.cameras || []; }); });
+    }
+    return staticAccess().then(function (a) { return a.cameras || []; });
+  }
+  function setDoorLocked(doorId, locked) {
+    return bridgeFetch("/doors/" + encodeURIComponent(doorId) + "/" + (locked ? "lock" : "unlock"), { method: "POST" });
+  }
+  function listAccessGrants() {
+    return Promise.resolve(read(LS.grants, []));
+  }
+  function addAccessGrant(g) {
+    g.id = uid("PASS");
+    g.status = "active";
+    g.createdAt = new Date().toISOString();
+    /* A readable 6-digit door code. Demo-grade by design: when a bridge is
+       connected, the LOCK SYSTEM's own code (returned below) replaces it. */
+    g.doorCode = g.doorCode || String(Math.floor(100000 + Math.random() * 900000));
+    g.synced = false;
+    var finish = function () {
+      var all = read(LS.grants, []);
+      all.unshift(g);
+      write(LS.grants, all);
+      fireWebhook("access-grant", g);
+      return g;
+    };
+    if (!accessBridgeConfigured()) return Promise.resolve(finish());
+    return bridgeFetch("/grants", { method: "POST", body: g }).then(function (resp) {
+      if (resp && resp.code) g.doorCode = String(resp.code);
+      if (resp && resp.id) g.bridgeId = resp.id;
+      g.synced = true;
+      return finish();
+    }).catch(function (e) {
+      g.syncError = (e && e.message) || "bridge unreachable";
+      return finish(); /* the pass still exists locally — honesty flag shown in UI */
+    });
+  }
+  function revokeAccessGrant(id) {
+    var all = read(LS.grants, []);
+    var i = all.findIndex(function (g) { return g.id === id; });
+    if (i >= 0) { all[i].status = "revoked"; all[i].revokedAt = new Date().toISOString(); write(LS.grants, all); }
+    var g = i >= 0 ? all[i] : null;
+    fireWebhook("access-revoke", { id: id });
+    if (g && g.bridgeId && accessBridgeConfigured()) {
+      return bridgeFetch("/grants/" + encodeURIComponent(g.bridgeId), { method: "DELETE" })
+        .then(function () { return g; })
+        .catch(function () { return g; });
+    }
+    return Promise.resolve(g);
+  }
+  function grantForRental(rentalId) {
+    return listAccessGrants().then(function (all) {
+      return all.filter(function (g) { return g.rentalId === rentalId && g.status === "active"; })[0] || null;
+    });
+  }
+
   /* ---------------- volunteer safety status ----------------
      Liability-driven, independent of church size — tracked from day one
      even before a full member directory exists. Never exposed to the
@@ -297,9 +467,9 @@ window.ShilohStore = (function () {
      the role comes from there — no row, no access. The client-side check
      is UX; in supabase mode Row Level Security enforces it for real. */
   var STAFF_PERMS = {
-    editor: ["dashboard", "inbox", "content", "reservations", "live", "assistant"],
-    admin: ["dashboard", "inbox", "content", "reservations", "live", "assistant",
-            "people", "prayer", "volunteers", "settings", "automations"]
+    editor: ["dashboard", "inbox", "content", "reservations", "rentals", "live", "assistant"],
+    admin: ["dashboard", "inbox", "content", "reservations", "rentals", "live", "assistant",
+            "people", "prayer", "volunteers", "settings", "automations", "building"]
   };
   function staffSignIn(passcode, email) {
     /* Passcodes are demo-mode only. In supabase mode a passcode "success"
@@ -461,6 +631,12 @@ window.ShilohStore = (function () {
     applianceConfigured: applianceConfigured, askAppliance: askAppliance,
     staffSignIn: staffSignIn, staffSignInSupabase: staffSignInSupabase, staffRole: staffRole,
     staffSignOut: staffSignOut, can: can,
+    listRentalSpaces: listRentalSpaces, submitRentalRequest: submitRentalRequest,
+    listRentalRequests: listRentalRequests, updateRentalRequest: updateRentalRequest,
+    findRentalByCode: findRentalByCode, myRentalCodes: myRentalCodes, rentalConflict: rentalConflict,
+    accessBridgeConfigured: accessBridgeConfigured, listDoors: listDoors, listCameras: listCameras,
+    setDoorLocked: setDoorLocked, listAccessGrants: listAccessGrants, addAccessGrant: addAccessGrant,
+    revokeAccessGrant: revokeAccessGrant, grantForRental: grantForRental,
     adminSignIn: adminSignIn, adminSignOut: adminSignOut, isAdminSignedIn: isAdminSignedIn, listProfiles: listProfiles,
     fireWebhook: fireWebhook, downloadCsv: downloadCsv, downloadEventIcs: downloadEventIcs
   };
