@@ -59,15 +59,23 @@ ollama run <model-name-from-the-library> "Say hello in one sentence."   # sanity
 
 Because the gateway is model-agnostic (one `OLLAMA_MODEL` variable, section 3),
 the church can climb this ladder over years without ever touching the app.
-Approximate fits at ~4-bit quantization, leaving headroom for macOS, context,
-and the featherweight relay/bridge services this same box runs:
+Everything below was verified against apple.com, ollama.com, and published
+run reports in **August 2026** — re-check on purchase day; this landscape
+moves monthly and Apple repriced/reshaped the whole lineup in June 2026:
 
-| Box | RAM | What runs well |
+| Box (new, Aug 2026) | RAM | What runs well |
 | --- | --- | --- |
-| Mac mini (M4) | 24–32GB | The sweet spot for office work: a ~30B mixture-of-experts model (fast — only a few billion parameters active per token) or a strong 9–14B dense model. GLM's 9B-class and Qwen's 30B-MoE-class both live here. |
-| Mac mini (M4 Pro) | 64GB | The ~100B mixture-of-experts class — GLM-4.5-Air territory at 3–4-bit. Tight but real. |
-| Mac Studio (M4 Max) | 128GB | The ~235B MoE class (Qwen's big mid-tier) at 3-bit, 4-bit if you keep context modest. |
-| Mac Studio (M3 Ultra) | 256–512GB | The 350B+ frontier-size open models (GLM-4.5/4.6 class) at a quality 4-bit quantization. |
+| Mac mini M4 Pro (~$1,599+) | up to **48GB** (64GB minis are no longer sold new) | The current small-box sweet spot: **GLM-4.7-Flash** (31B MoE, 19GB at 4-bit — the one modern GLM with real local weights in Ollama's library, billed as the strongest of its size) or **Qwen3.6-27B / 35B-A3B** (17GB / 24GB, multimodal, 256K context). Plenty of headroom for context plus the relay and door bridge. |
+| Mac Studio M4 Max 64GB (~$2,499+) | 64GB | **GLM-4.5-Air** (106B MoE) at 3-bit — the classic 64GB datapoint is a 44GB file peaking at ~48GB in RAM. 4-bit Air does NOT fit 64GB; don't let anyone sell that. |
+| Mac Studio M3 Ultra 96GB (~$5,299) | 96GB — the biggest Apple sells new right now | **Qwen3.5-122B-A10B** at 4-bit (~70–81GB) — the current big-Qwen tier that actually fits new hardware — or GLM-4.5-Air at a comfortable 4-bit. |
+| 256–512GB Mac Studio | used/refurb only — Apple's new-order configurator stops at 96GB as of mid-2026 | The open flagships: **GLM-5.2** (753B, MIT, ~16 tok/s at 2-bit on 256GB; 4-bit wants 512GB) and **Qwen3.5-397B-A17B** (4-bit ≈ 225GB). Community GGUF/MLX builds, not a one-line `ollama pull`. |
+
+Worth knowing when reading headlines: the frontier names (Qwen3.8-Max at
+2.4T parameters, GLM-5.2 at 753B) are mostly hosted-API models — on Ollama,
+`glm-5.1`/`glm-5.2` are **cloud** entries, not local weights. The honest local
+stack in Aug 2026 is GLM-4.7-Flash / Qwen3.6 on small boxes and GLM-4.5-Air /
+Qwen3.5-122B up the ladder. Qwen has promised open weights for the 3.8 line
+(including a 27B) — if that lands, it likely becomes the small-box pick.
 
 The swap, whenever a better model lands or a bigger box arrives:
 
@@ -78,9 +86,8 @@ launchctl kickstart -k gui/$(id -u)/org.shiloh.gateway
 ```
 
 Nothing in the app, the config, or the tunnel changes — the Assistant just
-gets smarter. Exact model names and sizes shift monthly; trust
-[ollama.com/library](https://ollama.com/library) on setup day over any table
-written in advance, this one included.
+gets smarter. Trust [ollama.com/library](https://ollama.com/library) on setup
+day over any table written in advance, this one included.
 
 ## 3. Get the gateway running
 
