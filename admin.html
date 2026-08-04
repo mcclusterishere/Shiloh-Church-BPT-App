@@ -1146,7 +1146,7 @@
     btn.disabled = true;
     ShilohStore.askAppliance(prompt).then(function (answer) { out.textContent = answer; })
       .catch(function (err) { out.textContent = "Couldn't reach the appliance: " + err.message + ". Is the box on and the tunnel up?"; })
-      .finally(function () { btn.disabled = false; });
+      .then(function () { btn.disabled = false; }); /* not .finally — Safari <11.1 lacks it, and the catch above means this always runs */
   });
 
   /* --------------------------- first-login tour -----------------------

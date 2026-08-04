@@ -337,8 +337,23 @@
   </div>
 </div>
 
+<div id="tooOld" hidden style="position:fixed;inset:0;z-index:99;display:none;align-items:center;justify-content:center;padding:24px;background:#10131d;color:#f2efe4;font:20px/1.5 sans-serif;text-align:center">
+  <p>This broadcast studio needs a newer phone — roughly 2018 or later.<br>The rest of the Shiloh app still works fine on this device: <a href="index.html" style="color:#9cc3f0">open the app</a>.</p>
+</div>
 <script src="js/store.js"></script>
 <script src="js/ambient.js"></script>
+<script>
+/* ES5 on purpose: this must run (and show the notice) on exactly the old
+   browsers that will fail to PARSE the modern studio script below. */
+(function () {
+  if (!window.RTCPeerConnection || !window.fetch || !window.Promise ||
+      !(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) {
+    var el = document.getElementById("tooOld");
+    el.hidden = false;
+    el.style.display = "flex";
+  }
+})();
+</script>
 <script>
 (function () {
   "use strict";

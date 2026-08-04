@@ -10,12 +10,13 @@
    merely hidden.
    ========================================================================= */
 
-body { padding-bottom: calc(7.2rem + env(safe-area-inset-bottom, 0px)); }
+body { padding-bottom: 7.2rem; padding-bottom: calc(7.2rem + env(safe-area-inset-bottom, 0px)); }
 
 /* ------------------------------------------------------------ the gate --- */
 /* Transparent over the ambient light field — arriving at the back office
    should feel like the same building, just a different door. */
 .gate {
+  min-height: 100vh;
   min-height: 100dvh;
   display: grid; place-items: center;
   padding: var(--space-5);
@@ -33,10 +34,11 @@ body { padding-bottom: calc(7.2rem + env(safe-area-inset-bottom, 0px)); }
   padding: var(--space-7) var(--space-6);
   border-radius: var(--radius-xl);
   border: 1px solid var(--edge);
+  background: var(--surface);
   background: color-mix(in oklch, var(--surface) 92%, transparent);
   box-shadow: 0 1px 0 0 var(--edge-light) inset, 0 30px 70px -30px var(--shadow);
 }
-@supports (backdrop-filter: blur(1px)) {
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   :root:not([data-comfort="on"]) .gate__card { backdrop-filter: blur(18px) saturate(150%); }
 }
 .gate__card h1 { font-size: var(--step-4); margin-top: var(--space-2); }
@@ -48,9 +50,10 @@ body { padding-bottom: calc(7.2rem + env(safe-area-inset-bottom, 0px)); }
 .adminbar {
   position: sticky; top: 0; z-index: 20;
   border-bottom: 1px solid var(--edge);
+  background: var(--ground);
   background: color-mix(in oklch, var(--ground) 84%, transparent);
 }
-@supports (backdrop-filter: blur(1px)) {
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   :root:not([data-comfort="on"]) .adminbar { backdrop-filter: blur(20px) saturate(150%); }
 }
 .adminbar__inner {
@@ -121,6 +124,7 @@ body { padding-bottom: calc(7.2rem + env(safe-area-inset-bottom, 0px)); }
 .adminrail {
   position: fixed; z-index: 30;
   left: 50%; transform: translateX(-50%);
+  bottom: var(--space-3);
   bottom: calc(var(--space-3) + env(safe-area-inset-bottom, 0px));
   width: min(100% - 1.2rem, 40rem);
   display: flex;
@@ -197,7 +201,7 @@ main.admin { padding: var(--space-6) 0 var(--space-7); min-width: 0; }
   color: var(--text); text-decoration: none;
   transition: transform var(--dur-fast) var(--ease-spring);
 }
-@supports (backdrop-filter: blur(1px)) {
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   :root:not([data-comfort="on"]) .broadcast { backdrop-filter: blur(16px) saturate(140%); }
 }
 .broadcast:active { transform: scale(0.985); }
@@ -223,7 +227,7 @@ main.admin { padding: var(--space-6) 0 var(--space-7); min-width: 0; }
   background: color-mix(in oklch, var(--surface) var(--glass), transparent);
   box-shadow: 0 1px 0 0 var(--edge-light) inset, 0 14px 34px -26px var(--shadow);
 }
-@supports (backdrop-filter: blur(1px)) {
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   :root:not([data-comfort="on"]) .tile { backdrop-filter: blur(14px) saturate(140%); }
 }
 /* A severity stripe down the edge — attention reads before the number does. */
@@ -258,7 +262,7 @@ main.admin { padding: var(--space-6) 0 var(--space-7); min-width: 0; }
   overflow: hidden;
   margin-bottom: var(--space-7);
 }
-@supports (backdrop-filter: blur(1px)) {
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   :root:not([data-comfort="on"]) .sheet { backdrop-filter: blur(16px) saturate(140%); }
 }
 .sheet:empty { display: none; }
@@ -347,7 +351,7 @@ main.admin { padding: var(--space-6) 0 var(--space-7); min-width: 0; }
   box-shadow: 0 1px 0 0 var(--edge-light) inset, 0 14px 34px -26px var(--shadow);
   margin-bottom: var(--space-5);
 }
-@supports (backdrop-filter: blur(1px)) {
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   :root:not([data-comfort="on"]) .formcard { backdrop-filter: blur(16px) saturate(140%); }
 }
 .duo { display: grid; gap: var(--space-4); margin-bottom: var(--space-5); }
@@ -402,7 +406,7 @@ main.admin { padding: var(--space-6) 0 var(--space-7); min-width: 0; }
   background: color-mix(in oklch, var(--surface) var(--glass), transparent);
   box-shadow: 0 1px 0 0 var(--edge-light) inset, 0 14px 34px -26px var(--shadow);
 }
-@supports (backdrop-filter: blur(1px)) {
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   :root:not([data-comfort="on"]) .rentcard { backdrop-filter: blur(16px) saturate(140%); }
 }
 .rentcard__head {
@@ -490,7 +494,7 @@ main.admin { padding: var(--space-6) 0 var(--space-7); min-width: 0; }
   box-shadow: 0 1px 0 0 var(--edge-light) inset, 0 14px 34px -26px var(--shadow);
   margin-bottom: var(--space-7);
 }
-@supports (backdrop-filter: blur(1px)) {
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   :root:not([data-comfort="on"]) .setup { backdrop-filter: blur(16px) saturate(140%); }
 }
 .setup > summary {
@@ -518,6 +522,7 @@ main.admin { padding: var(--space-6) 0 var(--space-7); min-width: 0; }
   position: fixed; inset: 0; z-index: 90;
   display: none;
   flex-direction: column;
+  padding: var(--space-6) var(--space-5) var(--space-6);
   padding: var(--space-6) var(--space-5) calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
   background: var(--ground-deep);
   overflow-y: auto;
@@ -554,7 +559,7 @@ main.admin { padding: var(--space-6) 0 var(--space-7); min-width: 0; }
   box-shadow: 0 1px 0 0 var(--edge-light) inset, 0 18px 40px -24px var(--shadow);
   color: var(--accent);
 }
-@supports (backdrop-filter: blur(1px)) {
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   :root:not([data-comfort="on"]) .tour__mark { backdrop-filter: blur(14px) saturate(140%); }
 }
 .tour__mark svg { width: 36px; height: 36px; }

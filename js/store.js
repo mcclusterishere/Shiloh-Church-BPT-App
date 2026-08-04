@@ -18,6 +18,36 @@
    so anyone who knows one knows the other. */
 "use strict";
 
+/* Tiny polyfills, loaded before every page's own script. These three are
+   the whole gap between "fetch-era browser" (2015-2017) and this app being
+   fully navigable — without them, ~2016 browsers render the home screen
+   and then die on the first tab tap. A dozen lines buys those years back. */
+(function () {
+  if (window.NodeList && !NodeList.prototype.forEach) {
+    NodeList.prototype.forEach = Array.prototype.forEach;
+  }
+  if (window.Element && !Element.prototype.prepend) {
+    var prepend = function () {
+      var frag = document.createDocumentFragment();
+      for (var i = 0; i < arguments.length; i++) {
+        var n = arguments[i];
+        frag.appendChild(n instanceof Node ? n : document.createTextNode(String(n)));
+      }
+      this.insertBefore(frag, this.firstChild);
+    };
+    Element.prototype.prepend = prepend;
+    if (window.Document && !Document.prototype.prepend) Document.prototype.prepend = prepend;
+  }
+  if (!String.prototype.padStart) {
+    String.prototype.padStart = function (len, pad) {
+      var s = String(this);
+      pad = pad === undefined ? " " : String(pad);
+      while (s.length < len && pad.length) s = pad.slice(0, len - s.length) + s;
+      return s;
+    };
+  }
+})();
+
 window.ShilohStore = (function () {
   var config = null;
   var LS = {
@@ -43,7 +73,12 @@ window.ShilohStore = (function () {
     try { return JSON.parse(localStorage.getItem(key)) || fallback; }
     catch (e) { return fallback; }
   }
-  function write(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
+  function write(key, val) {
+    /* Old-Safari private browsing throws on EVERY setItem. Swallowing it
+       beats crashing mid-submit — worst case the device just doesn't
+       remember, which private mode was asking for anyway. */
+    try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {}
+  }
 
   function uid(prefix) {
     return (prefix || "SH") + "-" + Date.now().toString(36).toUpperCase() + "-" +
