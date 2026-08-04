@@ -86,7 +86,7 @@ phone, and it says so plainly.
 - `scripts/appliance/gateway.js` — the local service that runs on that box
 - `scripts/appliance/mediamtx.yml` — the box's broadcast relay config: phone's WHIP stream in, YouTube + Facebook out
 - `manifest.webmanifest` / `sw.js` — install metadata and the offline service worker
-- `assets/icons/` — home-screen icons: a stained-glass-window mark in the blues of the church's own logo
+- `assets/icons/` — home-screen icons, generated from the church's own logo (the stained-glass cross window mark alone at favicon size, where the full logo would be unreadable)
 - `assets/media/` — all 60 photos from shilohchurchbpt.org
 - `assets/fonts/` — self-hosted type: Atkinson Hyperlegible (body) + Fraunces variable (display)
 
@@ -112,8 +112,8 @@ shilohchurchbpt.org (July 2026): the tagline ("Where Christ Is Lifted Up"), addr
 phone, service times, the prayer line, 14 real ministries with their scripture and
 mission statements, staff with bios, six giving methods with the church's real
 handles, recent sermons, the pastor's greeting, and the site's own FAQ — plus all 60
-photos, in `assets/media/`. The accent palette and app icon now follow the blues of
-Shiloh's own stained-glass-window logo.
+photos, in `assets/media/`. The app icon is the church's own logo, and the accent
+palette follows its blues.
 
 Known content notes (also flagged in the data files):
 - The site disagrees with itself on Sunday prayer time (hero says 8:30 AM, FAQ and
