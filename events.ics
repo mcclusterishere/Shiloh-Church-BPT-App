@@ -1,0 +1,54 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Shiloh Church App//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:sunday-worship-2026-08-02@shiloh-church-app
+DTSTAMP:20260804T000000
+DTSTART:20260802T090000
+SUMMARY:Sunday Worship
+LOCATION:Sanctuary\, 477 Broad Street
+DESCRIPTION:Continental breakfast 8:00 AM · Consecration in prayer 8:15 AM · Praise and worship 9:00 AM. Also live on Facebook at 9:00 AM.
+END:VEVENT
+BEGIN:VEVENT
+UID:sunday-worship-2026-08-09@shiloh-church-app
+DTSTAMP:20260804T000000
+DTSTART:20260809T090000
+SUMMARY:Sunday Worship
+LOCATION:Sanctuary\, 477 Broad Street
+DESCRIPTION:Continental breakfast 8:00 AM · Consecration in prayer 8:15 AM · Praise and worship 9:00 AM. Also live on Facebook at 9:00 AM.
+END:VEVENT
+BEGIN:VEVENT
+UID:sunday-worship-2026-08-16@shiloh-church-app
+DTSTAMP:20260804T000000
+DTSTART:20260816T090000
+SUMMARY:Sunday Worship
+LOCATION:Sanctuary\, 477 Broad Street
+DESCRIPTION:Continental breakfast 8:00 AM · Consecration in prayer 8:15 AM · Praise and worship 9:00 AM. Also live on Facebook at 9:00 AM.
+END:VEVENT
+BEGIN:VEVENT
+UID:sunday-worship-2026-08-23@shiloh-church-app
+DTSTAMP:20260804T000000
+DTSTART:20260823T090000
+SUMMARY:Sunday Worship
+LOCATION:Sanctuary\, 477 Broad Street
+DESCRIPTION:Continental breakfast 8:00 AM · Consecration in prayer 8:15 AM · Praise and worship 9:00 AM. Also live on Facebook at 9:00 AM.
+END:VEVENT
+BEGIN:VEVENT
+UID:sunday-worship-2026-08-30@shiloh-church-app
+DTSTAMP:20260804T000000
+DTSTART:20260830T090000
+SUMMARY:Sunday Worship
+LOCATION:Sanctuary\, 477 Broad Street
+DESCRIPTION:Continental breakfast 8:00 AM · Consecration in prayer 8:15 AM · Praise and worship 9:00 AM. Also live on Facebook at 9:00 AM.
+END:VEVENT
+BEGIN:VEVENT
+UID:sunday-worship-2026-09-06@shiloh-church-app
+DTSTAMP:20260804T000000
+DTSTART:20260906T090000
+SUMMARY:Sunday Worship
+LOCATION:Sanctuary\, 477 Broad Street
+DESCRIPTION:Continental breakfast 8:00 AM · Consecration in prayer 8:15 AM · Praise and worship 9:00 AM. Also live on Facebook at 9:00 AM.
+END:VEVENT
+END:VCALENDAR
