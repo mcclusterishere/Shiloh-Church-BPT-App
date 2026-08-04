@@ -336,6 +336,14 @@ window.ShilohStore = (function () {
       return r.status === 204 ? null : r.json();
     });
   }
+  function testAccessBridge() {
+    /* Strict: no static fallback. "Test connection" must never say
+       Connected because a hardcoded door list papered over a dead bridge. */
+    return bridgeFetch("/doors").then(function (d) {
+      var doors = (d && d.doors) || d || [];
+      return { ok: true, doors: doors.length };
+    });
+  }
   function staticAccess() {
     return fetch("data/access.json", { cache: "no-cache" })
       .then(function (r) { return r.json(); })
@@ -634,7 +642,8 @@ window.ShilohStore = (function () {
     listRentalSpaces: listRentalSpaces, submitRentalRequest: submitRentalRequest,
     listRentalRequests: listRentalRequests, updateRentalRequest: updateRentalRequest,
     findRentalByCode: findRentalByCode, myRentalCodes: myRentalCodes, rentalConflict: rentalConflict,
-    accessBridgeConfigured: accessBridgeConfigured, listDoors: listDoors, listCameras: listCameras,
+    accessBridgeConfigured: accessBridgeConfigured, testAccessBridge: testAccessBridge,
+    listDoors: listDoors, listCameras: listCameras,
     setDoorLocked: setDoorLocked, listAccessGrants: listAccessGrants, addAccessGrant: addAccessGrant,
     revokeAccessGrant: revokeAccessGrant, grantForRental: grantForRental,
     adminSignIn: adminSignIn, adminSignOut: adminSignOut, isAdminSignedIn: isAdminSignedIn, listProfiles: listProfiles,

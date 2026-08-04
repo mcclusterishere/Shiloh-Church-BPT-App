@@ -174,6 +174,12 @@ main.admin { padding: var(--space-6) 0 var(--space-7); min-width: 0; }
   font-size: var(--step--1);
 }
 .banner code { font-size: 0.92em; }
+/* Good news wears green — "Approved. Their building pass is ready…" */
+.banner--ok {
+  border-color: color-mix(in oklch, var(--ok) 36%, transparent);
+  background: color-mix(in oklch, var(--ok) 10%, transparent);
+  font-weight: 700;
+}
 
 /* ------------------------------------------------------ Sunday broadcast - */
 /* The one card on the dashboard allowed a wash of colour: the single most
@@ -385,6 +391,177 @@ main.admin { padding: var(--space-6) 0 var(--space-7); min-width: 0; }
   margin-top: var(--space-4);
   white-space: pre-wrap;
 }
+
+/* -------------------------------------------------------------- rentals -- */
+/* Pending requests are CARDS, not rows: each one is a decision, and the
+   two buttons that decide it are big enough for any pair of hands. */
+.rentcards { display: grid; gap: var(--space-4); margin-bottom: var(--space-7); }
+.rentcard {
+  padding: var(--space-5) var(--space-6);
+  border: 1px solid var(--edge); border-radius: var(--radius-lg);
+  background: color-mix(in oklch, var(--surface) var(--glass), transparent);
+  box-shadow: 0 1px 0 0 var(--edge-light) inset, 0 14px 34px -26px var(--shadow);
+}
+@supports (backdrop-filter: blur(1px)) {
+  :root:not([data-comfort="on"]) .rentcard { backdrop-filter: blur(16px) saturate(140%); }
+}
+.rentcard__head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: var(--space-3); flex-wrap: wrap;
+}
+.rentcard__head b {
+  font-family: var(--font-display);
+  font-variation-settings: var(--display-settings);
+  font-weight: 800; font-size: var(--step-2); letter-spacing: -0.015em; line-height: 1.15;
+}
+.rentcard__when { margin-top: var(--space-2); font-weight: 700; }
+.rentcard__contact {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 0 var(--space-2);
+  margin-top: var(--space-1);
+  color: var(--text-muted); font-size: var(--step--1);
+}
+.rentcard__purpose { margin-top: var(--space-3); color: var(--text-muted); }
+.rentcard .conflict { margin-top: var(--space-3); }
+/* Contact links keep the full 48px height even inline in a text line. */
+.biglink {
+  display: inline-flex; align-items: center;
+  min-height: var(--tap); padding: 0 var(--space-1);
+  font-weight: 700; text-underline-offset: 3px;
+}
+.dotsep { color: var(--text-faint); }
+.acts--big .btn { flex: 1 1 10rem; font-size: var(--step-0); }
+
+/* Approved bookings and access passes share one row species. */
+.rentrow, .passrow {
+  display: flex; align-items: center; gap: var(--space-3) var(--space-4); flex-wrap: wrap;
+  padding: var(--space-4) var(--space-5);
+  min-height: var(--tap);
+}
+.rentrow__id { flex: 1 1 14rem; min-width: 0; }
+.rentrow__id b { display: block; font-size: var(--step-0); }
+.rentrow__id .who { display: block; color: var(--text-muted); font-size: var(--step--1); }
+.rentrow--quiet { opacity: 0.78; }
+
+/* The six digits a guest will punch in — large, spaced, unmistakable. */
+.passwrap { display: inline-flex; align-items: baseline; gap: var(--space-2); }
+.passlabel {
+  font-size: var(--step--2); font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--text-faint);
+}
+.passcode {
+  font-size: var(--step-1); font-weight: 800; letter-spacing: 0.14em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------- building -- */
+.doorrow {
+  display: flex; align-items: center; gap: var(--space-3) var(--space-4); flex-wrap: wrap;
+  padding: var(--space-4) var(--space-5);
+  min-height: var(--tap);
+}
+.doorrow b { flex: 1 1 12rem; min-width: 0; font-size: var(--step-0); }
+.doorrow .btn { min-width: 7.5rem; }
+.doorstate { font-weight: 700; color: var(--text-muted); font-size: var(--step--1); }
+.doorerr { color: var(--danger); font-weight: 700; font-size: var(--step--1); margin-bottom: var(--space-4); }
+
+.camgrid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: var(--space-4); margin-bottom: var(--space-7);
+}
+.camgrid .empty { grid-column: 1 / -1; }
+.camtile {
+  overflow: hidden;
+  border: 1px solid var(--edge); border-radius: var(--radius-lg);
+  background: color-mix(in oklch, var(--surface) var(--glass), transparent);
+  box-shadow: 0 1px 0 0 var(--edge-light) inset, 0 14px 34px -26px var(--shadow);
+}
+.camtile img, .camtile iframe {
+  display: block; width: 100%; aspect-ratio: 16 / 9;
+  border: 0; object-fit: cover;
+  background: var(--ground-deep);
+}
+.camtile figcaption { padding: var(--space-3) var(--space-4); font-weight: 700; font-size: var(--step--1); }
+
+/* The collapsed "Connect the security system" sheet — same species as the
+   broadcast-target sheet in golive.html, dressed in the admin's glass. */
+.setup {
+  border: 1px solid var(--edge); border-radius: var(--radius-lg);
+  background: color-mix(in oklch, var(--surface) var(--glass), transparent);
+  box-shadow: 0 1px 0 0 var(--edge-light) inset, 0 14px 34px -26px var(--shadow);
+  margin-bottom: var(--space-7);
+}
+@supports (backdrop-filter: blur(1px)) {
+  :root:not([data-comfort="on"]) .setup { backdrop-filter: blur(16px) saturate(140%); }
+}
+.setup > summary {
+  display: flex; align-items: center; gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  min-height: var(--tap);
+  font-weight: 700; cursor: pointer; list-style: none;
+}
+.setup > summary::-webkit-details-marker { display: none; }
+.setup > summary svg { width: 20px; height: 20px; color: var(--text-muted); }
+.setup > summary::after {
+  content: ""; flex: none; margin-left: auto;
+  width: 0.5em; height: 0.5em;
+  border-right: 2px solid var(--text-faint); border-bottom: 2px solid var(--text-faint);
+  transform: rotate(45deg) translateY(-2px);
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+.setup[open] > summary::after { transform: rotate(-135deg) translateY(-2px); }
+.setup__body { padding: 0 var(--space-5) var(--space-5); }
+
+/* ------------------------------------------------------ first-login tour - */
+/* Same full-screen pattern as the member app's onboarding, wearing the
+   gate's calmer amber/teal glass instead of the app's ruby welcome. */
+.tour {
+  position: fixed; inset: 0; z-index: 90;
+  display: none;
+  flex-direction: column;
+  padding: var(--space-6) var(--space-5) calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
+  background: var(--ground-deep);
+  overflow-y: auto;
+}
+.tour.on { display: flex; }
+.tour__glass {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(70% 50% at 18% 8%, color-mix(in oklch, var(--amber) 26%, transparent), transparent 62%),
+    radial-gradient(60% 45% at 88% 30%, color-mix(in oklch, var(--teal) 20%, transparent), transparent 62%),
+    radial-gradient(90% 60% at 55% 96%, color-mix(in oklch, var(--accent) 16%, transparent), transparent 65%);
+}
+.tour__inner {
+  position: relative; z-index: 1;
+  flex: 1; display: flex; flex-direction: column;
+  width: min(100%, 30rem); margin-inline: auto;
+}
+.tour__steps { display: flex; gap: var(--space-2); justify-content: center; margin-bottom: var(--space-6); }
+.tour__steps i {
+  width: 30px; height: 4px; border-radius: 2px;
+  background: color-mix(in oklch, var(--text) 22%, transparent);
+  transition: background-color var(--dur-mid) var(--ease-out);
+}
+.tour__steps i[data-on="true"] { background: var(--accent); }
+.tour__body { flex: 1; display: flex; flex-direction: column; justify-content: center; text-align: center; padding: var(--space-6) 0; }
+.tour__body h1 { font-size: var(--step-4); margin-bottom: var(--space-4); }
+.tour__body p { font-size: var(--step-1); color: var(--text-muted); max-width: 36ch; margin-inline: auto; }
+.tour__mark {
+  width: 74px; height: 74px; margin: 0 auto var(--space-6);
+  border-radius: 22px;
+  display: grid; place-items: center;
+  border: 1px solid var(--edge);
+  background: color-mix(in oklch, var(--surface) 72%, transparent);
+  box-shadow: 0 1px 0 0 var(--edge-light) inset, 0 18px 40px -24px var(--shadow);
+  color: var(--accent);
+}
+@supports (backdrop-filter: blur(1px)) {
+  :root:not([data-comfort="on"]) .tour__mark { backdrop-filter: blur(14px) saturate(140%); }
+}
+.tour__mark svg { width: 36px; height: 36px; }
+.tour__actions { display: grid; gap: var(--space-3); }
+
+/* "Show me around again" — quiet, but still a full 48px target. */
+.touragain { margin-top: var(--space-2); }
 
 /* Long lists drift in as they scroll into view, like the member app's cards.
    Guarded: unsupported browsers simply show the rows. */

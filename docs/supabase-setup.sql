@@ -93,6 +93,50 @@ create table if not exists safety_status (
   expires_on date
 );
 
+-- Space rentals — the "Airbnb layer." Outside churches and community groups
+-- request a space from the public Rent screen (anon insert), the office
+-- reviews (any staff row), and the SHILOH-XXXX booking code is the guest's
+-- reference. Space ids match the bookable facility ids in ministries.json.
+-- Column names match exactly what js/store.js submits.
+create table if not exists rentals (
+  id text primary key,
+  church_id uuid not null default '00000000-0000-0000-0000-000000000001' references churches(id),
+  code text not null unique,
+  "spaceId" text not null,
+  "spaceName" text,
+  org text,
+  "contactName" text,
+  email text, phone text,
+  date date, "startTime" time, "endTime" time,
+  purpose text,
+  status text not null default 'pending' check (status in ('pending', 'approved', 'denied')),
+  "submittedAt" timestamptz default now(),
+  "reviewedAt" timestamptz
+);
+
+-- Building-access passes: who, which doors, what time window, a door code.
+-- Admin-only in every direction — a door code is a key, so it sits on the
+-- same tier as visitor cards and pastoral data. HONESTY NOTE: today
+-- js/store.js keeps passes in the admin device's localStorage and does not
+-- read or write this table yet. It is created now, with the right policies
+-- already on it, so switching the store to sync passes later is a one-file
+-- change instead of a security scramble. Nothing else here depends on it.
+create table if not exists access_grants (
+  id text primary key,
+  church_id uuid not null default '00000000-0000-0000-0000-000000000001' references churches(id),
+  "rentalId" text,
+  name text,
+  "doorIds" jsonb not null default '[]'::jsonb,
+  date date, "startTime" time, "endTime" time,
+  "doorCode" text,
+  status text not null default 'active' check (status in ('active', 'revoked')),
+  "createdAt" timestamptz default now(),
+  "revokedAt" timestamptz,
+  synced boolean not null default false,
+  "bridgeId" text,
+  "syncError" text
+);
+
 -- ---------------------------------------------------------------------------
 -- Row Level Security. A table with RLS enabled and NO policy is fully closed
 -- (safer default than Postgres' normal "no RLS = fully open"); every policy
@@ -105,6 +149,8 @@ alter table prayer_requests enable row level security;
 alter table reservations enable row level security;
 alter table safety_status enable row level security;
 alter table staff enable row level security;
+alter table rentals enable row level security;
+alter table access_grants enable row level security;
 
 -- A signed-in user may read exactly their own staff row — nothing else, and
 -- never write. This single policy is also what makes every EXISTS check
@@ -119,6 +165,7 @@ create policy "anon can submit visitor cards" on visitor_cards for insert to ano
 create policy "anon can submit rsvps" on rsvps for insert to anon with check (true);
 create policy "anon can submit prayer requests" on prayer_requests for insert to anon with check (true);
 create policy "anon can submit reservation requests" on reservations for insert to anon with check (true);
+create policy "anon can submit rental requests" on rentals for insert to anon with check (true);
 create policy "anon can save a profile" on members for insert to anon with check (true);
 create policy "anon can update own profile by email" on members for update to anon using (true) with check (true);
 
@@ -127,6 +174,25 @@ create policy "anon can update own profile by email" on members for update to an
 -- below.
 create policy "anyone can read church-visible prayer requests" on prayer_requests
   for select to anon, authenticated using (visibility = 'church');
+
+-- Guests check their booking by its code: findRentalByCode in js/store.js
+-- queries this table with the anon key (?code=eq.SHILOH-XXXX). RLS decides
+-- row by row and never sees HOW a query filters, so "readable only when
+-- asked for by exact code" is not something Postgres can enforce. The two
+-- honest choices: (a) let anon read rental rows so the Rent screen's code
+-- lookup works in supabase mode, or (b) close it and lose that lookup
+-- outside demo mode. This file picks (a), eyes open: anyone holding the
+-- anon key — which is public by design — can list rental requests, which
+-- carry an outside group's org, contact name, email, and phone. That is
+-- business contact info, deliberately a different tier from pastoral data
+-- (which stays admin-only), and the codes themselves are references, not
+-- secrets. If the church would rather keep rental contacts staff-only,
+-- drop this ONE policy — nothing else breaks; guests then confirm their
+-- booking with the office instead of in the app. Door codes are NOT
+-- exposed either way: passes live in access_grants, which has no anon
+-- policy at all.
+create policy "anon can look up rentals (by booking code)" on rentals
+  for select to anon using (true);
 
 -- UPGRADE PATH. Postgres ORs policies together, so a project that ran the
 -- pre-roles version of this file would keep its old any-signed-in-user
@@ -159,6 +225,11 @@ create policy "staff can read reservations" on reservations for select to authen
 create policy "staff can update reservations" on reservations for update to authenticated
   using (exists (select 1 from staff where lower(staff.email) = lower(auth.jwt()->>'email')))
   with check (exists (select 1 from staff where lower(staff.email) = lower(auth.jwt()->>'email')));
+create policy "staff can read rentals" on rentals for select to authenticated
+  using (exists (select 1 from staff where lower(staff.email) = lower(auth.jwt()->>'email')));
+create policy "staff can update rentals" on rentals for update to authenticated
+  using (exists (select 1 from staff where lower(staff.email) = lower(auth.jwt()->>'email')))
+  with check (exists (select 1 from staff where lower(staff.email) = lower(auth.jwt()->>'email')));
 
 -- Admin staff only: people, prayer at every tier, volunteer safety.
 create policy "admin staff can read members" on members for select to authenticated
@@ -171,6 +242,12 @@ create policy "admin staff can update visitor cards" on visitor_cards for update
 create policy "admin staff can read all prayer requests" on prayer_requests for select to authenticated
   using (exists (select 1 from staff where lower(staff.email) = lower(auth.jwt()->>'email') and staff.role = 'admin'));
 create policy "admin staff can manage safety status" on safety_status for all to authenticated
+  using (exists (select 1 from staff where lower(staff.email) = lower(auth.jwt()->>'email') and staff.role = 'admin'))
+  with check (exists (select 1 from staff where lower(staff.email) = lower(auth.jwt()->>'email') and staff.role = 'admin'));
+-- A door code is a key: access passes are admin-only for read AND write —
+-- an editor runs rentals without ever holding one, and there is no anon
+-- policy on this table at all.
+create policy "admin staff can manage access grants" on access_grants for all to authenticated
   using (exists (select 1 from staff where lower(staff.email) = lower(auth.jwt()->>'email') and staff.role = 'admin'))
   with check (exists (select 1 from staff where lower(staff.email) = lower(auth.jwt()->>'email') and staff.role = 'admin'));
 

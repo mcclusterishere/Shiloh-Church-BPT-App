@@ -189,6 +189,9 @@ nothing on its own.
       app currently says 8:15; confirm with the office and fix both places)
 - [ ] Live streaming: route chosen, `data/live.json` filled in, one test stream
       run before Sunday
+- [ ] Renting the building + door access: works day one with managed door codes
+      (nothing to buy, nothing to install); when locks or cameras are bought,
+      the hookup path is `docs/ACCESS-SETUP.md`
 - [ ] Workspace purchased for staff; AI Studio key created; edge function
       deployed; Assistant answering
 - [ ] The one thing the app can't fix: the church website's "Our History"

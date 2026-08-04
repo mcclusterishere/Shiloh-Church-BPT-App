@@ -39,7 +39,22 @@
   <g id="i-bolt"><path d="M13.4 2.8 5.4 13.5h5.1l-1.9 7.7 8-10.7h-5.1z"/></g>
   <g id="i-spark"><path d="M12 3.2c.5 4 2.1 6.3 6.4 6.8-4.3.5-5.9 2.8-6.4 6.8-.5-4-2.1-6.3-6.4-6.8 4.3-.5 5.9-2.8 6.4-6.8z"/><path d="M18.8 14.8c.3 2.1 1.1 3.3 3.2 3.6-2.1.3-2.9 1.5-3.2 3.6-.3-2.1-1.1-3.3-3.2-3.6 2.1-.3 2.9-1.5 3.2-3.6z"/></g>
   <g id="i-out"><path d="M14.6 8.2V6a1.8 1.8 0 0 0-1.8-1.8H6.2A1.8 1.8 0 0 0 4.4 6v12a1.8 1.8 0 0 0 1.8 1.8h6.6a1.8 1.8 0 0 0 1.8-1.8v-2.2"/><path d="M9.8 12h10.4M17.2 8.8l3.2 3.2-3.2 3.2"/></g>
+  <g id="i-key"><circle cx="7.6" cy="15.6" r="3.9"/><path d="M10.4 12.8 20.4 2.8M16.2 7l3.2 3.2M13.1 10.1l2.3 2.3"/></g>
+  <g id="i-door"><path d="M5.2 21V4.8A1.8 1.8 0 0 1 7 3h10a1.8 1.8 0 0 1 1.8 1.8V21"/><path d="M3 21h18"/><circle cx="15" cy="12.4" r="1.15"/></g>
 </defs></svg>
+
+<!-- ============================ first-login tour ========================= -->
+<!-- Mirrors the member app's onboarding: full-screen, skippable, equal-weight
+     choices. Steps are built per role in the script, so an editor never even
+     hears about admin-only rooms. -->
+<div class="tour" id="tour" role="dialog" aria-modal="true" aria-labelledby="tourTitle">
+  <div class="tour__glass" aria-hidden="true"></div>
+  <div class="tour__inner">
+    <div class="tour__steps" id="tourSteps" aria-hidden="true"></div>
+    <div class="tour__body" id="tourBody"></div>
+    <div class="tour__actions" id="tourActions"></div>
+  </div>
+</div>
 
 <!-- ================================ gate ================================ -->
 <div class="gate" id="gate">
@@ -96,6 +111,7 @@
         real database and real sign-in — see <code>docs/BACKEND.md</code>.
       </div>
       <div class="banner" id="dataErr" role="alert" hidden></div>
+      <div class="banner banner--ok" id="okBanner" role="status" hidden></div>
 
       <section class="view on" id="pane-dash">
         <p class="eyebrow">Today</p>
@@ -111,6 +127,7 @@
         <div class="tiles" id="tiles"></div>
         <h3>Needs attention</h3>
         <div class="sheet" id="dashLatest"></div>
+        <button class="btn btn--quiet touragain" id="tourAgain" type="button">Show me around again</button>
       </section>
 
       <section class="view" id="pane-inbox">
@@ -172,6 +189,18 @@
         <div class="sheet" id="evtAdminList"></div>
       </section>
 
+      <section class="view" id="pane-rentals">
+        <p class="eyebrow">Space rentals</p>
+        <h2>Rentals</h2>
+        <p class="note">Outside churches and community groups booking Shiloh's spaces. A request is not a booking until you say yes — and saying yes makes their building pass for you. The <b>SHILOH code</b> on every card is how guests identify themselves when they call.</p>
+        <h3>Waiting for a yes</h3>
+        <div class="rentcards" id="rentalPending"></div>
+        <h3>Coming up</h3>
+        <div class="sheet" id="rentalUpcoming"></div>
+        <h3>Past &amp; declined</h3>
+        <div class="sheet" id="rentalHistory"></div>
+      </section>
+
       <section class="view" id="pane-prayer">
         <p class="eyebrow">Every tier</p>
         <h2>Prayer</h2>
@@ -199,6 +228,43 @@
           </div>
         </form>
         <div class="sheet" id="volunteerList"></div>
+      </section>
+
+      <section class="view" id="pane-building">
+        <p class="eyebrow">Doors, cameras &amp; passes</p>
+        <h2>Building</h2>
+        <p class="note">Every guest pass works with no hardware at all — approve a rental and hand the guest their door code. Connect the security system below and the same passes start programming the real locks.</p>
+        <h3>Doors</h3>
+        <p class="doorerr" id="doorMsg" role="alert" hidden></p>
+        <div class="sheet" id="doorList"></div>
+        <h3>Cameras</h3>
+        <div class="camgrid" id="cameraGrid"></div>
+        <h3>Access passes</h3>
+        <div class="sheet" id="grantList"></div>
+        <details class="setup" id="bridgeSheet">
+          <summary>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-bolt"/></svg>
+            Connect the security system
+          </summary>
+          <div class="setup__body">
+            <p class="hint" style="margin:0 0 var(--space-4)">The address and key stay in this device's browser only — the same per-device model as the broadcast target, never uploaded and never written to a shared file.</p>
+            <div class="field">
+              <label for="brUrl">Bridge address</label>
+              <input id="brUrl" type="text" inputmode="url" autocapitalize="none" autocorrect="off" spellcheck="false" autocomplete="off" placeholder="https://access.shilohbpt.org">
+            </div>
+            <div class="field">
+              <label for="brToken">Access token</label>
+              <input id="brToken" type="password" autocomplete="off">
+            </div>
+            <div class="acts">
+              <button class="btn btn--primary" id="brSave" type="button">Save to this device</button>
+              <button class="btn btn--quiet" id="brClear" type="button">Clear</button>
+              <button class="btn btn--quiet" id="brTest" type="button">Test connection</button>
+              <span id="brResult" class="testresult" role="status"></span>
+            </div>
+            <p class="hint"><code>docs/ACCESS-SETUP.md</code> explains what to buy and how the Mac mini runs this.</p>
+          </div>
+        </details>
       </section>
 
       <section class="view" id="pane-brand">
@@ -247,6 +313,7 @@
   "use strict";
   var config = null, THEME = null, CHURCH = null, MINISTRIES = [];
   var VISITOR_CARDS = [], RESERVATIONS = [], PRAYERS = [], PEOPLE = [], VOLUNTEERS = [], RSVPS = [], PUBLISHED_EVENTS = [];
+  var RENTALS = [], SPACES = [], GRANTS = [], DOORS = [], CAMERAS = [];
 
   /* Every section, with the staff permission that unlocks it. Nav renders
      only permitted panes and showPane re-checks on every switch, so a stale
@@ -257,8 +324,10 @@
     { id: "people",     label: "People",      icon: "i-people", perm: "people" },
     { id: "ministries", label: "Ministries",  icon: "i-min",    perm: "reservations" },
     { id: "events",     label: "Events",      icon: "i-cal",    perm: "content" },
+    { id: "rentals",    label: "Rentals",     icon: "i-key",    perm: "rentals" },
     { id: "prayer",     label: "Prayer",      icon: "i-flame",  perm: "prayer" },
     { id: "volunteers", label: "Volunteers",  icon: "i-shield", perm: "volunteers" },
+    { id: "building",   label: "Building",    icon: "i-door",   perm: "building" },
     { id: "brand",      label: "Brand",       icon: "i-brand",  perm: "settings" },
     { id: "auto",       label: "Automations", icon: "i-bolt",   perm: "automations" },
     { id: "assistant",  label: "Assistant",   icon: "i-spark",  perm: "assistant" }
@@ -293,6 +362,29 @@
   var ICON = function (id) {
     return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#' + id + '"/></svg>';
   };
+  /* Plain words for dates and clock times — "Saturday, August 9" and
+     "2:00 PM", never "2026-08-09T14:00". The elder-simple bar. */
+  function plainDate(d) {
+    if (!d) return "";
+    try {
+      return new Date(d + "T12:00:00").toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
+    } catch (e) { return d; }
+  }
+  function plainTime(t) {
+    var m = /^(\d{1,2}):(\d{2})/.exec(t || "");
+    if (!m) return t || "";
+    var h = parseInt(m[1], 10), ap = h >= 12 ? "PM" : "AM";
+    h = h % 12 || 12;
+    return h + ":" + m[2] + " " + ap;
+  }
+  /* One green line of good news at the top of the pane — set after an
+     approval or a pass action, cleared the next time panes switch. */
+  function okNotice(msg) {
+    var el = document.getElementById("okBanner");
+    el.textContent = msg;
+    el.hidden = false;
+    window.scrollTo(0, 0);
+  }
 
   /* ------------------------------ theme ------------------------------- */
   function isDarkNow() {
@@ -365,10 +457,26 @@
     document.getElementById("goLiveBtn").hidden = !ShilohStore.can("live");
     document.getElementById("broadcastCard").hidden = !ShilohStore.can("live");
 
+    if (ShilohStore.can("building")) {
+      /* Pre-fill the bridge sheet from THIS device's saved connection —
+         same per-device model as the broadcast target. Admin only. */
+      try {
+        var br = JSON.parse(localStorage.getItem("shiloh.accessBridge")) || {};
+        document.getElementById("brUrl").value = br.url || "";
+        document.getElementById("brToken").value = br.token || "";
+      } catch (e) {}
+    }
+
     buildNav();
     buildInboxFilter();
     route();
     refresh();
+
+    /* First visit? Offer the walk-around. Finishing OR skipping sets the
+       flag, so nobody is ever nagged twice. */
+    try {
+      if (localStorage.getItem("shiloh.adminTourDone") !== "1") startTour();
+    } catch (e2) {}
   }
   function buildNav() {
     document.getElementById("nav").innerHTML = PANES.filter(function (p) {
@@ -381,6 +489,7 @@
   /* -------------------------------- nav ------------------------------- */
   function showPane(id) {
     if (!allowed(id)) id = "dash";
+    document.getElementById("okBanner").hidden = true;
     document.querySelectorAll("#nav button").forEach(function (b) {
       var on = b.getAttribute("data-pane") === id;
       b.setAttribute("aria-current", on ? "true" : "false");
@@ -427,16 +536,28 @@
       ShilohStore.can("content")      ? ShilohStore.listRsvps()               : none([]),
       ShilohStore.can("content")
         ? fetch("data/events.json", { cache: "no-cache" }).then(function (r) { return r.json(); }).catch(function () { return { events: [] }; })
-        : none({ events: [] })
+        : none({ events: [] }),
+      ShilohStore.can("rentals")      ? ShilohStore.listRentalRequests()      : none([]),
+      ShilohStore.can("rentals")      ? ShilohStore.listRentalSpaces()        : none({ spaces: [] }),
+      /* Passes are part of the rental flow — approving a booking mints one
+         and the Rentals pane shows its code — so grants load for any role
+         that works rentals. Doors and cameras stay strictly admin-only. */
+      ShilohStore.can("rentals")      ? ShilohStore.listAccessGrants()        : none([]),
+      ShilohStore.can("building")     ? ShilohStore.listDoors()               : none([]),
+      ShilohStore.can("building")     ? ShilohStore.listCameras()             : none([])
     ]).then(function (res) {
       VISITOR_CARDS = res[0] || []; RESERVATIONS = res[1] || []; PRAYERS = res[2] || [];
       PEOPLE = res[3] || []; VOLUNTEERS = res[4] || []; RSVPS = res[5] || []; PUBLISHED_EVENTS = res[6].events || [];
+      RENTALS = res[7] || []; SPACES = (res[8] || {}).spaces || []; GRANTS = res[9] || [];
+      DOORS = res[10] || []; CAMERAS = res[11] || [];
       renderDash(); renderInbox(); renderAssistant();
       if (ShilohStore.can("people")) renderPeople();
       if (ShilohStore.can("reservations")) renderMinistries();
       if (ShilohStore.can("content")) renderEventsAdmin();
+      if (ShilohStore.can("rentals")) renderRentals();
       if (ShilohStore.can("prayer")) renderPrayerAdmin();
       if (ShilohStore.can("volunteers")) renderVolunteers();
+      if (ShilohStore.can("building")) renderBuilding();
       if (ShilohStore.can("settings")) renderBrand();
       if (ShilohStore.can("automations")) renderAuto();
       var errEl = document.getElementById("dataErr");
@@ -479,22 +600,22 @@
   function renderDash() {
     var pendingVisitors = VISITOR_CARDS.filter(function (v) { return v.status === "received"; }).length;
     var pendingRes = RESERVATIONS.filter(function (r) { return r.status === "pending"; }).length;
+    var pendingRent = RENTALS.filter(function (r) { return r.status === "pending"; }).length;
     var needsCheck = VOLUNTEERS.filter(function (v) { return v.status !== "current"; }).length;
-    var today = churchToday();
-    var upcoming = allEvents().filter(function (ev) { return (ev.date || "") >= today; }).length;
     function tile(n, label, mod) {
       return '<div class="tile' + (mod ? " tile--" + mod : "") + '"><b>' + n + "</b><span>" + label + "</span></div>";
     }
     /* Tile counts divide evenly into the 2- and 3-column grids — six for
-       admin, three for editor — so a stat never orphans onto its own row. */
+       admin, three for editor — so a stat never orphans onto its own row.
+       (Rental requests took the sixth admin slot from Profiles and the
+       editor's third from Upcoming events, keeping that arithmetic true.) */
     var tiles = [];
     if (ShilohStore.can("people")) tiles.push(tile(pendingVisitors, "Awaiting follow-up", pendingVisitors ? "attention" : "good"));
     if (ShilohStore.can("reservations")) tiles.push(tile(pendingRes, "Reservation requests", pendingRes ? "attention" : "good"));
+    if (ShilohStore.can("rentals")) tiles.push(tile(pendingRent, "Rental requests", pendingRent ? "attention" : "good"));
     if (ShilohStore.can("volunteers")) tiles.push(tile(needsCheck, "Checks not current", needsCheck ? "attention" : "good"));
     if (ShilohStore.can("prayer")) tiles.push(tile(PRAYERS.length, "Prayer requests"));
     if (ShilohStore.can("content")) tiles.push(tile(RSVPS.length, "RSVPs"));
-    if (ShilohStore.can("people")) tiles.push(tile(PEOPLE.length, "Profiles"));
-    else if (ShilohStore.can("content")) tiles.push(tile(upcoming, "Upcoming events"));
     document.getElementById("tiles").innerHTML = tiles.join("");
 
     var needs = [];
@@ -508,9 +629,14 @@
         if (r.status === "pending") needs.push({ title: facilityName(r.facilityId), sub: r.purpose || r.type || "Reservation request", status: r.status, at: r.submittedAt });
       });
     }
+    if (ShilohStore.can("rentals")) {
+      RENTALS.forEach(function (r) {
+        if (r.status === "pending") needs.push({ title: r.org || r.contactName || "Rental request", sub: spaceLabel(r) + " · " + plainDate(r.date), status: r.status, at: r.submittedAt, pane: "rentals" });
+      });
+    }
     needs.sort(function (a, b) { return (b.at || "").localeCompare(a.at || ""); });
     document.getElementById("dashLatest").innerHTML = needs.length ? needs.slice(0, 5).map(function (n) {
-      return '<button class="rowlink" data-pane-link="inbox" type="button"><b>' + esc(n.title) + '</b><span class="who">' + esc(n.sub) + "</span>" +
+      return '<button class="rowlink" data-pane-link="' + (n.pane || "inbox") + '" type="button"><b>' + esc(n.title) + '</b><span class="who">' + esc(n.sub) + "</span>" +
         chip(n.status) + '<span class="when">' + fmtDate(n.at) + "</span></button>";
     }).join("") : '<div class="empty">Nothing waiting — you\'re caught up.</div>';
   }
@@ -520,19 +646,23 @@
     var kinds = [];
     if (ShilohStore.can("people")) kinds.push(['visitor', 'Visitor cards']);
     if (ShilohStore.can("reservations")) kinds.push(['reservation', 'Reservation requests']);
+    if (ShilohStore.can("rentals")) kinds.push(['rental', 'Rental requests']);
     if (ShilohStore.can("prayer")) kinds.push(['prayer', 'Prayer requests']);
     document.getElementById("inboxType").innerHTML = '<option value="">Every type</option>' + kinds.map(function (k) {
       return '<option value="' + k[0] + '">' + k[1] + "</option>";
     }).join("");
     document.getElementById("inboxTools").hidden = kinds.length < 2;
+    /* The note names only the kinds THIS role will actually see. */
     document.getElementById("inboxNote").textContent = kinds.length > 1
-      ? "Visitor cards, reservation requests, and prayer requests in one place — the church-sized version of a unified host inbox."
+      ? kinds.map(function (k) { return k[1]; }).join(", ").replace(/, ([^,]+)$/, ", and $1") +
+        " in one place — the church-sized version of a unified host inbox."
       : "Reservation and booking requests from the app land here.";
   }
   function inboxItems() {
     var items = [];
     if (ShilohStore.can("people")) VISITOR_CARDS.forEach(function (v) { items.push({ kind: "visitor", at: v.submittedAt, data: v }); });
     if (ShilohStore.can("reservations")) RESERVATIONS.forEach(function (r) { items.push({ kind: "reservation", at: r.submittedAt, data: r }); });
+    if (ShilohStore.can("rentals")) RENTALS.forEach(function (r) { items.push({ kind: "rental", at: r.submittedAt, data: r }); });
     if (ShilohStore.can("prayer")) PRAYERS.forEach(function (p) { items.push({ kind: "prayer", at: p.submittedAt, data: p }); });
     return items.sort(function (a, b) { return (b.at || "").localeCompare(a.at || ""); });
   }
@@ -562,6 +692,7 @@
           "</div></div></details>";
       }
       if (i.kind === "reservation") return reservationRec(i.data);
+      if (i.kind === "rental") return rentalRec(i.data);
       var p = i.data;
       var tierCls = p.visibility === "pastor" ? "chip chip--accent" : p.visibility === "team" ? "chip chip--violet" : "chip";
       return '<details class="rec"><summary><b>' + esc(p.name || "Anonymous") + '</b><span class="who">Prayer request</span>' +
@@ -658,6 +789,271 @@
   });
   document.getElementById("exportRsvps").addEventListener("click", function () { ShilohStore.downloadCsv(RSVPS, "shiloh-rsvps.csv"); });
 
+  /* ------------------------------ rentals -----------------------------
+     Outside groups renting the building. One automatic, sensible action:
+     approving a request also mints the guest's building pass — no extra
+     screen, no jargon prompt. The SHILOH code is the phone-call reference;
+     the six-digit door code is what actually opens the building. */
+  function spaceLabel(r) {
+    if (r.spaceName) return r.spaceName;
+    var s = SPACES.filter(function (x) { return x.id === r.spaceId; })[0];
+    return s ? s.name : (r.spaceId || "a space");
+  }
+  function rentalWhen(r) {
+    return plainDate(r.date) + ", " + plainTime(r.startTime) + "–" + plainTime(r.endTime);
+  }
+  function activeGrantFor(rentalId) {
+    return GRANTS.filter(function (g) { return g.rentalId === rentalId && g.status === "active"; })[0] || null;
+  }
+  function rentalContactHtml(r) {
+    /* tel: strips to digits like index.html's telHref; mailto follows the
+       roster-blast esc(encodeURIComponent(...)) convention. */
+    var bits = [];
+    if (r.contactName) bits.push("<b>" + esc(r.contactName) + "</b>");
+    if (r.phone) bits.push('<a class="biglink" href="tel:' + esc(String(r.phone).replace(/[^0-9+]/g, "")) + '">' + esc(r.phone) + "</a>");
+    if (r.email) bits.push('<a class="biglink" href="mailto:' + esc(encodeURIComponent(r.email)) + "?subject=" +
+      esc(encodeURIComponent("Your booking " + (r.code || "") + " at " + (THEME.shortName || "the church"))) + '">' + esc(r.email) + "</a>");
+    return bits.join('<span class="dotsep" aria-hidden="true">·</span>');
+  }
+  function rentalConflictLine(r) {
+    return r.status === "pending" && ShilohStore.rentalConflict(r.spaceId, r.date, r.startTime, r.endTime)
+      ? '<p class="conflict">Another booking already overlaps this time.</p>' : "";
+  }
+  function rentalActs(r, big) {
+    if (r.status !== "pending") return "";
+    return '<div class="acts' + (big ? " acts--big" : "") + '">' +
+      '<button class="btn btn--primary" data-rent-status="' + esc(r.id) + '" data-status="approved" type="button">Approve</button>' +
+      '<button class="btn btn--quiet" data-rent-status="' + esc(r.id) + '" data-status="denied" type="button">Decline</button></div>';
+  }
+  /* The big pending card on the Rentals pane — org name first, everything
+     in plain words, two big buttons. */
+  function rentalCard(r) {
+    return '<div class="rentcard">' +
+      '<div class="rentcard__head"><b>' + esc(r.org || r.contactName || "Rental request") + '</b><span class="chip tnum">' + esc(r.code || "") + "</span></div>" +
+      '<p class="rentcard__when">' + esc(spaceLabel(r)) + " · " + esc(plainDate(r.date)) + " · " + esc(plainTime(r.startTime)) + " to " + esc(plainTime(r.endTime)) + "</p>" +
+      '<p class="rentcard__contact">' + rentalContactHtml(r) + "</p>" +
+      (r.purpose ? '<p class="rentcard__purpose">' + esc(r.purpose) + "</p>" : "") +
+      rentalConflictLine(r) + rentalActs(r, true) + "</div>";
+  }
+  /* The same request as an inbox record. */
+  function rentalRec(r) {
+    return '<details class="rec"><summary><b>' + esc(r.org || r.contactName || "Rental") + '</b><span class="who">' +
+      esc(spaceLabel(r)) + " · " + esc(plainDate(r.date)) + "</span>" + chip(r.status) +
+      '<span class="when">' + fmtDate(r.submittedAt) + '</span></summary><div class="rec__body"><dl>' +
+      '<dt>Booking code</dt><dd class="tnum">' + esc(r.code || "–") + "</dd>" +
+      "<dt>When</dt><dd>" + esc(rentalWhen(r)) + "</dd>" +
+      "<dt>Contact</dt><dd>" + (rentalContactHtml(r) || "–") + "</dd>" +
+      "<dt>Purpose</dt><dd>" + esc(r.purpose || "–") + "</dd></dl>" +
+      rentalConflictLine(r) + rentalActs(r, false) + "</div></details>";
+  }
+  function rentalUpcomingRow(r) {
+    var g = activeGrantFor(r.id);
+    var pass = g
+      ? '<span class="passwrap"><span class="passlabel">door code</span><span class="passcode tnum">' + esc(g.doorCode || "") + "</span></span>" +
+        (!g.synced ? '<span class="chip chip--warn">app only — not on the locks yet</span>' : "") +
+        '<button class="btn btn--quiet" data-pass-revoke="' + esc(g.id) + '" type="button">Revoke pass</button>'
+      : '<span class="chip">no pass</span>' +
+        '<button class="btn btn--quiet" data-pass-make="' + esc(r.id) + '" type="button">Make a pass</button>';
+    return '<div class="rentrow"><div class="rentrow__id"><b>' + esc(r.org || r.contactName || "Booking") + '</b>' +
+      '<span class="who">' + esc(spaceLabel(r)) + " · " + esc(rentalWhen(r)) + '</span></div>' +
+      '<span class="chip tnum">' + esc(r.code || "") + "</span>" + pass + "</div>";
+  }
+  function rentalHistoryRow(r) {
+    return '<div class="rentrow rentrow--quiet"><div class="rentrow__id"><b>' + esc(r.org || r.contactName || "Request") + '</b>' +
+      '<span class="who">' + esc(spaceLabel(r)) + " · " + esc(plainDate(r.date)) + '</span></div>' +
+      '<span class="chip tnum">' + esc(r.code || "") + "</span>" + chip(r.status) + "</div>";
+  }
+  function renderRentals() {
+    var today = churchToday();
+    var byStart = function (a, b) {
+      return (a.date || "").localeCompare(b.date || "") || (a.startTime || "").localeCompare(b.startTime || "");
+    };
+    var pending = RENTALS.filter(function (r) { return r.status === "pending"; }).sort(byStart);
+    var upcoming = RENTALS.filter(function (r) { return r.status === "approved" && (r.date || "") >= today; }).sort(byStart);
+    var history = RENTALS.filter(function (r) {
+      return r.status === "denied" || (r.status === "approved" && (r.date || "") < today);
+    }).sort(function (a, b) { return byStart(b, a); });
+    document.getElementById("rentalPending").innerHTML = pending.length ? pending.map(rentalCard).join("")
+      : '<div class="empty">No requests waiting. New ones appear here and in the Inbox.</div>';
+    document.getElementById("rentalUpcoming").innerHTML = upcoming.length ? upcoming.map(rentalUpcomingRow).join("")
+      : '<div class="empty">Nothing booked yet.</div>';
+    document.getElementById("rentalHistory").innerHTML = history.length ? history.map(rentalHistoryRow).join("")
+      : '<div class="empty">Past and declined requests rest here.</div>';
+  }
+  /* Approving = the booking AND the pass, in one motion. Default doors:
+     all of them — the static door list is public names (data/access.json),
+     so this is safe for editors too; a bridge only exists on admin devices. */
+  function makeRentalPass(r) {
+    return ShilohStore.listDoors().then(function (doors) {
+      return ShilohStore.addAccessGrant({
+        name: (r.org || r.contactName || "Guest") + (r.org && r.contactName ? " (" + r.contactName + ")" : ""),
+        rentalId: r.id,
+        doorIds: (doors || []).map(function (d) { return d.id; }),
+        date: r.date, startTime: r.startTime, endTime: r.endTime
+      });
+    });
+  }
+  function approveRental(r) {
+    ShilohStore.updateRentalRequest(r.id, { status: "approved" }).then(function () {
+      return makeRentalPass(r);
+    }).then(function (g) {
+      okNotice("Approved. Their building pass is ready — code " + ((g && g.doorCode) || "pending") + ", works " + rentalWhen(r) + ".");
+      refresh();
+    }, dataFail);
+  }
+  function declineRental(r) {
+    ShilohStore.updateRentalRequest(r.id, { status: "denied" }).then(function () {
+      okNotice("Declined — nothing was booked. The request stays in the Rentals history.");
+      refresh();
+    }, dataFail);
+  }
+  document.addEventListener("click", function (e) {
+    var rb = e.target.closest("button[data-rent-status]");
+    if (rb) {
+      var r = RENTALS.filter(function (x) { return x.id === rb.getAttribute("data-rent-status"); })[0];
+      if (!r) return;
+      rb.disabled = true;
+      if (rb.getAttribute("data-status") === "approved") approveRental(r); else declineRental(r);
+      return;
+    }
+    var rv = e.target.closest("button[data-pass-revoke]");
+    if (rv) {
+      rv.disabled = true;
+      ShilohStore.revokeAccessGrant(rv.getAttribute("data-pass-revoke")).then(function () {
+        okNotice("Pass revoked — that code is no longer good.");
+        refresh();
+      }, dataFail);
+      return;
+    }
+    var mk = e.target.closest("button[data-pass-make]");
+    if (mk) {
+      var rr = RENTALS.filter(function (x) { return x.id === mk.getAttribute("data-pass-make"); })[0];
+      if (!rr) return;
+      mk.disabled = true;
+      makeRentalPass(rr).then(function (g) {
+        okNotice("New pass made — code " + ((g && g.doorCode) || "pending") + ", works " + rentalWhen(rr) + ".");
+        refresh();
+      }, dataFail);
+      return;
+    }
+  });
+
+  /* ----------------------------- building -----------------------------
+     Admin-only, and only ever rendered for admin sessions — an editor's
+     browser never fetches doors, cameras, or the full pass list, and no
+     door code is written into an editor's Building pane (it stays empty). */
+  function renderBuilding() { renderDoors(); renderCameras(); renderPasses(); }
+
+  function renderDoors() {
+    var bridged = ShilohStore.accessBridgeConfigured();
+    document.getElementById("doorList").innerHTML = DOORS.length ? DOORS.map(function (d) {
+      var right = bridged
+        ? '<span class="doorstate">' + (d.locked ? "Locked" : "Unlocked") + "</span>" +
+          '<button class="btn ' + (d.locked ? "btn--quiet" : "btn--primary") + '" data-door-lock="' + esc(d.id) +
+          '" data-next="' + (d.locked ? "false" : "true") + '" type="button">' + (d.locked ? "Unlock" : "Lock") + "</button>"
+        : '<span class="chip">not connected</span>';
+      return '<div class="doorrow"><b>' + esc(d.name || d.id) + "</b>" + right + "</div>";
+    }).join("") : '<div class="empty">No doors listed yet — name them in <code>data/access.json</code>.</div>';
+  }
+  document.addEventListener("click", function (e) {
+    var db = e.target.closest("button[data-door-lock]");
+    if (!db) return;
+    var door = DOORS.filter(function (x) { return x.id === db.getAttribute("data-door-lock"); })[0];
+    if (!door) return;
+    var next = db.getAttribute("data-next") === "true";
+    var prev = !!door.locked;
+    door.locked = next;          /* optimistic — the row answers the tap now */
+    renderDoors();
+    document.getElementById("doorMsg").hidden = true;
+    ShilohStore.setDoorLocked(door.id, next).catch(function (err) {
+      door.locked = prev;        /* honest rollback */
+      renderDoors();
+      var m = document.getElementById("doorMsg");
+      m.textContent = "Couldn't reach that lock — nothing changed. " + ((err && err.message) || "");
+      m.hidden = false;
+    });
+  });
+
+  function renderCameras() {
+    var live = CAMERAS.filter(function (c) { return c && (c.streamUrl || c.snapshotUrl); });
+    document.getElementById("cameraGrid").innerHTML = live.length ? live.map(function (c) {
+      var view = c.streamUrl
+        ? '<iframe src="' + esc(c.streamUrl) + '" title="' + esc((c.name || "Camera") + " live view") +
+          '" loading="lazy" allow="autoplay; fullscreen" sandbox="allow-scripts allow-same-origin" referrerpolicy="no-referrer"></iframe>'
+        : '<img src="' + esc(c.snapshotUrl) + '" alt="' + esc((c.name || "Camera") + " snapshot") + '" loading="lazy">';
+      return '<figure class="camtile">' + view + "<figcaption>" + esc(c.name || c.id || "Camera") + "</figcaption></figure>";
+    }).join("") : '<div class="empty">No cameras connected yet. When the security system is in (<code>docs/ACCESS-SETUP.md</code>), live views appear right here.</div>';
+  }
+
+  /* expired = the window's end is already behind us, worked out right here
+     on the client — the store never marks it. */
+  function passState(g) {
+    if (g.status === "revoked") return "revoked";
+    var end = new Date((g.date || "9999-12-31") + "T" + (g.endTime || "23:59") + ":00");
+    return (isNaN(end) ? false : end < new Date()) ? "expired" : "active";
+  }
+  function renderPasses() {
+    document.getElementById("grantList").innerHTML = GRANTS.length ? GRANTS.map(function (g) {
+      var st = passState(g);
+      var cls = st === "active" ? "chip chip--ok" : st === "revoked" ? "chip chip--danger" : "chip";
+      return '<div class="passrow"><div class="rentrow__id"><b>' + esc(g.name || "Pass") + '</b>' +
+        '<span class="who">' + esc(plainDate(g.date)) + " · " + esc(plainTime(g.startTime)) + " to " + esc(plainTime(g.endTime)) + "</span></div>" +
+        '<span class="passwrap"><span class="passlabel">door code</span><span class="passcode tnum">' + esc(g.doorCode || "") + "</span></span>" +
+        '<span class="' + cls + '">' + st + "</span>" +
+        (st !== "revoked" && !g.synced ? '<span class="chip chip--warn">app only — not on the locks yet</span>' : "") +
+        (st === "active" ? '<button class="btn btn--quiet" data-pass-revoke="' + esc(g.id) + '" type="button">Revoke</button>' : "") +
+        "</div>";
+    }).join("") : '<div class="empty">No passes yet. Approving a rental makes one automatically.</div>';
+  }
+
+  /* Bridge connection — written straight to this device's localStorage,
+     exactly like the broadcast target. Nothing here touches a shared file. */
+  document.getElementById("brSave").addEventListener("click", function () {
+    var out = document.getElementById("brResult");
+    var url = document.getElementById("brUrl").value.trim();
+    if (!url) {
+      out.textContent = "Add the bridge address first — or use Clear to disconnect.";
+      out.style.color = "var(--warn)";
+      return;
+    }
+    try {
+      localStorage.setItem("shiloh.accessBridge", JSON.stringify({ url: url, token: document.getElementById("brToken").value.trim() }));
+      out.textContent = "Saved to this device.";
+      out.style.color = "var(--ok)";
+    } catch (err) {
+      out.textContent = "Couldn't save on this device.";
+      out.style.color = "var(--danger)";
+    }
+    refresh();
+  });
+  document.getElementById("brClear").addEventListener("click", function () {
+    try { localStorage.removeItem("shiloh.accessBridge"); } catch (err) {}
+    document.getElementById("brUrl").value = "";
+    document.getElementById("brToken").value = "";
+    var out = document.getElementById("brResult");
+    out.textContent = "Cleared — this device no longer talks to the locks.";
+    out.style.color = "";
+    refresh();
+  });
+  document.getElementById("brTest").addEventListener("click", function () {
+    var out = document.getElementById("brResult");
+    out.textContent = "Checking…";
+    out.style.color = "";
+    if (!ShilohStore.accessBridgeConfigured()) {
+      out.textContent = "No bridge saved on this device yet — the doors below are just the names from the app's files.";
+      out.style.color = "var(--warn)";
+      return;
+    }
+    /* Strict probe — never says Connected off the static fallback list. */
+    ShilohStore.testAccessBridge().then(function (r) {
+      out.textContent = "Connected — " + r.doors + (r.doors === 1 ? " door" : " doors") + " found.";
+      out.style.color = "var(--ok)";
+    }, function (err) {
+      out.textContent = (err && err.message) || "Couldn't reach the bridge.";
+      out.style.color = "var(--danger)";
+    });
+  });
+
   /* ------------------------------ prayer ------------------------------ */
   function renderPrayerAdmin() {
     var filter = document.getElementById("prFilter").value;
@@ -751,6 +1147,80 @@
     ShilohStore.askAppliance(prompt).then(function (answer) { out.textContent = answer; })
       .catch(function (err) { out.textContent = "Couldn't reach the appliance: " + err.message + ". Is the box on and the tunnel up?"; })
       .finally(function () { btn.disabled = false; });
+  });
+
+  /* --------------------------- first-login tour -----------------------
+     Mirrors the member app's onboarding (data-* buttons, a steps array,
+     always skippable) but the steps are built from ShilohStore.can() at
+     start time, so each role hears only about its own rooms. Finishing OR
+     skipping writes shiloh.adminTourDone="1"; the Dashboard's "Show me
+     around again" button clears it and replays. */
+  var TOUR = [], tourIndex = 0;
+  function tourStepList() {
+    var steps = [{
+      icon: "i-dash", title: "The day at a glance",
+      body: "Everything that needs you is here on the Dashboard. When a number turns amber, something is waiting for you.",
+      first: true
+    }];
+    if (ShilohStore.can("inbox")) steps.push({
+      icon: "i-inbox", title: "One inbox for everything",
+      body: "Visitor cards, booking requests, and prayer all land in the Inbox, newest first. Open one and the buttons tell you what to do."
+    });
+    if (ShilohStore.can("content") || ShilohStore.can("rentals")) steps.push({
+      icon: "i-key", title: "Events & rentals",
+      body: "Post events, and say yes or no to groups renting the building. Approve a booking and their door code is made for you — nothing extra to set up."
+    });
+    if (ShilohStore.can("live")) steps.push({
+      icon: "i-bolt", title: "Go live from this phone",
+      body: "The red Go live button up top opens the broadcast studio — frame the shot, tap once, and the church is on the air."
+    });
+    if (ShilohStore.can("building")) steps.push({
+      icon: "i-door", title: "The building itself",
+      body: "Doors, cameras, and every guest pass live on the Building page — you can lock up from the parking lot."
+    });
+    steps.push({
+      icon: "i-spark", title: "That's the whole tour",
+      body: "Everything else explains itself as you go. Play this again any time from the bottom of the Dashboard.",
+      last: true
+    });
+    return steps;
+  }
+  function renderTour() {
+    var s = TOUR[tourIndex];
+    document.getElementById("tourSteps").innerHTML = TOUR.map(function (_, i) {
+      return '<i data-on="' + (i <= tourIndex) + '"></i>';
+    }).join("");
+    document.getElementById("tourBody").innerHTML =
+      '<div class="tour__mark">' + ICON(s.icon) + "</div>" +
+      '<h1 id="tourTitle">' + esc(s.title) + "</h1><p>" + esc(s.body) + "</p>";
+    var acts = "";
+    if (s.first) {
+      acts = '<button class="btn btn--primary btn--block" data-tour="next" type="button">Show me around</button>' +
+             '<button class="btn btn--quiet btn--block" data-tour="skip" type="button">Skip for now</button>';
+    } else if (s.last) {
+      acts = '<button class="btn btn--primary btn--block" data-tour="skip" type="button">Get started</button>';
+    } else {
+      acts = '<button class="btn btn--primary btn--block" data-tour="next" type="button">Next</button>' +
+             '<button class="btn btn--quiet btn--block" data-tour="skip" type="button">Skip for now</button>';
+    }
+    document.getElementById("tourActions").innerHTML = acts;
+  }
+  function startTour() {
+    TOUR = tourStepList();
+    tourIndex = 0;
+    renderTour();
+    document.getElementById("tour").classList.add("on");
+  }
+  document.getElementById("tour").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-tour]");
+    if (!b) return;
+    if (b.getAttribute("data-tour") === "next") { tourIndex++; renderTour(); return; }
+    try { localStorage.setItem("shiloh.adminTourDone", "1"); } catch (err) {}
+    document.getElementById("tour").classList.remove("on");
+  });
+  document.getElementById("tourAgain").addEventListener("click", function () {
+    try { localStorage.removeItem("shiloh.adminTourDone"); } catch (err) {}
+    startTour();
   });
 })();
 </script>

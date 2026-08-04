@@ -63,6 +63,21 @@ out to YouTube and Facebook with no monthly streaming service in the middle
 that box is set up, the studio runs as a camera check: nothing leaves the
 phone, and it says so plainly.
 
+## Renting the building
+
+Outside congregations, choirs, and community groups can request the Sanctuary or
+Fellowship Hall from the app — the office reviews every request, nothing is a
+booking until it's approved, and the app never takes a payment (the office quotes
+and invoices). An approved booking carries a building-access pass — which doors,
+what time window, and a door code — that the guest finds in the app under their
+booking code. That works today with zero hardware: the code is handed to the guest,
+or a person at the door checks the list. When the church buys smart locks or
+cameras, a small "bridge" service makes the same passes program the real hardware —
+the contract and the honest shopping options are in `docs/ACCESS-SETUP.md`. One
+plain fact shapes the design: fingerprints must be enrolled standing at the door,
+but a time-boxed door code can be issued remotely by every major lock system — so
+the code is the guest's key, exactly how Airbnb hosts run smart locks.
+
 ## Files
 
 - `index.html` — the app (shell, screens, router, onboarding)
@@ -75,6 +90,8 @@ phone, and it says so plainly.
 - `data/ministries.json` — the ministry/small-group/facility catalog
 - `data/events.json` / `data/news.json` — the calendar and the announcement feed
 - `data/live.json` — the live-stream player config (any iframe embed, plus the church's own WHIP ingest URL)
+- `data/rentals.json` — the spaces outside groups can rent: descriptions, house rules, and rates (a blank rate shows "Ask about rates")
+- `data/access.json` — door and camera names for Admin → Building (names and ids only — data files are public, so nothing secret ever lives here)
 - `scripts/build-ics.js` — generates `events.ics` from `data/events.json` at deploy time
 - `supabase/functions/assistant-gemini/` — ready-to-deploy Gemini brain for the admin Assistant
 - `docs/GO-LIVE.md` — the launch runbook: Pages setup, streaming routes and real costs, Workspace vs Gemini API
@@ -83,6 +100,7 @@ phone, and it says so plainly.
 - `docs/supabase-setup.sql` — schema + Row Level Security policies for live mode
 - `docs/DESIGN.md` — the full design proposal this build follows
 - `docs/APPLIANCE-SETUP.md` — turning a Mac mini into the Church OS "brain and pipe" appliance
+- `docs/ACCESS-SETUP.md` — building access: passes with door codes today, the bridge contract and the honest shopping options for real locks and cameras later
 - `scripts/appliance/gateway.js` — the local service that runs on that box
 - `scripts/appliance/mediamtx.yml` — the box's broadcast relay config: phone's WHIP stream in, YouTube + Facebook out
 - `manifest.webmanifest` / `sw.js` — install metadata and the offline service worker

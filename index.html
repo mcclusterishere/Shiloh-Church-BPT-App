@@ -103,6 +103,10 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-chat"/></svg>
           <span><b>New here? Plan a visit</b><small>We'd love to meet you</small></span>
         </button>
+        <button class="quick quick--rent" data-nav="rent" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-pin"/></svg>
+          <span><b>Rent our space</b><small>Our sanctuary &amp; hall, open to your group</small></span>
+        </button>
       </div>
 
       <div class="card rise rise-4" id="serviceCard" hidden>
@@ -406,6 +410,13 @@
       </div>
 
       <div class="card">
+        <p class="eyebrow">Room for your congregation</p>
+        <h3 style="margin-top:var(--space-2)">Does your congregation need a home?</h3>
+        <p>We rent our sanctuary and fellowship hall — see dates and request a booking.</p>
+        <button class="btn btn--primary" data-nav="rent" type="button" style="margin-top:var(--space-4)">Rent our space</button>
+      </div>
+
+      <div class="card">
         <p class="eyebrow">Questions &amp; answers</p>
         <div class="stack" style="--gap: var(--space-2); margin-top: var(--space-4)" id="faqList"></div>
       </div>
@@ -435,6 +446,71 @@
     </div>
   </section>
 
+  <!-- ------------------------------- rent ------------------------------ -->
+  <!-- Routed like #/profile: reachable from Home, Connect, and Help, never
+       in the tab bar. Public-facing — visiting congregations and community
+       groups requesting Shiloh's spaces. A request is never called a booking
+       here until the office marks it approved. -->
+  <section class="screen" id="screen-rent">
+    <div class="wrap stack">
+      <div class="screen__head">
+        <p class="eyebrow">Our doors are open</p>
+        <h2>Rent our space</h2>
+      </div>
+      <p class="muted" id="rentIntro"></p>
+      <div class="stack" id="rentSpaces"></div>
+
+      <div class="card" id="rentDone" hidden>
+        <p class="eyebrow">Request received</p>
+        <h3 style="margin-top:var(--space-2)">Your booking code</h3>
+        <p class="bookingcode" id="rentCode"></p>
+        <p style="color:var(--text)"><b>Write this code down or screenshot this page.</b> You'll use it below, under "Already booked?", to check on your request.</p>
+        <p class="muted" id="rentApprovalNote" style="margin-top:var(--space-3)"></p>
+        <div class="row" style="margin-top:var(--space-4)">
+          <a class="btn btn--quiet" id="rentDoneCall" href="#">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-phone"/></svg>
+            <span id="rentDonePhone">Call the church office</span>
+          </a>
+          <button class="btn btn--quiet" id="rentAgain" type="button">Make another request</button>
+        </div>
+      </div>
+
+      <form class="card" id="rentForm">
+        <h3>Request your dates</h3>
+        <p class="muted" style="margin-bottom:var(--space-4)">Tell us what you need and the church office will call you back.</p>
+        <div class="field">
+          <label id="rentSpaceLabel">Which space?</label>
+          <div class="tierpick" id="rentSpacePick" role="radiogroup" aria-labelledby="rentSpaceLabel"></div>
+        </div>
+        <div class="field"><label for="rOrg">Your church or group</label><input type="text" id="rOrg" required autocomplete="organization"></div>
+        <div class="field"><label for="rName">Contact name</label><input type="text" id="rName" required autocomplete="name"></div>
+        <div class="field"><label for="rPhone">Phone</label><input type="tel" id="rPhone" required autocomplete="tel"></div>
+        <div class="field"><label for="rEmail">Email <span class="muted" style="font-weight:400">(optional)</span></label><input type="email" id="rEmail" autocomplete="email"></div>
+        <div class="field"><label for="rDate">Date</label><input type="date" id="rDate" required></div>
+        <div class="field"><label for="rStart">Start time</label><input type="time" id="rStart" required></div>
+        <div class="field"><label for="rEnd">End time</label><input type="time" id="rEnd" required></div>
+        <div class="field"><label for="rPurpose">What are you planning? <span class="muted" style="font-weight:400">(optional)</span></label><textarea id="rPurpose"></textarea></div>
+        <p class="hint" id="rentPolicyHint" style="margin-bottom:var(--space-4)"></p>
+        <button class="btn btn--primary btn--block" type="submit">Send this request</button>
+      </form>
+
+      <form class="card" id="rentLookupForm">
+        <p class="eyebrow">Already booked?</p>
+        <h3 style="margin-top:var(--space-2)">Check on your booking</h3>
+        <div id="rentMineWrap" hidden>
+          <p class="hint">Your codes from this phone — tap one:</p>
+          <div class="row" id="rentMyCodes" style="margin-top:var(--space-2)"></div>
+        </div>
+        <div class="field" style="margin-top:var(--space-4)">
+          <label for="rentLookup">Your booking code</label>
+          <input type="text" id="rentLookup" placeholder="SHILOH-XXXX" autocomplete="off" autocapitalize="characters" spellcheck="false">
+        </div>
+        <button class="btn btn--primary btn--block" type="submit">Look it up</button>
+      </form>
+      <div id="rentStatus"></div>
+    </div>
+  </section>
+
   <!-- -------------------------------- help ----------------------------- -->
   <section class="screen" id="screen-help">
     <div class="wrap stack">
@@ -448,6 +524,11 @@
       <button class="quick" data-nav="profile" type="button">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-people"/></svg>
         <span><b>Your profile &amp; RSVPs</b><small>Your name, contact details, and what you've said yes to</small></span>
+      </button>
+
+      <button class="quick" data-nav="rent" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-pin"/></svg>
+        <span><b>Rent our space</b><small>Request a booking, or look yours up with your code</small></span>
       </button>
 
       <div class="card">
@@ -511,7 +592,7 @@
 <script>
 (function () {
   "use strict";
-  var CHURCH = null, THEME = null, EVENTS = [], MINISTRIES = [], GIVING = null, ABOUT = null, SERMONS = null, FAQ = [], IMPACT = null, LIVE = null;
+  var CHURCH = null, THEME = null, EVENTS = [], MINISTRIES = [], GIVING = null, ABOUT = null, SERMONS = null, FAQ = [], IMPACT = null, LIVE = null, RENTALS = null;
   var ICON = function (id) {
     return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#' + id + '"/></svg>';
   };
@@ -530,6 +611,15 @@
   }
   function monthOf(iso) { return new Date(iso + "T00:00:00").toLocaleDateString("en-US", { month: "short" }); }
   function dayOf(iso) { return new Date(iso + "T00:00:00").getDate(); }
+  /* "14:00" -> "2:00 PM" — plain words for a time window, elder-first. */
+  function fmtTime(t) {
+    var m = /^(\d{1,2}):(\d{2})/.exec(String(t || ""));
+    if (!m) return String(t || "");
+    var h = parseInt(m[1], 10);
+    var ap = h >= 12 ? "PM" : "AM";
+    h = h % 12 || 12;
+    return h + ":" + m[2] + " " + ap;
+  }
   function timeAgo(iso) {
     var mins = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
     if (mins < 60) return mins <= 1 ? "just now" : mins + " minutes ago";
@@ -583,7 +673,7 @@
   }
 
   /* ------------------------------ router ------------------------------ */
-  var ROUTES = ["home", "events", "prayer", "directory", "give", "watch", "about", "connect", "profile", "help"];
+  var ROUTES = ["home", "events", "prayer", "directory", "give", "watch", "about", "connect", "profile", "help", "rent"];
   function paint(r) {
     document.querySelectorAll(".screen").forEach(function (s) { s.classList.toggle("on", s.id === "screen-" + r); });
     document.querySelectorAll("#tabbar button").forEach(function (b) {
@@ -593,6 +683,7 @@
     if (r === "prayer") renderPrayer();
     if (r === "directory") renderMinistries();
     if (r === "profile") renderProfile();
+    if (r === "rent") renderRent();
     window.scrollTo(0, 0);
   }
   function route() {
@@ -1157,6 +1248,176 @@
     ShilohStore.staffSignOut();
     renderStaffCard();
     toast("Signed out.");
+  });
+
+  /* ------------------------------ rentals ------------------------------ */
+  /* Outside congregations and community groups renting Shiloh's spaces.
+     Wording rule: nothing here is called a booking or confirmed until the
+     office marks the request approved. */
+  function rentSpaceCard(s) {
+    var img = s.image ? '<img src="' + esc(s.image) + '" alt="" loading="lazy" decoding="async">' : "";
+    var rate = s.rate
+      ? '<p style="margin-top:var(--space-3)"><b>' + esc(s.rate) + "</b></p>"
+      : '<p class="muted" style="margin-top:var(--space-3)">Ask about rates — the church office will go over everything with you.</p>';
+    var rules = (s.houseRules || []).length
+      ? '<div class="houserules"><p class="eyebrow">House rules</p><ul>' +
+        s.houseRules.map(function (r) { return "<li>" + esc(r) + "</li>"; }).join("") + "</ul></div>"
+      : "";
+    return '<article class="card photocard reveal">' + img +
+      '<div class="photocard__body"><h3>' + esc(s.name) + "</h3>" +
+      "<p>" + esc(s.goodFor || "") + "</p>" + rate + rules +
+      '<button class="btn btn--primary btn--block" data-rentpick="' + esc(s.id) + '" type="button" style="margin-top:var(--space-5)">Request these dates</button>' +
+      "</div></article>";
+  }
+  function renderRentCodes() {
+    var codes = ShilohStore.myRentalCodes();
+    document.getElementById("rentMineWrap").hidden = !codes.length;
+    document.getElementById("rentMyCodes").innerHTML = codes.map(function (c) {
+      return '<button class="codechip" data-code="' + esc(c) + '" type="button">' + esc(c) + "</button>";
+    }).join("");
+  }
+  function renderRent() {
+    renderRentCodes();
+    if (RENTALS) return; /* static content — fetched once, codes refresh every visit */
+    ShilohStore.listRentalSpaces().then(function (data) {
+      var spaces = (data && data.spaces) || [];
+      if (!spaces.length) {
+        document.getElementById("rentSpaces").innerHTML =
+          '<div class="empty">We couldn\'t load the spaces just now. Call the church office' +
+          (CHURCH && CHURCH.phone ? " at " + esc(CHURCH.phone) : "") + " and we'll help.</div>";
+        return;
+      }
+      RENTALS = data;
+      document.getElementById("rentIntro").textContent = data.intro || "";
+      document.getElementById("rentSpaces").innerHTML = spaces.map(rentSpaceCard).join("");
+      document.getElementById("rentSpacePick").innerHTML = spaces.map(function (s, i) {
+        return '<label><input type="radio" name="rentSpace" value="' + esc(s.id) + '"' + (i === 0 ? " checked" : "") +
+          "><span><b>" + esc(s.name) + "</b></span></label>";
+      }).join("");
+      if (data.policy) {
+        document.getElementById("rentPolicyHint").textContent =
+          ((data.policy.approval || "") + " " + (data.policy.payment || "")).trim();
+      }
+    });
+  }
+  document.getElementById("rentForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var picked = document.querySelector('input[name="rentSpace"]:checked');
+    if (!picked) { toast("Choose a space first."); return; }
+    var space = ((RENTALS && RENTALS.spaces) || []).find(function (s) { return s.id === picked.value; });
+    ShilohStore.submitRentalRequest({
+      spaceId: picked.value,
+      spaceName: space ? space.name : picked.value,
+      org: document.getElementById("rOrg").value.trim(),
+      contactName: document.getElementById("rName").value.trim(),
+      email: document.getElementById("rEmail").value.trim(),
+      phone: document.getElementById("rPhone").value.trim(),
+      date: document.getElementById("rDate").value,
+      startTime: document.getElementById("rStart").value,
+      endTime: document.getElementById("rEnd").value,
+      purpose: document.getElementById("rPurpose").value.trim()
+    }).then(function (rec) {
+      document.getElementById("rentForm").hidden = true;
+      var done = document.getElementById("rentDone");
+      done.hidden = false;
+      document.getElementById("rentCode").textContent = rec.code || "";
+      document.getElementById("rentApprovalNote").textContent =
+        (RENTALS && RENTALS.policy && RENTALS.policy.approval) || "";
+      if (CHURCH && CHURCH.phone) {
+        document.getElementById("rentDoneCall").href = telHref(CHURCH.phone);
+        document.getElementById("rentDonePhone").textContent = "Call the church office · " + CHURCH.phone;
+      }
+      renderRentCodes();
+      done.scrollIntoView({ block: "start" });
+      haptic(18);
+      toast("Request sent — the office will call you.");
+    });
+  });
+  document.getElementById("rentAgain").addEventListener("click", function () {
+    document.getElementById("rentDone").hidden = true;
+    var f = document.getElementById("rentForm");
+    f.hidden = false;
+    f.scrollIntoView({ block: "start" });
+  });
+  function rentStatusCard(rec) {
+    var phone = (CHURCH && CHURCH.phone) || "";
+    var when = esc(fmtDate(rec.date)) +
+      (rec.startTime ? " · " + esc(fmtTime(rec.startTime)) + " to " + esc(fmtTime(rec.endTime)) : "");
+    var head = function (chip) {
+      return '<div class="row" style="justify-content:space-between"><span class="eyebrow">Your booking code</span>' + chip + "</div>" +
+        '<h3 style="margin-top:var(--space-3)">' + esc(rec.spaceName || "") + "</h3>" +
+        '<p class="muted">' + when + "</p>";
+    };
+    if (rec.status === "approved") {
+      return '<div class="card">' + head('<span class="chip chip--ok">Approved</span>') +
+        '<p style="margin-top:var(--space-3)">You\'re confirmed — we\'ll be glad to have you.</p>' +
+        '<div id="rentPassSlot"><p class="hint" style="margin-top:var(--space-4)">Your access details will appear here before your date.</p></div>' +
+        "</div>";
+    }
+    if (rec.status === "denied") {
+      return '<div class="card">' + head('<span class="chip chip--danger">Not this time</span>') +
+        '<p style="margin-top:var(--space-3)">We\'re sorry — we couldn\'t say yes to these dates. Please call the church office' +
+        (phone ? " at <b>" + esc(phone) + "</b>" : "") + " — we'd love to find a time that works.</p></div>";
+    }
+    /* pending, or anything we don't recognize: never claim more than "reviewing" */
+    return '<div class="card">' + head('<span class="chip chip--warn">Being reviewed</span>') +
+      '<p style="margin-top:var(--space-3)">The office is reviewing your request — you\'ll get a call.</p></div>';
+  }
+  function renderGuestPass(rec) {
+    Promise.all([ShilohStore.grantForRental(rec.id), ShilohStore.listDoors()]).then(function (res) {
+      var g = res[0], doors = res[1] || [];
+      var slot = document.getElementById("rentPassSlot");
+      if (!slot || !g) return; /* the placeholder line already covers "no pass yet" */
+      var names = (g.doorIds || []).map(function (id) {
+        var d = doors.filter(function (x) { return x.id === id; })[0];
+        return d ? d.name : "";
+      }).filter(Boolean);
+      slot.innerHTML = '<div class="guestpass">' +
+        '<p class="eyebrow">Building access pass</p>' +
+        '<p class="guestpass__code tnum">' + esc(g.doorCode || "") + "</p>" +
+        "<p><b>" + esc(fmtDate(g.date || rec.date)) + " · " +
+          esc(fmtTime(g.startTime || rec.startTime)) + " to " + esc(fmtTime(g.endTime || rec.endTime)) + "</b></p>" +
+        (names.length ? '<p style="margin-top:var(--space-2)">Opens ' + esc(names.join(" and ")) + ".</p>" : "") +
+        '<p class="muted" style="margin-top:var(--space-3)">This code works only during your booked time.</p>' +
+        "</div>";
+    });
+  }
+  function rentLookup(code) {
+    if (!code) { toast("Type your booking code first."); return; }
+    var out = document.getElementById("rentStatus");
+    ShilohStore.findRentalByCode(code).then(function (rec) {
+      if (!rec) {
+        out.innerHTML = '<div class="card"><h3>We couldn\'t find that code</h3>' +
+          '<p class="muted" style="margin-top:var(--space-2)">Check the letters and try again' +
+          (CHURCH && CHURCH.phone ? ", or call the church office at <b>" + esc(CHURCH.phone) + "</b> and we'll look it up for you" : "") +
+          ".</p></div>";
+        return;
+      }
+      out.innerHTML = rentStatusCard(rec);
+      if (rec.status === "approved") renderGuestPass(rec);
+      out.scrollIntoView({ block: "start" });
+    });
+  }
+  document.getElementById("rentLookupForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    rentLookup(document.getElementById("rentLookup").value.trim());
+  });
+  document.addEventListener("click", function (e) {
+    var pick = e.target.closest("button[data-rentpick]");
+    if (pick) {
+      haptic();
+      var id = pick.getAttribute("data-rentpick");
+      document.querySelectorAll('input[name="rentSpace"]').forEach(function (r) { r.checked = r.value === id; });
+      var f = document.getElementById("rentForm");
+      f.hidden = false;
+      f.scrollIntoView({ block: "start" });
+      return;
+    }
+    var chipBtn = e.target.closest("button[data-code]");
+    if (chipBtn) {
+      document.getElementById("rentLookup").value = chipBtn.getAttribute("data-code");
+      rentLookup(chipBtn.getAttribute("data-code"));
+    }
   });
 
   /* -------------------------------- help ------------------------------ */

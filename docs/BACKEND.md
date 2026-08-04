@@ -21,7 +21,7 @@ decides where it goes: **`data/config.json`**.
 | --- | --- |
 | `mode: "demo"` | Zero setup. Everything lives in the browser's localStorage. Submissions made on a device appear in **that device's** admin only — perfect for trying the app and for the pilot, useless for a real multi-person church. |
 | `mode: "supabase"` | Real database, real admin login. Visitor cards, RSVPs, prayer requests, and reservations insert from the app; staff sign in to review and act on them. |
-| `webhookUrl` | **Automations.** Fires in *any* mode: every visitor card, RSVP, prayer request, and reservation request POSTs JSON to this URL. |
+| `webhookUrl` | **Automations.** Fires in *any* mode: every visitor card, RSVP, prayer request, reservation request, rental request, and access-pass event POSTs JSON to this URL. |
 | `adminPasscode` | Demo mode's courtesy lock for the **admin** tier of the back office. Client-side and **not security** — real access control comes with Supabase mode (see "Staff roles" below). |
 | `editorPasscode` | Same courtesy lock, **editor** tier: the public-face jobs only, nothing people-sensitive. Change both passcodes before handing out links. |
 | `applianceUrl` / `applianceToken` | Points **Admin → Assistant** at the church's own box (or the Gemini edge function) — see `docs/APPLIANCE-SETUP.md`. Both blank is a normal, fully-supported state. |
@@ -43,7 +43,7 @@ email. Each event arrives as:
 ```json
 {
   "source": "shiloh-church-app",
-  "type": "visitor-card | rsvp | prayer-request | reservation-request | profile | test",
+  "type": "visitor-card | rsvp | prayer-request | reservation-request | rental-request | rental-update | access-grant | access-revoke | profile | test",
   "sentAt": "2026-07-26T15:00:00.000Z",
   "data": { "...": "the record itself" }
 }
@@ -117,6 +117,30 @@ password). The policies compare emails case-insensitively, but keep staff
 emails lowercase anyway — it's what the auth system stores. Change a role
 with an UPDATE, remove access with a DELETE — same place. No deploy, no
 code change.
+
+## Rentals and building access — what lands in the database
+
+`supabase-setup.sql` also creates the two tables behind the space-rental
+layer:
+
+- **`rentals`** — every request from the public Rent form. Anon may insert
+  (that's the form), any staff row reads and updates (approve/deny). Guests
+  look a booking up by its `SHILOH-XXXX` code with the anon key — and since
+  RLS can't express "readable only via exact code match," anon read is on,
+  eyes open. What that trades away and the one policy to drop if the church
+  would rather not are spelled out in a comment right above that policy in
+  the SQL file. Door codes are not in this table either way.
+- **`access_grants`** — building-access passes: doors, time window, door
+  code. Admin-only in every direction, the same tier as visitor cards and
+  pastoral data. One honesty note: today `js/store.js` keeps passes on the
+  admin device (localStorage) and doesn't sync this table yet — the schema
+  and policies are in place now so turning sync on later is a store change,
+  not a security scramble.
+
+The bridge that turns passes into real lock schedules is a separate, tiny
+HTTP service — see `docs/ACCESS-SETUP.md`. Its URL and token never live in
+the database or in a data file; they're entered per admin device in
+**Admin → Building**.
 
 ## Content management (no code needed)
 
