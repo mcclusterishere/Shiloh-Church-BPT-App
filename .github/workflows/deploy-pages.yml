@@ -26,6 +26,13 @@ jobs:
       - name: Build events.ics from data/events.json
         run: node scripts/build-ics.js
 
+      - name: Stage site
+        # The artifact tar honors .gitignore, which lists the generated
+        # events.ics — so stage into a clean directory it can't second-guess.
+        run: |
+          mkdir -p /tmp/site
+          rsync -a --exclude '.git' --exclude '.github' ./ /tmp/site/
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
         with:
@@ -36,7 +43,7 @@ jobs:
       - name: Upload site
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: /tmp/site
 
       - name: Deploy
         id: deployment
