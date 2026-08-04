@@ -66,7 +66,8 @@ window.ShilohStore = (function () {
     rentals: "shiloh.rentals",
     myRentals: "shiloh.myRentals",
     grants: "shiloh.accessGrants",
-    adminTour: "shiloh.adminTourDone"
+    adminTour: "shiloh.adminTourDone",
+    mediaLog: "shiloh.mediaLog"
   };
 
   function read(key, fallback) {
@@ -449,6 +450,46 @@ window.ShilohStore = (function () {
     });
   }
 
+  /* ---------------- the media desk ----------------
+     Compose once, publish everywhere — with the honest division of labor:
+     THIS app composes and hands off; the AUTOMATION layer (webhookUrl ->
+     n8n on the church's own box, or Zapier/Make/Ayrshare) holds the
+     platform credentials and does the actual posting; the STREAMING BOX
+     holds the stream keys and does the live fan-out. No platform secret
+     ever touches this codebase or its data files. The UI must never say
+     "posted" — it says the post was handed to the automation (sent:true)
+     or that no automation is connected yet (sent:false).
+     See docs/MEDIA-SUITE.md for the per-platform truth. */
+  function listMediaConfig() {
+    return fetch("data/media.json", { cache: "no-cache" })
+      .then(function (r) { return r.json(); })
+      .catch(function () { return { platforms: [], pressContacts: [], liveDestinations: [] }; });
+  }
+  function logMedia(entry) {
+    var all = read(LS.mediaLog, []);
+    all.unshift(entry);
+    write(LS.mediaLog, all.slice(0, 50));
+  }
+  function submitMediaPost(p) {
+    p.id = uid("POST");
+    p.at = new Date().toISOString();
+    return fireWebhook("media-post", p).then(function (sent) {
+      p.sent = sent;
+      logMedia(p);
+      return p;
+    });
+  }
+  function submitPressRelease(r) {
+    r.id = uid("PRESS");
+    r.at = new Date().toISOString();
+    return fireWebhook("press-release", r).then(function (sent) {
+      r.sent = sent;
+      logMedia(r);
+      return r;
+    });
+  }
+  function listMediaLog() { return Promise.resolve(read(LS.mediaLog, [])); }
+
   /* ---------------- volunteer safety status ----------------
      Liability-driven, independent of church size — tracked from day one
      even before a full member directory exists. Never exposed to the
@@ -510,8 +551,8 @@ window.ShilohStore = (function () {
      the role comes from there — no row, no access. The client-side check
      is UX; in supabase mode Row Level Security enforces it for real. */
   var STAFF_PERMS = {
-    editor: ["dashboard", "inbox", "content", "reservations", "rentals", "live", "assistant"],
-    admin: ["dashboard", "inbox", "content", "reservations", "rentals", "live", "assistant",
+    editor: ["dashboard", "inbox", "content", "reservations", "rentals", "live", "media", "assistant"],
+    admin: ["dashboard", "inbox", "content", "reservations", "rentals", "live", "media", "assistant",
             "people", "prayer", "volunteers", "settings", "automations", "building"]
   };
   function staffSignIn(passcode, email) {
@@ -668,6 +709,8 @@ window.ShilohStore = (function () {
     getLocalEvents: getLocalEvents, saveLocalEvents: saveLocalEvents,
     submitPrayerRequest: submitPrayerRequest, listVisiblePrayerRequests: listVisiblePrayerRequests,
     listAllPrayerRequests: listAllPrayerRequests, markPraying: markPraying, hasPrayed: hasPrayed,
+    listMediaConfig: listMediaConfig, submitMediaPost: submitMediaPost,
+    submitPressRelease: submitPressRelease, listMediaLog: listMediaLog,
     submitReservationRequest: submitReservationRequest, listReservationRequests: listReservationRequests,
     updateReservationRequest: updateReservationRequest, hasConflict: hasConflict,
     listVolunteers: listVolunteers, addVolunteer: addVolunteer, updateVolunteer: updateVolunteer,
