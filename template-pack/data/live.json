@@ -1,0 +1,25 @@
+{
+  "note": "Live streaming configuration — see docs/GO-LIVE.md for the full setup walkthrough. The app plays ANY provider that gives an iframe embed URL: a YouTube live embed, a Facebook video embed, Cloudflare Stream, or Restream's website player. Paste the embed URL below and the Watch screen becomes a live player. 'mode' controls when the player shows: 'schedule' shows it during the weekly window below (the player itself shows an offline state if nothing is streaming), 'always' shows it permanently, 'manual' shows it only while liveNow is true, 'off' hides it. This template ships with mode 'off' — nothing is claimed to be streaming until you actually stream. CHANGE-ME: set the schedule window, timezone, and fallback text to match your real service before switching mode on.",
+  "mode": "off",
+  "liveNow": false,
+  "provider": "",
+  "embedUrl": "",
+  "aspectRatio": "16 / 9",
+  "schedule": {
+    "note": "Example window: opens 15 minutes before a 10:00 AM Sunday service and closes at noon. Adjust to your service, then set mode to 'schedule'.",
+    "dayOfWeek": 0,
+    "startMinutes": 585,
+    "endMinutes": 720,
+    "timezone": "America/New_York",
+    "label": "Sundays at 10:00 AM"
+  },
+  "fallback": {
+    "text": "We gather every Sunday at 10:00 AM.",
+    "linkLabel": "",
+    "linkUrl": ""
+  },
+  "whip": {
+    "note": "The church's OWN broadcast ingest (WebRTC/WHIP) — this is what golive.html publishes the phone camera to: a MediaMTX server on the church's own box receives the phone's stream here and fans it out to YouTube/Facebook over RTMP for free. See docs/GO-LIVE.md 'Your own box'. Only the URL lives here (it is public by nature); the publish username/password are entered once on each staff phone in the Go Live studio and never leave that device. Empty url = studio runs in rehearsal mode (camera check, no broadcast).",
+    "url": ""
+  }
+}

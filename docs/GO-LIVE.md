@@ -121,6 +121,18 @@ point `embedUrl` at the box's own player page
 The Watch screen then goes live the moment a staff phone starts broadcasting
 and shows the player's offline state otherwise — nobody edits anything, ever.
 
+### Going live on more platforms + posting everywhere
+
+The tee in `scripts/appliance/mediamtx.yml` isn't limited to YouTube +
+Facebook — Twitch, Kick, and Rumble are one config line each, X wants a paid
+Premium subscription first, and each destination adds a full copy of the
+stream to the church's upload bill, so do the bandwidth math before adding
+lines. The per-platform truth table (what's free, what's gated, what isn't
+officially possible), the extended tee example, and the whole *posting* side
+of the media desk — social posts and press releases composed in
+Admin → Media and handed to an automation — live in one place:
+[`docs/MEDIA-SUITE.md`](MEDIA-SUITE.md).
+
 ### When the player appears
 
 `data/live.json` controls it:

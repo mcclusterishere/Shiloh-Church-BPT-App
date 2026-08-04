@@ -67,6 +67,19 @@ out to YouTube and Facebook with no monthly streaming service in the middle
 that box is set up, the studio runs as a camera check: nothing leaves the
 phone, and it says so plainly.
 
+## The media desk
+
+**Admin → Media** is compose-once-publish-everywhere with the labor honestly
+divided: the app composes and hands off, an automation the church controls
+(n8n on its own box, or Zapier/Make) holds the platform credentials and does
+the actual posting, and the streaming box fans the live service out — so no
+platform secret ever touches this codebase or its public data files. The same
+pane carries a press-release composer wired to the church's own local media
+list in `data/media.json`, because for a Bridgeport church a maintained list
+of real newsroom contacts beats a $400 wire post. The per-platform truth —
+what's free, what's gated, what isn't officially possible, verified with
+sources — is [`docs/MEDIA-SUITE.md`](docs/MEDIA-SUITE.md).
+
 ## Renting the building
 
 Outside congregations, choirs, and community groups can request the Sanctuary or
@@ -96,10 +109,12 @@ the code is the guest's key, exactly how Airbnb hosts run smart locks.
 - `data/live.json` — the live-stream player config (any iframe embed, plus the church's own WHIP ingest URL)
 - `data/rentals.json` — the spaces outside groups can rent: descriptions, house rules, and rates (a blank rate shows "Ask about rates")
 - `data/access.json` — door and camera names for Admin → Building (names and ids only — data files are public, so nothing secret ever lives here)
+- `data/media.json` — the media desk's config: which platforms show as posting destinations, the press-contact list, and the live destinations to display (names only — never a key or token)
 - `scripts/build-ics.js` — generates `events.ics` from `data/events.json` at deploy time
 - `scripts/make-icons.py` — regenerates the full `assets/icons/` set from any church's logo (Pillow; trims margins, splits a stacked logo's mark for the favicon)
 - `supabase/functions/assistant-gemini/` — ready-to-deploy Gemini brain for the admin Assistant
 - `docs/GO-LIVE.md` — the launch runbook: Pages setup, streaming routes and real costs, Workspace vs Gemini API
+- `docs/MEDIA-SUITE.md` — the media desk's honest map: per-platform live + posting rules (verified, with sources), the automation routes and what each costs, and the press-desk playbook
 - `docs/BACKEND.md` — go-live guide for Supabase + automations
 - `docs/MANAGE.md` — the one-page content-editing guide
 - `docs/TEMPLATE.md` — the fork checklist: give this app to another church in an afternoon

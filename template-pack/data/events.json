@@ -1,0 +1,4 @@
+{
+  "note": "The calendar starts empty on purpose — no example church should ship dated events that instantly go stale. The Setup Studio (setup.html) seeds your recurring Sunday services when you answer its service-time questions, or the church office adds events here / in Admin -> Events. Future events rise, past ones archive themselves. After editing, events.ics regenerates automatically on deploy; deploying any other way, run node scripts/build-ics.js. See docs/MANAGE.md.",
+  "events": []
+}

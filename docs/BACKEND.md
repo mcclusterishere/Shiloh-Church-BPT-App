@@ -43,7 +43,7 @@ email. Each event arrives as:
 ```json
 {
   "source": "shiloh-church-app",
-  "type": "visitor-card | rsvp | prayer-request | reservation-request | rental-request | rental-update | access-grant | access-revoke | profile | test",
+  "type": "visitor-card | rsvp | prayer-request | reservation-request | rental-request | rental-update | access-grant | access-revoke | profile | media-post | press-release | test",
   "sentAt": "2026-07-26T15:00:00.000Z",
   "data": { "...": "the record itself" }
 }
@@ -57,6 +57,12 @@ finding:
   Slack/SMS ping to staff.
 - **RSVP confirmed → reminder 3 days before the event.** A scheduled step in
   Zapier/Make/n8n reading the RSVP's `eventId` and `email`.
+
+Two of the types are the media desk's: `media-post` (a social post composed
+in **Admin → Media**, with the ticked platform ids in `data.platforms`) and
+`press-release` (the press composer, with the real recipient list in
+`data.recipients`). Their exact payloads, the honest per-platform rules, and
+ready-made n8n/Zapier recipes are in `docs/MEDIA-SUITE.md`.
 
 Test it from **Admin → Automations → Send a test event**.
 

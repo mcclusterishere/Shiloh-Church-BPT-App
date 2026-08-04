@@ -515,6 +515,102 @@ main.admin { padding: var(--space-6) 0 var(--space-7); min-width: 0; }
 .setup[open] > summary::after { transform: rotate(-135deg) translateY(-2px); }
 .setup__body { padding: 0 var(--space-5) var(--space-5); }
 
+/* ----------------------------------------------------------- media desk -- */
+/* Compose once, publish everywhere. Destinations are full 48px targets;
+   platforms the automation isn't wired to yet stay visible but greyed with
+   an honest chip — nothing silently disappears. */
+.destwrap { border: 0; padding: 0; margin: 0 0 var(--space-5); min-width: 0; }
+.destwrap legend {
+  padding: 0; margin-bottom: var(--space-3);
+  font-weight: 700; font-size: var(--step--1); color: var(--text-muted);
+}
+.dests { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: var(--space-3); }
+.dest {
+  display: flex; align-items: center; gap: var(--space-3);
+  min-height: var(--tap);
+  padding: 0 var(--space-4);
+  border: 1px solid var(--edge); border-radius: var(--radius-md);
+  background: color-mix(in oklch, var(--surface) 55%, transparent);
+  font-weight: 700; cursor: pointer;
+}
+.dest input { width: 1.3em; height: 1.3em; min-height: 0; flex: none; accent-color: var(--accent); }
+.dest > span:first-of-type, .dest input + span { flex: 1; min-width: 0; }
+.dest .chip { flex: none; font-size: var(--step--2); }
+.dest--off { opacity: 0.55; cursor: default; font-weight: 400; }
+
+.charcount {
+  margin-top: var(--space-2);
+  font-size: var(--step--1); color: var(--text-faint);
+  text-align: right; font-variant-numeric: tabular-nums;
+}
+.charcount--over { color: var(--warn); font-weight: 700; }
+
+/* One big action per block — the send button gets studio-sized. */
+.bigsend { min-height: 56px; font-size: var(--step-0); }
+
+/* The calm "saved only" card — same dashed species as the studio's
+   rehearsal card: information delivered honestly, not an alarm. */
+.savedcard {
+  margin-top: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  border: 1.5px dashed color-mix(in oklch, var(--warn) 45%, transparent);
+  border-radius: var(--radius-lg);
+  font-size: var(--step--1); color: var(--text-muted);
+}
+.savedcard b { color: var(--warn); }
+.savedcard code { font-size: 0.92em; }
+
+/* The press preview — the release exactly as a newsroom receives it. */
+.pressview {
+  margin: var(--space-2) 0 var(--space-5);
+  padding: var(--space-5) var(--space-6);
+  border: 1px solid var(--edge); border-radius: var(--radius-md);
+  background: color-mix(in oklch, var(--surface) 70%, transparent);
+  font-size: var(--step--1); line-height: 1.55;
+}
+.pressview__tag {
+  display: block;
+  font-size: var(--step--2); font-weight: 800;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text-faint);
+}
+.pressview h4 {
+  font-family: var(--font-display);
+  font-variation-settings: var(--display-settings);
+  font-size: var(--step-1); font-weight: 800; letter-spacing: -0.01em; line-height: 1.2;
+  margin: var(--space-2) 0 var(--space-3);
+}
+.pressview p { margin: 0 0 var(--space-3); overflow-wrap: anywhere; }
+.pressview p:last-child { margin-bottom: 0; }
+.pressview__end { text-align: center; font-weight: 700; letter-spacing: 0.3em; color: var(--text-faint); }
+.pressview__contact { color: var(--text-muted); }
+
+/* Log rows share the rentrow anatomy; the honesty chip carries the state. */
+.medrow {
+  display: flex; align-items: center; gap: var(--space-3) var(--space-4); flex-wrap: wrap;
+  padding: var(--space-4) var(--space-5);
+  min-height: var(--tap);
+}
+.medrow > .when { flex: none; color: var(--text-faint); font-size: var(--step--1); font-variant-numeric: tabular-nums; }
+
+/* "WHERE WE GO LIVE" — a quiet footer of plain facts, not a control. */
+.livewhere {
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid var(--edge); border-radius: var(--radius-lg);
+  background: color-mix(in oklch, var(--surface) var(--glass), transparent);
+  box-shadow: 0 1px 0 0 var(--edge-light) inset, 0 14px 34px -26px var(--shadow);
+  font-size: var(--step--1);
+  margin-bottom: var(--space-7);
+}
+.livewhere b {
+  display: block; margin-bottom: var(--space-2);
+  font-size: var(--step--2); font-weight: 800;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--text-faint);
+}
+.livewhere__names { font-weight: 700; }
+.livewhere .hint { margin-top: var(--space-2); }
+
 /* ------------------------------------------------------ first-login tour - */
 /* Same full-screen pattern as the member app's onboarding, wearing the
    gate's calmer amber/teal glass instead of the app's ruby welcome. */

@@ -12,6 +12,8 @@
 #   CHANGE-ME-TO-A-LONG-RANDOM-STRING  — the publish password staff phones use
 #   YT_KEY / FB_KEY                    — the two persistent stream keys
 #   YOURUSER                           — the Mac's account name, in recordPath
+# (The commented multi-platform example further down adds optional TWITCH_KEY
+# / KICK_KEY placeholders — only if you swap that line in; docs/MEDIA-SUITE.md.)
 
 # ---------------------------------------------------------------------------
 # Who may do what. Anyone may WATCH (that lets the app's Watch screen and the
@@ -77,6 +79,30 @@ webrtcAddress: :8889
 #   -c:v h264_videotoolbox -b:v 4500k
 # WebRTC audio always arrives as Opus, which RTMP can't carry either, so
 # audio is unconditionally re-encoded to AAC below.
+#
+# GOING LIVE ON MORE PLATFORMS — docs/MEDIA-SUITE.md has the per-platform
+# truth table (which are free, which are gated, which don't fit at all).
+# Mechanically, each extra destination is one more |[f=flv:onfail=ignore]…
+# segment in the tee. A 4-destination example (YouTube + Facebook + Twitch +
+# Kick) — swap the runOnReady line below for this one and paste real keys
+# over the ALL-CAPS placeholders, same CHANGE-ME convention as everywhere
+# else in this file (TWITCH_KEY: Creator Dashboard -> Stream, needs 2FA on
+# the account; KICK_KEY: Creator Dashboard -> Stream Key):
+#
+#   runOnReady: >
+#     ffmpeg -rtsp_transport tcp -i rtsp://localhost:$RTSP_PORT/$MTX_PATH
+#     -c:v copy -c:a aac -b:a 128k -map 0:v -map 0:a -f tee
+#     "[f=flv:onfail=ignore]rtmp://a.rtmp.youtube.com/live2/YT_KEY|[f=flv:onfail=ignore]rtmps://live-api-s.facebook.com:443/rtmp/FB_KEY|[f=flv:onfail=ignore]rtmp://live.twitch.tv/app/TWITCH_KEY|[f=flv:onfail=ignore]rtmp://live.kick.com/app/KICK_KEY"
+#
+# The bandwidth math, honestly: the tee re-encodes nothing — it DUPLICATES
+# the stream, so every destination is one full copy going up the church's
+# internet connection. Four destinations of a ~4.5 Mbps broadcast is ~18 Mbps
+# of steady upload; budget 20+ for headroom. Run a real speed test on the
+# church's actual connection BEFORE adding tee segments (the phone->box leg
+# rides the church Wi-Fi and costs no internet upload). If upload is thin,
+# point ONE tee segment at a Restream-style service's RTMP ingest and let it
+# fan out from their servers on their bandwidth — the box still owns ingest,
+# recording, and the app's own player (plans priced in docs/GO-LIVE.md).
 # ---------------------------------------------------------------------------
 paths:
   live:

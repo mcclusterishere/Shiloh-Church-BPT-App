@@ -41,6 +41,7 @@
   <g id="i-out"><path d="M14.6 8.2V6a1.8 1.8 0 0 0-1.8-1.8H6.2A1.8 1.8 0 0 0 4.4 6v12a1.8 1.8 0 0 0 1.8 1.8h6.6a1.8 1.8 0 0 0 1.8-1.8v-2.2"/><path d="M9.8 12h10.4M17.2 8.8l3.2 3.2-3.2 3.2"/></g>
   <g id="i-key"><circle cx="7.6" cy="15.6" r="3.9"/><path d="M10.4 12.8 20.4 2.8M16.2 7l3.2 3.2M13.1 10.1l2.3 2.3"/></g>
   <g id="i-door"><path d="M5.2 21V4.8A1.8 1.8 0 0 1 7 3h10a1.8 1.8 0 0 1 1.8 1.8V21"/><path d="M3 21h18"/><circle cx="15" cy="12.4" r="1.15"/></g>
+  <g id="i-mega"><path d="m3.2 10.9 17.4-5.1v12.4L3.2 14z"/><path d="M3.2 10.9v3.1M11.8 17a3.1 3.1 0 0 1-6-1.6"/></g>
 </defs></svg>
 
 <!-- ============================ first-login tour ========================= -->
@@ -189,6 +190,59 @@
         <div class="sheet" id="evtAdminList"></div>
       </section>
 
+      <section class="view" id="pane-media">
+        <p class="eyebrow">Compose once</p>
+        <h2>Media</h2>
+        <p class="note">Write it here once; your automation does the actual posting from its own logins
+        (<code>data/config.json</code> → <code>webhookUrl</code>). This desk never says "posted" —
+        it says whether the piece was <b>handed off</b> to the automation or only <b>saved</b> to the log.</p>
+
+        <h3>Tell everyone</h3>
+        <form class="formcard" id="mpForm">
+          <div class="field">
+            <label for="mpText">What's the good news?</label>
+            <textarea id="mpText" rows="5" placeholder="Revival starts Friday at 7 PM — bring somebody."></textarea>
+            <p class="charcount" id="mpCount" aria-live="polite" hidden></p>
+          </div>
+          <div class="field">
+            <label for="mpLink">Add a link <span class="muted">(optional)</span></label>
+            <input id="mpLink" type="url" inputmode="url" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="https://…">
+          </div>
+          <fieldset class="destwrap">
+            <legend>Where it goes</legend>
+            <div class="dests" id="mpPlatforms"></div>
+          </fieldset>
+          <button class="btn btn--primary btn--block bigsend" id="mpSend" type="submit">Send it out</button>
+          <div class="savedcard" id="mpResult" role="status" hidden></div>
+        </form>
+
+        <h3>Press desk</h3>
+        <div class="formcard" id="prCard">
+          <div class="field"><label for="prHead">Headline</label><input id="prHead" placeholder="Shiloh Baptist Church opens its doors for …"></div>
+          <div class="field"><label for="prBody">The story</label>
+            <textarea id="prBody" rows="7" placeholder="Who, what, when, where — in plain words. Two or three short paragraphs is plenty."></textarea></div>
+          <div class="field"><label for="prQuote">A word from the pastor <span class="muted">(optional)</span></label>
+            <textarea id="prQuote" rows="2" placeholder="This church has stood on this corner for a long time, and the doors are open."></textarea></div>
+          <div class="duo">
+            <div class="field"><label for="prCName">Media contact — name</label><input id="prCName" autocomplete="name"></div>
+            <div class="field"><label for="prCPhone">Media contact — phone</label><input id="prCPhone" type="tel" autocomplete="tel"></div>
+          </div>
+          <div class="pressview" id="prPreview" aria-label="Press release preview"></div>
+          <div class="acts">
+            <button class="btn btn--quiet" id="prCopy" type="button">Copy the release</button>
+            <button class="btn btn--quiet" id="prDownload" type="button">Download as text</button>
+            <button class="btn btn--primary" id="prSend" type="button">Send to the press list</button>
+            <span class="testresult" id="prMsg" role="status"></span>
+          </div>
+          <p class="hint" id="prListNote"></p>
+          <div class="savedcard" id="prResult" role="status" hidden></div>
+        </div>
+
+        <h3>The log</h3>
+        <div class="sheet" id="mediaLogList"></div>
+        <div class="livewhere" id="liveWhere" hidden></div>
+      </section>
+
       <section class="view" id="pane-rentals">
         <p class="eyebrow">Space rentals</p>
         <h2>Rentals</h2>
@@ -314,6 +368,7 @@
   var config = null, THEME = null, CHURCH = null, MINISTRIES = [];
   var VISITOR_CARDS = [], RESERVATIONS = [], PRAYERS = [], PEOPLE = [], VOLUNTEERS = [], RSVPS = [], PUBLISHED_EVENTS = [];
   var RENTALS = [], SPACES = [], GRANTS = [], DOORS = [], CAMERAS = [];
+  var MEDIA_CFG = { platforms: [], pressContacts: [], liveDestinations: [] }, MEDIA_LOG = [];
 
   /* Every section, with the staff permission that unlocks it. Nav renders
      only permitted panes and showPane re-checks on every switch, so a stale
@@ -324,6 +379,7 @@
     { id: "people",     label: "People",      icon: "i-people", perm: "people" },
     { id: "ministries", label: "Ministries",  icon: "i-min",    perm: "reservations" },
     { id: "events",     label: "Events",      icon: "i-cal",    perm: "content" },
+    { id: "media",      label: "Media",       icon: "i-mega",   perm: "media" },
     { id: "rentals",    label: "Rentals",     icon: "i-key",    perm: "rentals" },
     { id: "prayer",     label: "Prayer",      icon: "i-flame",  perm: "prayer" },
     { id: "volunteers", label: "Volunteers",  icon: "i-shield", perm: "volunteers" },
@@ -544,16 +600,20 @@
          that works rentals. Doors and cameras stay strictly admin-only. */
       ShilohStore.can("rentals")      ? ShilohStore.listAccessGrants()        : none([]),
       ShilohStore.can("building")     ? ShilohStore.listDoors()               : none([]),
-      ShilohStore.can("building")     ? ShilohStore.listCameras()             : none([])
+      ShilohStore.can("building")     ? ShilohStore.listCameras()             : none([]),
+      ShilohStore.can("media")        ? ShilohStore.listMediaConfig()         : none({ platforms: [], pressContacts: [], liveDestinations: [] }),
+      ShilohStore.can("media")        ? ShilohStore.listMediaLog()            : none([])
     ]).then(function (res) {
       VISITOR_CARDS = res[0] || []; RESERVATIONS = res[1] || []; PRAYERS = res[2] || [];
       PEOPLE = res[3] || []; VOLUNTEERS = res[4] || []; RSVPS = res[5] || []; PUBLISHED_EVENTS = res[6].events || [];
       RENTALS = res[7] || []; SPACES = (res[8] || {}).spaces || []; GRANTS = res[9] || [];
       DOORS = res[10] || []; CAMERAS = res[11] || [];
+      MEDIA_CFG = res[12] || MEDIA_CFG; MEDIA_LOG = res[13] || [];
       renderDash(); renderInbox(); renderAssistant();
       if (ShilohStore.can("people")) renderPeople();
       if (ShilohStore.can("reservations")) renderMinistries();
       if (ShilohStore.can("content")) renderEventsAdmin();
+      if (ShilohStore.can("media")) renderMedia();
       if (ShilohStore.can("rentals")) renderRentals();
       if (ShilohStore.can("prayer")) renderPrayerAdmin();
       if (ShilohStore.can("volunteers")) renderVolunteers();
@@ -788,6 +848,272 @@
     var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "events.json"; a.click(); URL.revokeObjectURL(a.href);
   });
   document.getElementById("exportRsvps").addEventListener("click", function () { ShilohStore.downloadCsv(RSVPS, "shiloh-rsvps.csv"); });
+
+  /* ---------------------------- media desk ----------------------------
+     Compose once, publish everywhere — with the honest division of labor:
+     this pane composes and hands off; the automation behind webhookUrl
+     (n8n on the church's own box, or Zapier/Make) holds the platform
+     logins and does the actual posting. record.sent is the whole truth:
+     true means the automation ACCEPTED the handoff, false means it was
+     only saved to the log. The words on screen never claim more. */
+  function renderMedia() {
+    renderMediaDests();
+    renderPressList();
+    renderPressPreview();
+    renderMediaLog();
+    renderLiveWhere();
+  }
+  /* Destination checkboxes from data/media.json. Enabled platforms arrive
+     pre-checked; disabled ones stay visible but greyed with an honest
+     "not connected yet" chip, so nobody wonders where TikTok went. A
+     background refresh() keeps whatever the composer already ticked. */
+  function renderMediaDests() {
+    var prev = {}, had = false;
+    document.querySelectorAll("#mpPlatforms input[data-plat]").forEach(function (i) {
+      prev[i.getAttribute("data-plat")] = i.checked; had = true;
+    });
+    document.getElementById("mpPlatforms").innerHTML = (MEDIA_CFG.platforms || []).map(function (p) {
+      if (!p.enabled) {
+        return '<span class="dest dest--off"><span>' + esc(p.name) + '</span><span class="chip">not connected yet</span></span>';
+      }
+      var on = had ? !!prev[p.id] : true;
+      return '<label class="dest"><input type="checkbox" data-plat="' + esc(p.id) + '"' + (on ? " checked" : "") +
+        '><span>' + esc(p.name) + "</span></label>";
+    }).join("") || '<div class="empty">No platforms listed yet — name them in <code>data/media.json</code>.</div>';
+  }
+  function updateMpCount() {
+    var n = document.getElementById("mpText").value.length;
+    var el = document.getElementById("mpCount");
+    el.hidden = n === 0;
+    el.classList.toggle("charcount--over", n > 280);
+    el.textContent = n + (n === 1 ? " character" : " characters") +
+      (n > 280 ? " — X (Twitter) cuts off around here" : "");
+  }
+  document.getElementById("mpText").addEventListener("input", updateMpCount);
+  /* The two honest not-sent messages. Which one depends on WHY: no webhook
+     configured at all, or a configured webhook that didn't answer. */
+  function savedOnlyHtml(kind) {
+    var thing = kind === "press" ? "The release" : "The post";
+    if (!config.webhookUrl) {
+      return "<b>No automation is connected yet.</b> " + thing + " was saved to your log — nothing went out. " +
+        "<code>docs/MEDIA-SUITE.md</code> shows the one-time hookup (free on the church's own box).";
+    }
+    return "<b>The automation didn't answer.</b> " + thing + " was saved to your log — nothing went out. " +
+      "Check the webhook address (<code>data/config.json</code> → <code>webhookUrl</code>), then send it again.";
+  }
+  function refreshMediaLog() {
+    return ShilohStore.listMediaLog().then(function (log) { MEDIA_LOG = log || []; renderMediaLog(); });
+  }
+  document.getElementById("mpForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var resEl = document.getElementById("mpResult");
+    resEl.hidden = true;
+    var text = document.getElementById("mpText").value.trim();
+    if (!text) { document.getElementById("mpText").focus(); return; }
+    var plats = [];
+    document.querySelectorAll("#mpPlatforms input[data-plat]").forEach(function (i) {
+      if (i.checked) plats.push(i.getAttribute("data-plat"));
+    });
+    if (!plats.length) {
+      resEl.innerHTML = "<b>Pick at least one place</b> for it to go — tick a box above.";
+      resEl.hidden = false;
+      return;
+    }
+    var btn = document.getElementById("mpSend");
+    btn.disabled = true; btn.textContent = "Sending…";
+    ShilohStore.submitMediaPost({
+      text: text,
+      link: document.getElementById("mpLink").value.trim(),
+      platforms: plats,
+      kind: "post"
+    }).then(function (rec) {
+      btn.disabled = false; btn.textContent = "Send it out";
+      if (rec.sent) {
+        okNotice("Handed to your automation — it posts from there. (n8n/Zapier decides the final formatting per platform.)");
+        document.getElementById("mpForm").reset();
+        updateMpCount();
+        renderMediaDests();
+      } else {
+        resEl.innerHTML = savedOnlyHtml("post");
+        resEl.hidden = false;
+      }
+      return refreshMediaLog();
+    }, dataFail);
+  });
+
+  /* Press desk. The preview is the release exactly as a newsroom would
+     receive it: FOR IMMEDIATE RELEASE / dateline / body / quote /
+     boilerplate drawn from theme.json + church.json / ### / contact. */
+  function pressCity() {
+    var parts = String(CHURCH.address || "").split(",");
+    var city = (parts[1] || "").trim();
+    var state = ((parts[2] || "").trim().split(/\s+/)[0] || "");
+    return city ? city.toUpperCase() + (state ? ", " + state : "") : (THEME.shortName || "OUR TOWN").toUpperCase();
+  }
+  function pressDateline() {
+    return pressCity() + " — " + new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+  }
+  function pressBoilerplate() {
+    var name = THEME.churchName || CHURCH.name || "The church";
+    var s = name;
+    if (THEME.tagline) s += ' ("' + THEME.tagline + '")';
+    s += " is a " + (CHURCH.denomination ? CHURCH.denomination + " church" : "church");
+    if (CHURCH.address) s += " at " + CHURCH.address;
+    if (CHURCH.pastor) s += ", led by " + CHURCH.pastor;
+    s += ".";
+    var worship = (CHURCH.serviceTimes || []).filter(function (t) { return /worship/i.test(t.label || "") && t.time; })[0];
+    if (worship) s += " Worship is " + worship.time.replace(/^Sun\s+/i, "Sundays at ") + ".";
+    if (CHURCH.website || THEME.website) s += " Learn more at " + (CHURCH.website || THEME.website) + ".";
+    return s;
+  }
+  function pressParts() {
+    return {
+      headline: document.getElementById("prHead").value.trim(),
+      body: document.getElementById("prBody").value.trim(),
+      quote: document.getElementById("prQuote").value.trim().replace(/^["“]|["”]$/g, ""),
+      cname: document.getElementById("prCName").value.trim(),
+      cphone: document.getElementById("prCPhone").value.trim(),
+      dateline: pressDateline()
+    };
+  }
+  function pressQuoteLine(p) {
+    return '"' + p.quote + '," said ' + (CHURCH.pastor || "the pastor") + ", pastor of " + (THEME.churchName || "the church") + ".";
+  }
+  function releaseText() {
+    var p = pressParts();
+    var lines = [
+      "FOR IMMEDIATE RELEASE", "",
+      p.headline || "(headline)", "",
+      p.dateline + " — " + (p.body || "(the story)")
+    ];
+    if (p.quote) { lines.push(""); lines.push(pressQuoteLine(p)); }
+    lines.push("");
+    lines.push("About " + (THEME.churchName || "the church"));
+    lines.push(pressBoilerplate());
+    lines.push("");
+    lines.push("###");
+    lines.push("");
+    lines.push("Media contact:");
+    [p.cname, p.cphone, THEME.churchName, CHURCH.phone, CHURCH.email].forEach(function (l) { if (l) lines.push(l); });
+    return lines.join("\n");
+  }
+  function renderPressPreview() {
+    var p = pressParts();
+    document.getElementById("prPreview").innerHTML =
+      '<span class="pressview__tag">For immediate release</span>' +
+      "<h4>" + (p.headline ? esc(p.headline) : '<span class="muted">Your headline lands here</span>') + "</h4>" +
+      "<p><b>" + esc(p.dateline) + "</b> — " +
+      (p.body ? esc(p.body).replace(/\n{2,}/g, "</p><p>").replace(/\n/g, "<br>") : '<span class="muted">the story…</span>') + "</p>" +
+      (p.quote ? "<p>" + esc(pressQuoteLine(p)) + "</p>" : "") +
+      '<p class="pressview__about"><b>About ' + esc(THEME.churchName || "the church") + "</b><br>" + esc(pressBoilerplate()) + "</p>" +
+      '<p class="pressview__end" aria-hidden="true">###</p>' +
+      '<p class="pressview__contact"><b>Media contact</b><br>' +
+      [p.cname, p.cphone, THEME.churchName, CHURCH.phone, CHURCH.email].filter(Boolean).map(esc).join("<br>") + "</p>";
+  }
+  ["prHead", "prBody", "prQuote", "prCName", "prCPhone"].forEach(function (id) {
+    document.getElementById(id).addEventListener("input", renderPressPreview);
+  });
+  /* The shipped press list is a CHANGE-ME example (newsroom@example.com);
+     the send button sleeps until real addresses replace it. */
+  function realPressEmails() {
+    return (MEDIA_CFG.pressContacts || []).map(function (c) { return String(c.email || "").trim(); })
+      .filter(function (em) { return em.indexOf("@") > 0 && !/@example\.com$/i.test(em); });
+  }
+  function renderPressList() {
+    var emails = realPressEmails();
+    document.getElementById("prSend").disabled = !emails.length;
+    document.getElementById("prListNote").textContent = emails.length
+      ? "Goes to " + emails.length + (emails.length === 1 ? " contact" : " contacts") + " on the press list (data/media.json)."
+      : "The press list is still the example that shipped with the app — put the real newsroom addresses in data/media.json and this button wakes up. Copy or download the release in the meantime.";
+  }
+  function copyPlainText(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(text);
+    return new Promise(function (res, rej) {
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      var ok = false;
+      try { ok = document.execCommand("copy"); } catch (err) {}
+      document.body.removeChild(ta);
+      if (ok) res(); else rej(new Error("copy failed"));
+    });
+  }
+  document.getElementById("prCopy").addEventListener("click", function () {
+    var out = document.getElementById("prMsg");
+    copyPlainText(releaseText()).then(function () {
+      out.textContent = "Copied — paste it anywhere.";
+      out.style.color = "var(--ok)";
+    }, function () {
+      out.textContent = "Couldn't copy here — use Download as text instead.";
+      out.style.color = "var(--warn)";
+    });
+  });
+  document.getElementById("prDownload").addEventListener("click", function () {
+    var blob = new Blob([releaseText()], { type: "text/plain" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "press-release-" + churchToday() + ".txt";
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+  document.getElementById("prSend").addEventListener("click", function () {
+    var resEl = document.getElementById("prResult");
+    resEl.hidden = true;
+    var p = pressParts();
+    if (!p.headline || !p.body) {
+      resEl.innerHTML = "<b>Almost —</b> a release needs at least a headline and the story.";
+      resEl.hidden = false;
+      return;
+    }
+    var emails = realPressEmails();
+    if (!emails.length) return; /* button is disabled; belt and suspenders */
+    var btn = document.getElementById("prSend");
+    btn.disabled = true; btn.textContent = "Sending…";
+    ShilohStore.submitPressRelease({
+      headline: p.headline, dateline: p.dateline, body: p.body, quote: p.quote,
+      contactName: p.cname, contactPhone: p.cphone, recipients: emails, kind: "press"
+    }).then(function (rec) {
+      btn.textContent = "Send to the press list";
+      renderPressList();
+      if (rec.sent) {
+        okNotice("Handed to your automation — it emails the press list from there. (n8n/Zapier decides the final formatting.)");
+      } else {
+        resEl.innerHTML = savedOnlyHtml("press");
+        resEl.hidden = false;
+      }
+      return refreshMediaLog();
+    }, dataFail);
+  });
+
+  /* The log: the last 50 posts and releases with the honest chip — handed
+     off (the automation accepted it) or saved only (it never left). */
+  function mediaKindLabel(k) {
+    return k === "press" ? "Press release" : k === "live-announce" ? "Live announcement" : "Post";
+  }
+  function renderMediaLog() {
+    document.getElementById("mediaLogList").innerHTML = MEDIA_LOG.length ? MEDIA_LOG.map(function (m) {
+      var body = String(m.text || m.headline || "");
+      if (body.length > 80) body = body.slice(0, 80) + "…";
+      var where = (m.platforms && m.platforms.length) ? m.platforms.length + (m.platforms.length === 1 ? " place" : " places")
+        : (m.recipients && m.recipients.length) ? m.recipients.length + " on the press list" : "";
+      return '<div class="medrow"><span class="when">' + fmtDate(m.at) + '</span><div class="rentrow__id"><b>' +
+        esc(mediaKindLabel(m.kind)) + '</b><span class="who">' + esc(body) + "</span></div>" +
+        (where ? '<span class="chip">' + esc(where) + "</span>" : "") +
+        '<span class="chip ' + (m.sent ? "chip--ok" : "chip--warn") + '">' + (m.sent ? "handed off" : "saved only") + "</span></div>";
+    }).join("") : '<div class="empty">Nothing written yet — the first post or release lands here.</div>';
+  }
+  function renderLiveWhere() {
+    var el = document.getElementById("liveWhere");
+    var names = MEDIA_CFG.liveDestinations || [];
+    if (!names.length && !MEDIA_CFG.liveDestinationsNote) { el.hidden = true; return; }
+    el.hidden = false;
+    el.innerHTML = "<b>Where we go live</b>" +
+      (names.length ? '<span class="livewhere__names">' + names.map(esc).join('<span class="dotsep" aria-hidden="true"> · </span>') + "</span>" : "") +
+      (MEDIA_CFG.liveDestinationsNote ? '<p class="hint">' + esc(MEDIA_CFG.liveDestinationsNote) + "</p>" : "");
+  }
 
   /* ------------------------------ rentals -----------------------------
      Outside groups renting the building. One automatic, sensible action:
@@ -1169,6 +1495,10 @@
     if (ShilohStore.can("content") || ShilohStore.can("rentals")) steps.push({
       icon: "i-key", title: "Events & rentals",
       body: "Post events, and say yes or no to groups renting the building. Approve a booking and their door code is made for you — nothing extra to set up."
+    });
+    if (ShilohStore.can("media")) steps.push({
+      icon: "i-mega", title: "Tell everyone at once",
+      body: "Write the good news once on the Media page and hand it to every platform together — and it always says plainly whether it was handed off or only saved."
     });
     if (ShilohStore.can("live")) steps.push({
       icon: "i-bolt", title: "Go live from this phone",

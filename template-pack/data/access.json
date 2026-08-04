@@ -1,0 +1,8 @@
+{
+  "note": "Building-access configuration — the doors and cameras the back office manages. SECURITY MODEL: this file is public (every data file is served to every visitor), so it holds ONLY names and ids — never a bridge URL with credentials baked in, never codes. The bridge URL + token are entered once per admin device in Admin -> Building and live in that device's localStorage. Until a bridge is connected, access passes still work as managed door codes handed to guests (printed instructions / a person at the door); connecting a bridge (see docs/ACCESS-SETUP.md) makes the same passes program real locks and pull real camera views. CHANGE-ME: rename these two example doors to match your building, add more as needed.",
+  "doors": [
+    { "id": "front", "name": "Front doors (Main Street)" },
+    { "id": "fellowship", "name": "Fellowship Hall entrance" }
+  ],
+  "cameras": []
+}

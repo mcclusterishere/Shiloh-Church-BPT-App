@@ -1,0 +1,21 @@
+{
+  "note": "The Media desk's configuration — which platforms show as destinations in Admin -> Media, and the press list for one-tap releases. IMPORTANT: this file is public (every data file is), so it holds names and choices only — NEVER an API key, stream key, or token. The actual posting happens through the automation layer (config.json webhookUrl -> n8n on the church's own box, or Zapier/Make/Ayrshare), and the actual multi-platform live fan-out happens on the streaming box (scripts/appliance/mediamtx.yml). docs/MEDIA-SUITE.md is the honest per-platform guide.",
+  "platforms": [
+    { "id": "facebook", "name": "Facebook page", "enabled": true },
+    { "id": "instagram", "name": "Instagram", "enabled": true },
+    { "id": "youtube", "name": "YouTube (community post)", "enabled": true },
+    { "id": "x", "name": "X (Twitter)", "enabled": false },
+    { "id": "tiktok", "name": "TikTok", "enabled": false },
+    { "id": "nextdoor", "name": "Nextdoor", "enabled": false },
+    { "id": "email", "name": "Email newsletter", "enabled": true }
+  ],
+  "pressContacts": [
+    {
+      "outlet": "CHANGE ME — e.g. your local paper",
+      "email": "newsroom@example.com",
+      "note": "Fill in the church's real local media list: paper, TV assignment desks, radio, community calendars. The office owns this list; the app just sends to it."
+    }
+  ],
+  "liveDestinationsNote": "Where the service streams simultaneously is configured on the streaming box (stream keys are secrets and live ONLY there) — see scripts/appliance/mediamtx.yml and docs/MEDIA-SUITE.md. List the active ones here by name if you want the Media desk to display them.",
+  "liveDestinations": []
+}

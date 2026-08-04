@@ -1,0 +1,75 @@
+{
+  "note": "CHANGE-ME: six common example ministries and two bookable facilities for the fictional Grace Community Church. Replace the names, scriptures, and descriptions with your church's real ministries — in their own words, not these. The two bookable facilities power the reservation feature; their ids deliberately match data/rentals.json so one double-booking check covers member reservations AND outside rentals. Edit and push to update; see docs/MANAGE.md.",
+  "ministries": [
+    {
+      "id": "childrens-ministry",
+      "type": "ministry",
+      "name": "Children's Ministry",
+      "scripture": "Start children off on the way they should go, and even when they are old they will not turn from it. — Proverbs 22:6",
+      "description": "Sunday-morning classes and monthly events where kids learn God's Word through age-appropriate lessons, crafts, and a lot of joy. Replace this with your children's ministry's own mission statement.",
+      "image": "assets/media/children-ministry.webp",
+      "bookable": false
+    },
+    {
+      "id": "youth-ministry",
+      "type": "ministry",
+      "name": "Youth Ministry",
+      "scripture": "Don't let anyone look down on you because you are young, but set an example for the believers. — 1 Timothy 4:12",
+      "description": "A safe, honest place for teenagers to ask real questions, build real friendships, and grow a faith of their own. Replace this with your youth ministry's own mission statement.",
+      "image": "assets/media/youth-ministry.webp",
+      "bookable": false
+    },
+    {
+      "id": "womens-ministry",
+      "type": "ministry",
+      "name": "Women's Ministry",
+      "scripture": "She is clothed with strength and dignity; she can laugh at the days to come. — Proverbs 31:25",
+      "description": "Bible study, prayer, and friendship that carries through the week — for women of every age and season. Replace this with your women's ministry's own mission statement.",
+      "image": "assets/media/womens-ministry.webp",
+      "bookable": false
+    },
+    {
+      "id": "mens-ministry",
+      "type": "ministry",
+      "name": "Men's Ministry",
+      "scripture": "As iron sharpens iron, so one person sharpens another. — Proverbs 27:17",
+      "description": "Breakfasts, Bible study, and shoulder-to-shoulder service projects — men building each other up for the daily demands of work, family, and faith. Replace this with your men's ministry's own mission statement.",
+      "image": "assets/media/mens-ministry.webp",
+      "bookable": false
+    },
+    {
+      "id": "music-ministry",
+      "type": "ministry",
+      "name": "Music & Worship",
+      "scripture": "Sing to the Lord a new song; sing to the Lord, all the earth. — Psalm 96:1",
+      "description": "The choir, musicians, and worship team who lead us in praise every Sunday — rehearsals weekly, new voices always welcome. Replace this with your music ministry's own mission statement.",
+      "image": "assets/media/music-ministry.webp",
+      "bookable": false
+    },
+    {
+      "id": "outreach-ministry",
+      "type": "ministry",
+      "name": "Outreach & Missions",
+      "scripture": "For I was hungry and you gave me something to eat, I was thirsty and you gave me something to drink. — Matthew 25:35",
+      "description": "The church beyond the building: a food pantry shelf, visits to the sick and shut-in, and hands-on help for neighbors in need. Replace this with your outreach ministry's own mission statement.",
+      "image": "assets/media/outreach-ministry.webp",
+      "bookable": false
+    },
+    {
+      "id": "sanctuary",
+      "type": "facility",
+      "name": "Sanctuary",
+      "description": "Main worship space at 123 Main Street.",
+      "image": "assets/media/sanctuary.webp",
+      "bookable": true
+    },
+    {
+      "id": "fellowship-hall",
+      "type": "facility",
+      "name": "Fellowship Hall",
+      "description": "Where the church family gathers — meals, meetings, and celebrations.",
+      "image": "assets/media/fellowship-hall.webp",
+      "bookable": true
+    }
+  ]
+}

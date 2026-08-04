@@ -1,0 +1,13 @@
+{
+  "note": "Announcements for the Home feed. One welcome item ships so the feed isn't empty on day one — CHANGE-ME: set its date to your launch day (items older than 18 months hide themselves automatically) and replace the body with your own welcome.",
+  "news": [
+    {
+      "id": "welcome",
+      "date": "2026-08-01",
+      "title": "Welcome to our church app",
+      "body": "This app is the simplest way to stay close to your church family: service times and events on the front door, a prayer wall the whole church can pray over, and one tap to let us know you're new. Add it to your home screen and it works like any other app — even offline.",
+      "link": "",
+      "linkLabel": ""
+    }
+  ]
+}

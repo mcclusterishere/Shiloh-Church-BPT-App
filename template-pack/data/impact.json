@@ -1,0 +1,7 @@
+{
+  "note": "The community-impact story — the part of your church's history the About screen tells with citations attached. This ships EMPTY in the template (the section simply doesn't appear until items exist). When your church has a story to tell — a fight won, a building raised, a neighborhood served — add items here with sources, following this file's original shape: items with title, body, and sources arrays. Never invent or embellish: every claim should carry a source a member could check.",
+  "intro": "",
+  "items": [],
+  "image": "",
+  "imageCaption": ""
+}

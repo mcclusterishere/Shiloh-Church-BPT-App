@@ -1,0 +1,1983 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Setup Studio · Church App Template</title>
+  <meta name="description" content="A guided setup that walks a new church through configuring this app — in about an hour.">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#f7f4ec" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#10131d" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="assets/icons/favicon-32.png" type="image/png">
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/atkinson-hyperlegible-latin-400-normal.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/fraunces-latin-var.woff2" crossorigin>
+  <link rel="stylesheet" href="css/system.css">
+  <script>
+    /* Applied before first paint so the page never flashes the wrong theme.
+       No service worker is registered here — this page is a workshop, not
+       part of the installed app. */
+    (function () {
+      try {
+        var t = localStorage.getItem("shiloh.theme");
+        if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+        if (localStorage.getItem("shiloh.comfort") === "on") document.documentElement.setAttribute("data-comfort", "on");
+      } catch (e) {}
+    })();
+  </script>
+  <style>
+    /* ================================================================
+       The Setup Studio — a guided bench where a church builds its app.
+       Left pane teaches, right pane asks. Everything autosaves locally.
+       ================================================================ */
+    body { padding-bottom: var(--space-8); }
+
+    .studio-top {
+      position: sticky; top: 0; z-index: 30;
+      display: flex; align-items: center; gap: var(--space-4);
+      padding: calc(env(safe-area-inset-top, 0px) + var(--space-4)) var(--space-5) var(--space-4);
+      background: color-mix(in oklch, var(--ground) 86%, transparent);
+      border-bottom: 1px solid var(--edge);
+    }
+    @supports (backdrop-filter: blur(1px)) {
+      :root:not([data-comfort="on"]) .studio-top { backdrop-filter: blur(16px) saturate(140%); }
+    }
+    .studio-top__id b {
+      display: block;
+      font-family: var(--font-display);
+      font-variation-settings: var(--display-settings);
+      font-weight: 800; font-size: var(--step-1); letter-spacing: -0.015em;
+    }
+    .studio-top__id .eyebrow { font-size: var(--step--2); }
+    .studio-top__right { margin-left: auto; display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; justify-content: flex-end; }
+    .savedchip { --chip-c: var(--ok); }
+
+    .studio {
+      width: min(100% - 2 * var(--space-5), 84rem);
+      margin: var(--space-6) auto 0;
+      display: grid;
+      grid-template-columns: 15.5rem minmax(0, 1fr);
+      gap: var(--space-6);
+      align-items: start;
+    }
+
+    /* ------------------------------ rail ------------------------------ */
+    .rail { position: sticky; top: 6.2rem; display: flex; flex-direction: column; gap: 2px; }
+    .rail__step {
+      display: flex; align-items: center; gap: var(--space-3);
+      min-height: var(--tap);
+      padding: var(--space-2) var(--space-3);
+      border-radius: var(--radius-md);
+      color: var(--text-muted);
+      font-weight: 700; font-size: var(--step--1);
+      text-align: left;
+      border: 1.5px solid transparent;
+      transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+    }
+    .rail__step:hover { background: color-mix(in oklch, var(--text) 6%, transparent); }
+    .rail__step[disabled] { opacity: 0.45; pointer-events: none; }
+    .rail__num {
+      flex: none; width: 1.7rem; height: 1.7rem;
+      display: grid; place-items: center;
+      border-radius: var(--radius-pill);
+      border: 1.5px solid var(--edge);
+      font-size: var(--step--2); font-variant-numeric: tabular-nums;
+      background: var(--surface);
+    }
+    .rail__step.is-current {
+      color: var(--text);
+      background: color-mix(in oklch, var(--accent) 12%, transparent);
+      border-color: color-mix(in oklch, var(--accent) 35%, transparent);
+    }
+    .rail__step.is-current .rail__num { border-color: var(--accent); color: var(--accent); }
+    .rail__step.is-done .rail__num {
+      background: var(--ok); border-color: var(--ok); color: var(--accent-ink);
+      color: #fff;
+    }
+    :root[data-theme="dark"] .rail__step.is-done .rail__num,
+    .rail__step.is-done .rail__num { color: var(--surface); }
+
+    /* --------------------------- the two panes ------------------------ */
+    .duo { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--space-5); align-items: start; }
+    .tutor, .formpane { padding: var(--space-6); }
+    .tutor { position: sticky; top: 6.2rem; max-height: calc(100dvh - 7.4rem); overflow-y: auto; overscroll-behavior: contain; }
+    .tutor h2, .formpane h2 { font-size: var(--step-3); margin-top: var(--space-2); }
+    .tutor p, .formpane > section > p { margin-top: var(--space-4); }
+    .tutor p, .tutor li { color: var(--text-muted); }
+    .tutor b, .tutor strong { color: var(--text); }
+    .tutor ul, .tutor ol { margin: var(--space-4) 0 0 1.2em; display: grid; gap: var(--space-3); }
+    .tutor ol li::marker { font-weight: 700; color: var(--accent); }
+
+    @media (max-width: 66rem) {
+      .studio { grid-template-columns: 1fr; }
+      .rail {
+        position: static;
+        flex-direction: row; overflow-x: auto; overscroll-behavior-x: contain;
+        padding-bottom: var(--space-2); scrollbar-width: thin;
+      }
+      .rail__step { flex: none; }
+      .duo { grid-template-columns: 1fr; }
+      .tutor { position: static; max-height: none; }
+    }
+
+    /* ------------------------------ steps ----------------------------- */
+    .step[hidden] { display: none; }
+    .fnav {
+      display: flex; align-items: center; gap: var(--space-3);
+      margin-top: var(--space-6); padding-top: var(--space-5);
+      border-top: 1px solid var(--edge);
+    }
+    .fnav__count { margin-inline: auto; color: var(--text-faint); font-size: var(--step--1); font-weight: 700; font-variant-numeric: tabular-nums; }
+    .gentle {
+      display: none;
+      margin-top: var(--space-4);
+      padding: var(--space-3) var(--space-4);
+      border: 1.5px dashed color-mix(in oklch, var(--warn) 45%, transparent);
+      border-radius: var(--radius-md);
+      color: var(--warn); font-weight: 700; font-size: var(--step--1);
+    }
+    .gentle.on { display: block; }
+
+    /* ------------------------------ pieces ----------------------------- */
+    .fieldgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 var(--space-4); }
+    .fieldgrid .field--wide { grid-column: 1 / -1; }
+    @media (max-width: 40rem) { .fieldgrid { grid-template-columns: 1fr; } }
+
+    .rows { display: grid; gap: var(--space-3); margin-top: var(--space-3); }
+    .rowline { display: grid; gap: var(--space-3); align-items: start; }
+    .rowline--2 { grid-template-columns: minmax(0,1fr) minmax(0,1fr) var(--tap); }
+    .rowline--3 { grid-template-columns: minmax(0,1fr) minmax(0,1fr) minmax(0,1.4fr) var(--tap); }
+    .rowline--min { grid-template-columns: var(--tap) minmax(0,1fr) minmax(0,1.4fr); }
+    @media (max-width: 46rem) {
+      .rowline--2, .rowline--3 { grid-template-columns: minmax(0,1fr) var(--tap); }
+      .rowline--3 > :nth-child(3), .rowline--2 > :first-child, .rowline--3 > :first-child { grid-column: 1; }
+      .rowline--min { grid-template-columns: var(--tap) minmax(0,1fr); }
+      .rowline--min > :nth-child(3) { grid-column: 2; }
+    }
+    .rowdel {
+      width: var(--tap); height: var(--tap);
+      display: grid; place-items: center;
+      border-radius: var(--radius-pill);
+      border: 1.5px solid var(--edge);
+      color: var(--text-muted);
+      font-size: 1.2rem; line-height: 1;
+      transition: transform var(--dur-fast) var(--ease-spring), color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+    }
+    .rowdel:hover { color: var(--danger); border-color: color-mix(in oklch, var(--danger) 50%, transparent); }
+    .rowdel:active { transform: scale(0.92); }
+    .addrow { margin-top: var(--space-4); }
+
+    .tick {
+      width: 1.5rem; height: 1.5rem; margin-top: 0.7rem;
+      accent-color: var(--accent);
+    }
+
+    /* Choice cards — one decision, laid out as glass tiles. */
+    .choices { display: grid; gap: var(--space-3); margin-top: var(--space-4); }
+    .choice { position: relative; display: block; cursor: pointer; }
+    .choice input { position: absolute; opacity: 0; inset: 0; pointer-events: none; }
+    .choice__card {
+      padding: var(--space-4) var(--space-5);
+      border: 1.5px solid var(--edge);
+      border-radius: var(--radius-lg);
+      background: color-mix(in oklch, var(--surface) 70%, transparent);
+      transition: border-color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out);
+    }
+    .choice__card b { display: block; font-size: var(--step-0); }
+    .choice__card span { display: block; margin-top: var(--space-1); color: var(--text-muted); font-size: var(--step--1); }
+    .choice input:checked + .choice__card {
+      border-color: var(--accent);
+      background: color-mix(in oklch, var(--accent) 10%, var(--surface));
+      box-shadow: 0 0 0 1px var(--accent) inset;
+    }
+    .choice input:focus-visible + .choice__card { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+    /* Palette swatches */
+    .swatches { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: var(--space-3); margin-top: var(--space-4); }
+    .swatch__strip { display: flex; height: 3.2rem; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--edge); }
+    .swatch__strip i { flex: 1; }
+    .swatch b { display: block; margin-top: var(--space-2); font-size: var(--step--1); }
+
+    /* Code blocks with copy buttons */
+    .codewrap { position: relative; margin-top: var(--space-4); }
+    .codeblock {
+      padding: var(--space-4) var(--space-5);
+      padding-right: 5.4rem;
+      border: 1px solid var(--edge);
+      border-radius: var(--radius-md);
+      background: color-mix(in oklch, var(--text) 5%, var(--surface));
+      font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      font-size: 0.8rem; line-height: 1.55;
+      overflow-x: auto; overscroll-behavior-x: contain;
+      white-space: pre; color: var(--text);
+    }
+    .codecopy {
+      position: absolute; top: var(--space-2); right: var(--space-2);
+      min-height: 40px; padding: 0.2em 0.9em;
+      border: 1.5px solid var(--edge); border-radius: var(--radius-pill);
+      background: var(--surface);
+      font-weight: 700; font-size: var(--step--2);
+      transition: transform var(--dur-fast) var(--ease-spring);
+    }
+    .codecopy:active { transform: scale(0.94); }
+
+    /* The live mini-preview of the app header */
+    .mockapp {
+      margin-top: var(--space-4);
+      border: 1px solid var(--edge);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: 0 14px 34px -22px var(--shadow);
+      background: var(--surface);
+    }
+    .mockapp__bar {
+      display: flex; align-items: center; gap: var(--space-3);
+      padding: var(--space-4) var(--space-5);
+      background: linear-gradient(180deg, color-mix(in oklch, var(--mock-accent, var(--accent)) 14%, var(--surface)), var(--surface));
+      border-bottom: 1px solid var(--edge);
+    }
+    .mockapp__logo {
+      flex: none; width: 2.6rem; height: 2.6rem;
+      display: grid; place-items: center;
+      border-radius: var(--radius-pill);
+      background: var(--mock-accent, var(--accent)); color: #fff;
+      font-family: var(--font-display); font-weight: 800; font-size: 1.2rem;
+    }
+    .mockapp__name {
+      font-family: var(--font-display); font-variation-settings: var(--display-settings);
+      font-weight: 800; font-size: var(--step-1); line-height: 1.1; letter-spacing: -0.015em;
+    }
+    .mockapp__tag { color: var(--text-muted); font-size: var(--step--2); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+    .mockapp__body { padding: var(--space-4) var(--space-5); display: grid; gap: var(--space-2); }
+    .mockapp__pill { height: 0.8rem; border-radius: var(--radius-pill); background: color-mix(in oklch, var(--text) 9%, transparent); }
+    .mockapp__pill--short { width: 62%; }
+
+    /* Icon preview grid */
+    .icongrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(8.4rem, 1fr)); gap: var(--space-4); margin-top: var(--space-4); }
+    .iconcell { text-align: center; }
+    .iconcell canvas {
+      width: 100%; max-width: 7rem; margin-inline: auto;
+      border: 1px solid var(--edge); border-radius: var(--radius-md);
+      background: #fff; image-rendering: auto;
+    }
+    .iconcell b { display: block; margin-top: var(--space-2); font-size: var(--step--2); font-family: ui-monospace, Menlo, monospace; }
+    .iconcell .btn { margin-top: var(--space-2); min-height: 40px; font-size: var(--step--2); padding: 0.3em 1em; }
+
+    /* Review checklist */
+    .shiprow {
+      display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap;
+      padding: var(--space-3) 0;
+      border-bottom: 1px solid var(--edge);
+    }
+    .shiprow:last-child { border-bottom: 0; }
+    .shiprow code { font-family: ui-monospace, Menlo, monospace; font-size: 0.85rem; font-weight: 700; }
+    .shiprow .chip { margin-left: auto; }
+    .shiprow .btn { min-height: 40px; font-size: var(--step--2); padding: 0.3em 1em; }
+    .shipnote { color: var(--text-muted); font-size: var(--step--1); width: 100%; }
+
+    .verdict { display: none; margin-top: var(--space-4); font-weight: 700; }
+    .verdict.on { display: block; }
+    .verdict--ok { color: var(--ok); }
+    .verdict--warn { color: var(--warn); }
+    .verdict--bad { color: var(--danger); }
+
+    .keybox {
+      margin-top: var(--space-2);
+      padding: var(--space-3) var(--space-4);
+      border: 1.5px solid var(--edge); border-radius: var(--radius-md);
+      font-family: ui-monospace, Menlo, monospace; font-size: var(--step-0); font-weight: 700;
+      letter-spacing: 0.04em;
+      background: color-mix(in oklch, var(--accent) 7%, var(--surface));
+      overflow-wrap: anywhere;
+    }
+
+    .bigstart { margin-top: var(--space-6); }
+    .promise {
+      margin-top: var(--space-5);
+      padding: var(--space-4) var(--space-5);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      background: color-mix(in oklch, var(--accent) 7%, transparent);
+    }
+    .promise b { color: var(--text); }
+
+    .fine { font-size: var(--step--1); color: var(--text-muted); }
+    .filelabel {
+      display: inline-flex; align-items: center; gap: var(--space-3);
+      min-height: var(--tap); padding: 0.5em 1.3em;
+      border: 1.5px dashed var(--edge); border-radius: var(--radius-pill);
+      font-weight: 700; cursor: pointer;
+      transition: border-color var(--dur-fast) var(--ease-out);
+    }
+    .filelabel:hover { border-color: var(--accent); }
+    .filelabel input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+
+    .closing {
+      margin-top: var(--space-6); padding: var(--space-6);
+      text-align: center;
+      border: 1px solid var(--edge); border-radius: var(--radius-xl);
+      background: color-mix(in oklch, var(--accent) 8%, var(--surface));
+    }
+    .closing h3 { font-size: var(--step-3); }
+    .closing p { margin: var(--space-3) auto 0; }
+  </style>
+</head>
+<body>
+
+<canvas id="lightfield" aria-hidden="true"></canvas>
+<div id="grain" aria-hidden="true"></div>
+
+<header class="studio-top">
+  <div class="studio-top__id">
+    <p class="eyebrow">Church app template</p>
+    <b>Setup Studio</b>
+  </div>
+  <div class="studio-top__right">
+    <span class="chip savedchip" id="savedChip" hidden>Saved on this computer</span>
+    <button class="btn btn--quiet" id="resetBtn" type="button">Start over</button>
+    <button class="btn" id="resetConfirmBtn" type="button" hidden style="border-color: var(--danger); color: var(--danger)">Yes, erase my answers</button>
+  </div>
+</header>
+
+<div class="studio">
+  <nav class="rail" id="rail" aria-label="Setup steps"></nav>
+
+  <div class="duo">
+    <!-- ========================= tutorial pane ========================= -->
+    <aside class="tutor pane pane--tall rise" id="tutorPane" aria-live="polite">
+
+      <section class="step" data-t="0">
+        <p class="eyebrow">Before we begin</p>
+        <h2>What this is</h2>
+        <p>In about an hour, your church has its own app — events, giving, prayer, live worship, all under your own name. This studio walks you through it one small step at a time, and no question here is technical.</p>
+        <p><b>Worth gathering first</b> (none of it is required to start):</p>
+        <ul>
+          <li>Your <b>logo</b> as an image file (JPG or PNG)</li>
+          <li>A few <b>photos</b> of your congregation for later</li>
+          <li>Your <b>service times</b> and office info — address, phone, email</li>
+          <li>Your <b>giving handles</b> — Givelify, Cash App, PayPal, Zelle, whatever you use</li>
+        </ul>
+        <p>Two honest promises. First: <b>you can stop anytime — your answers stay on this computer</b>, and this page picks up right where you left off. Second: this studio <b>generates files and shows you exactly where to put them. It never touches your app, your account, or the internet by itself.</b></p>
+      </section>
+
+      <section class="step" data-t="1" hidden>
+        <p class="eyebrow">Step 1</p>
+        <h2>Your church, up top</h2>
+        <p>The name you type becomes the app's masthead, the install icon's label, the page title in every browser tab, and the sign-in screen for your staff. Watch it take shape:</p>
+        <div class="mockapp" id="mockapp" aria-hidden="true">
+          <div class="mockapp__bar">
+            <div class="mockapp__logo" id="mockLogo">A</div>
+            <div>
+              <div class="mockapp__name" id="mockName">Your Church Name</div>
+              <div class="mockapp__tag" id="mockTag">Your tagline</div>
+            </div>
+          </div>
+          <div class="mockapp__body">
+            <div class="mockapp__pill"></div>
+            <div class="mockapp__pill mockapp__pill--short"></div>
+          </div>
+        </div>
+        <p>The <b>short name</b> is what fits under the icon on a phone's home screen — one word is best. The <b>tagline</b> sits under your name on the front door of the app.</p>
+      </section>
+
+      <section class="step" data-t="2" hidden>
+        <p class="eyebrow">Step 2</p>
+        <h2>Where each fact shows up</h2>
+        <ul>
+          <li><b>Address</b> — the front door, the visitor FAQ, every event's location, and the "get directions" button.</li>
+          <li><b>Phone &amp; email</b> — tap-to-call and tap-to-email buttons throughout.</li>
+          <li><b>Website &amp; socials</b> — linked from the About screen and the footer.</li>
+          <li><b>Prayer line</b> — its own card on the Prayer screen. Skip it if you don't have one; the card simply never appears.</li>
+          <li><b>Service times</b> — the front door's schedule, and in the next steps they seed your calendar and your live-stream window.</li>
+          <li><b>Kids &amp; parking notes</b> — the "New Here" screen, where first-time visitors look before they visit.</li>
+        </ul>
+        <p>Anything you leave blank stays quietly hidden in the app — blank is always a supported answer.</p>
+      </section>
+
+      <section class="step" data-t="3" hidden>
+        <p class="eyebrow">Step 3</p>
+        <h2>The faces of the church</h2>
+        <p>Your pastor's name appears on the front door and the About screen; the short greeting becomes the opening words of your "Who we are" section — the first thing a visitor reads.</p>
+        <p>Staff and leaders appear as cards on the About screen, in the order you add them. Bios are optional — a name and a title is a perfectly good card.</p>
+        <p>Photos come later: after the files are in place, you'll drop portrait images into <b>assets/media/</b> and add each one's filename in the app's admin — or just edit the file again. No photo means a clean, initialed card, never a broken image.</p>
+      </section>
+
+      <section class="step" data-t="4" hidden>
+        <p class="eyebrow">Step 4</p>
+        <h2>Ministries and spaces</h2>
+        <p>Each checked ministry becomes a card on the Ministries screen with an "I'm interested" button that sends the person's name to your admin inbox. The one-line mission is what shows on the card — you can grow it into a full description later.</p>
+        <p><b>Bookable spaces</b> are different: they appear both as facilities members can reserve <em>and</em> on the public "Rent our space" screen for outside congregations and community groups. Rates stay blank until your office sets them — the app shows "Ask about rates" and never takes a payment.</p>
+        <p>Rename anything. "Women's Ministry" can be "Sisters of Grace" — the list is a head start, not a rule.</p>
+      </section>
+
+      <section class="step" data-t="5" hidden>
+        <p class="eyebrow">Step 5</p>
+        <h2>How giving works here</h2>
+        <p>The design has one non-negotiable, written into the giving file itself: <b>"the app only LINKS out to these — it never processes or moves money itself."</b></p>
+        <p>That means no fees, no card forms, no compliance burden, and nothing to breach. Each method you check becomes a card on the Give screen that opens the real Givelify / Cash App / PayPal / Zelle page — the same handles your congregation already uses.</p>
+        <p>"By mail" and "in person" get cards too. For many members those are still the main way, and the app honors that.</p>
+      </section>
+
+      <section class="step" data-t="6" hidden>
+        <p class="eyebrow">Step 6</p>
+        <h2>A calendar that starts full</h2>
+        <p>Nothing feels emptier than a church app with no events. So the studio seeds your next <b>six weeks</b> of weekly worship from the service day and time you confirm here — real dates, computed on this page:</p>
+        <ul id="tutorDates"></ul>
+        <p>Past events archive themselves automatically, and staff add future ones from the app's admin — no file editing needed after launch.</p>
+        <p>One-off events — a concert, a revival, a community day — can go in now too, or later from the admin.</p>
+      </section>
+
+      <section class="step" data-t="7" hidden>
+        <p class="eyebrow">Step 7</p>
+        <h2>Color and your icon</h2>
+        <p>The palette colors buttons, links, and highlights. Whichever you choose, the design keeps its legibility promise: body text stays large and high-contrast.</p>
+        <p><b>Where the icons go:</b> the five PNG files you generate here get uploaded to the <b>assets/icons/</b> folder, replacing the ones already there — same filenames. Step 12 walks you through the upload click by click.</p>
+        <p><b>Two lines the browser reads before the app runs.</b> The file <b>manifest.webmanifest</b> carries the install colors, and no setting inside the app can change them — they must be edited in that file, right where these two lines already exist:</p>
+        <div class="codewrap">
+          <pre class="codeblock" id="manifestSnippet"></pre>
+          <button class="codecopy" type="button" data-copy="#manifestSnippet">Copy</button>
+        </div>
+        <p>If you chose a palette other than the shipped blue, the app's stylesheet has one accent token to update in <b>css/system.css</b> — the same value appears in four blocks near the top (light, dark, and the two override blocks). Each is a hex + OKLCH pair on one line:</p>
+        <div class="codewrap">
+          <pre class="codeblock" id="cssSnippet"></pre>
+          <button class="codecopy" type="button" data-copy="#cssSnippet">Copy</button>
+        </div>
+        <p class="fine">A note on the tiny favicon: the command-line tool <b>scripts/make-icons.py</b> does one thing this page doesn't — it splits a stacked logo's picture from its wordmark so the 32-pixel icon stays crisp. Here the full logo is used at 32px, which is acceptable; run that script later if you want the sharper cut.</p>
+      </section>
+
+      <section class="step" data-t="8" hidden>
+        <p class="eyebrow">Step 8</p>
+        <h2>Two keys, two jobs</h2>
+        <p><b>Admin</b> opens everything — people, prayer requests, settings. <b>Editor</b> opens only the public-facing jobs — events, announcements, ministries, reservations, and going live — and nothing people-sensitive.</p>
+        <p>The passcodes below were made on this page with your browser's own cryptographic randomness — they never left this computer. Write them somewhere safe; hand the editor code to your media team and keep the admin code close.</p>
+        <p>Plain honesty from the app's own docs: until you connect a real database in the next step, these are <b>courtesy locks</b> — they keep honest people in their lane, and real enforcement arrives with the database.</p>
+      </section>
+
+      <section class="step" data-t="9" hidden>
+        <p class="eyebrow">Step 9</p>
+        <h2>Where your app's memory lives</h2>
+        <p><b>Demo mode</b> needs nothing: every RSVP and prayer request lives in the browser it was typed on. Perfect for a pilot; one browser only, so two staff phones won't see each other's inbox.</p>
+        <p><b>Supabase</b> is a real shared database with a generous free tier. If you choose it, here is the whole journey:</p>
+        <ol>
+          <li><b>Create an account</b> at supabase.com — email and a password.</li>
+          <li><b>New project</b> — give it your church's name, set a strong database password (save it somewhere safe; you rarely need it again), pick the region nearest you.</li>
+          <li><b>Find your two values.</b> In your project's dashboard, open the settings (the gear icon in the left sidebar) and choose <b>API</b>. The <b>Project URL</b> is at the top — it looks like <i>https://abcdefgh.supabase.co</i>. Below it, under "Project API keys," copy the one labeled <b>anon public</b>. Never copy the one labeled <i>service_role</i> — that one is secret and belongs nowhere near a website.</li>
+          <li><b>Paste both</b> into the fields on the right.</li>
+          <li><b>Set up the tables.</b> Press "Copy the database setup" on the right, then in the Supabase dashboard open <b>SQL Editor</b> (left sidebar), paste, and press <b>Run</b>. It creates every table with row-level security already on.</li>
+          <li><b>Test it</b> with the button on the right — it asks your project a harmless question and tells you in plain words what came back.</li>
+        </ol>
+        <p class="fine">Privacy, stated plainly: the URL and key you paste here are saved only inside this page's draft, in <b>your</b> browser's local storage on this computer — nowhere else. The anon key is designed to be public; the safety comes from the row-level security the setup script turns on.</p>
+      </section>
+
+      <section class="step" data-t="10" hidden>
+        <p class="eyebrow">Step 10</p>
+        <h2>Going live on Sundays</h2>
+        <p>The app's Watch screen has a built-in player that accepts any embed link. Three honest routes, from the app's own go-live runbook (<b>docs/GO-LIVE.md</b>):</p>
+        <ul>
+          <li><b>YouTube embed</b> — stream to YouTube (free) and the app plays it inside your own design. Most churches pair it with Restream (from about $19–49/month) to reach Facebook at the same time.</li>
+          <li><b>Your own box</b> — $0/month: a staff phone becomes the camera and a small church-owned computer does the fan-out. It's real and documented, but it's an afternoon project for later, not tonight.</li>
+          <li><b>Skip for now</b> — the Watch screen shows your schedule and a friendly note instead of a player. Nothing breaks.</li>
+        </ul>
+        <p>Whatever you pick today is one line in one file to change later.</p>
+      </section>
+
+      <section class="step" data-t="11" hidden>
+        <p class="eyebrow">Step 12 · Where the files go</p>
+        <h2>The placement tutorial</h2>
+        <p>Your files download to this computer. Here's how they get into your app, using only the GitHub website:</p>
+        <ol>
+          <li>Open <b>your fork</b> of the app on github.com (the copy under your account).</li>
+          <li>Click into the <b>data</b> folder.</li>
+          <li>Press <b>Add file → Upload files</b> (top right of the file list).</li>
+          <li><b>Drag in every JSON file</b> you downloaded on the right. GitHub will say they replace the existing ones — that's exactly right.</li>
+          <li>At the bottom, press the green <b>Commit changes</b> button.</li>
+        </ol>
+        <p><b>Icons</b> (if you generated them in step 8): do the same dance once more — go back to the repository's front page, open <b>assets</b>, then <b>icons</b>, Upload files, drag in the five PNGs, Commit changes.</p>
+        <p><b>Manifest colors and name:</b> open <b>manifest.webmanifest</b> at the repository's front page, press the pencil (Edit), and update the lines shown on the right. Commit.</p>
+        <p><b>Then turn the website on:</b> in your repository go to <b>Settings → Pages → Source: GitHub Actions</b>. The next change you commit publishes the app. The full launch runbook — custom domain and all — is <b>docs/GO-LIVE.md</b>, step 1.</p>
+        <p class="fine">The deep, complete fork checklist (hardcoded strings, photo swaps, every corner) lives in <b>docs/TEMPLATE.md</b>. This studio covers the heart of it; that document covers all of it.</p>
+      </section>
+
+    </aside>
+
+    <!-- =========================== form pane =========================== -->
+    <main class="formpane pane pane--tall rise rise-2" id="formPane">
+
+      <!-- step 0 · welcome -->
+      <section class="step" data-f="0">
+        <p class="eyebrow">Welcome</p>
+        <h2>Let's set up your church's app</h2>
+        <p>Twelve short steps. Plain questions, no jargon, and a running lesson beside every one so you always know <em>why</em> you're being asked.</p>
+        <div class="promise">
+          <p style="margin-top:0"><b>Every answer saves automatically to this computer</b> the moment you type it. Close this page mid-thought, come back next week — it reopens exactly where you stopped.</p>
+          <p><b>And nothing happens behind your back.</b> At the end, this studio hands you a set of files and shows you exactly where to put them. It never uploads, deploys, or changes anything by itself.</p>
+        </div>
+        <button class="btn btn--primary btn--block bigstart" type="button" id="beginBtn">Begin — step 1 of 12</button>
+      </section>
+
+      <!-- step 1 · your church -->
+      <section class="step" data-f="1" hidden>
+        <p class="eyebrow">Step 1 of 12</p>
+        <h2>Your church</h2>
+        <div class="fieldgrid" style="margin-top:var(--space-5)">
+          <div class="field field--wide">
+            <label for="chName">Church name</label>
+            <input type="text" id="chName" data-path="church.name" placeholder="First Community Church" autocomplete="organization">
+          </div>
+          <div class="field">
+            <label for="chShort">Short name <span class="muted">(under the icon)</span></label>
+            <input type="text" id="chShort" data-path="church.shortName" placeholder="First Community">
+          </div>
+          <div class="field">
+            <label for="chDenom">Denomination <span class="muted">(optional)</span></label>
+            <input type="text" id="chDenom" data-path="church.denomination" placeholder="Baptist">
+          </div>
+          <div class="field field--wide">
+            <label for="chTag">Tagline <span class="muted">(optional)</span></label>
+            <input type="text" id="chTag" data-path="church.tagline" placeholder="Where everyone has a place">
+            <p class="hint">A short phrase your church already uses. It sits under your name on the app's front door.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- step 2 · the facts -->
+      <section class="step" data-f="2" hidden>
+        <p class="eyebrow">Step 2 of 12</p>
+        <h2>The facts</h2>
+        <div class="fieldgrid" style="margin-top:var(--space-5)">
+          <div class="field field--wide">
+            <label for="fAddress">Street address</label>
+            <input type="text" id="fAddress" data-path="facts.address" placeholder="123 Main Street, Yourtown, ST 00000" autocomplete="street-address">
+          </div>
+          <div class="field">
+            <label for="fPhone">Office phone</label>
+            <input type="tel" id="fPhone" data-path="facts.phone" placeholder="(555) 555-0100">
+          </div>
+          <div class="field">
+            <label for="fEmail">Office email</label>
+            <input type="email" id="fEmail" data-path="facts.email" placeholder="office@yourchurch.org">
+          </div>
+          <div class="field">
+            <label for="fWebsite">Website <span class="muted">(optional)</span></label>
+            <input type="text" id="fWebsite" data-path="facts.website" placeholder="https://www.yourchurch.org">
+          </div>
+          <div class="field">
+            <label for="fFacebook">Facebook page <span class="muted">(optional)</span></label>
+            <input type="text" id="fFacebook" data-path="facts.facebook" placeholder="https://www.facebook.com/yourchurch">
+          </div>
+          <div class="field field--wide">
+            <label for="fInstagram">Instagram <span class="muted">(optional)</span></label>
+            <input type="text" id="fInstagram" data-path="facts.instagram" placeholder="https://www.instagram.com/yourchurch/">
+          </div>
+          <div class="field">
+            <label for="fPrayerNum">Prayer line number <span class="muted">(optional)</span></label>
+            <input type="tel" id="fPrayerNum" data-path="facts.prayerNumber" placeholder="+1 (555) 555-0123">
+          </div>
+          <div class="field">
+            <label for="fPrayerCode">Prayer line access code <span class="muted">(optional)</span></label>
+            <input type="text" id="fPrayerCode" data-path="facts.prayerCode" placeholder="123456#">
+          </div>
+        </div>
+
+        <h3 style="margin-top:var(--space-5)">Service times</h3>
+        <p class="hint">One row per gathering — "Sunday worship", "Bible study", "Prayer call". Write times the way you'd say them: <i>Sun 10:00 AM</i>.</p>
+        <div class="rows" id="svcRows"></div>
+        <button class="btn addrow" type="button" id="svcAdd">+ Add a service time</button>
+
+        <div class="fieldgrid" style="margin-top:var(--space-5)">
+          <div class="field field--wide">
+            <label for="fKids">A note for parents <span class="muted">(optional)</span></label>
+            <textarea id="fKids" data-path="facts.kids" placeholder="Childcare is provided for all services, with safe, age-appropriate activities."></textarea>
+          </div>
+          <div class="field field--wide">
+            <label for="fParking">A note about parking <span class="muted">(optional)</span></label>
+            <textarea id="fParking" data-path="facts.parking" placeholder="Free parking in the church lot; attendants will guide you on Sunday."></textarea>
+          </div>
+        </div>
+      </section>
+
+      <!-- step 3 · people -->
+      <section class="step" data-f="3" hidden>
+        <p class="eyebrow">Step 3 of 12</p>
+        <h2>People</h2>
+        <div class="fieldgrid" style="margin-top:var(--space-5)">
+          <div class="field">
+            <label for="pName">Pastor's full name</label>
+            <input type="text" id="pName" data-path="people.pastorName" placeholder="Rev. Jordan Ellis" autocomplete="name">
+          </div>
+          <div class="field">
+            <label for="pTitle">Title</label>
+            <input type="text" id="pTitle" data-path="people.pastorTitle" placeholder="Senior Pastor">
+          </div>
+          <div class="field field--wide">
+            <label for="pShort">What people call them <span class="muted">(the short, warm version)</span></label>
+            <input type="text" id="pShort" data-path="people.pastorShort" placeholder="Pastor Jordan">
+          </div>
+          <div class="field field--wide">
+            <label for="pGreeting">A short greeting from the pastor <span class="muted">(optional, 2–3 sentences)</span></label>
+            <textarea id="pGreeting" data-path="people.greeting" placeholder="Whether you've walked with the Lord for years or you're just curious, we'd love to meet you this Sunday."></textarea>
+            <p class="hint">This becomes the opening of your "Who we are" section — the first words a visitor reads.</p>
+          </div>
+        </div>
+        <h3 style="margin-top:var(--space-5)">Staff &amp; leaders <span class="muted">(optional)</span></h3>
+        <div class="rows" id="staffRows"></div>
+        <button class="btn addrow" type="button" id="staffAdd">+ Add a person</button>
+      </section>
+
+      <!-- step 4 · ministries & spaces -->
+      <section class="step" data-f="4" hidden>
+        <p class="eyebrow">Step 4 of 12</p>
+        <h2>Ministries &amp; spaces</h2>
+        <p>Check what your church has, rename anything, and add a one-line mission if you like.</p>
+        <div class="rows" id="minRows"></div>
+        <button class="btn addrow" type="button" id="minAdd">+ Add your own ministry</button>
+
+        <h3 style="margin-top:var(--space-6)">Bookable spaces</h3>
+        <p class="hint">Rooms that members can reserve and outside groups can rent — a sanctuary, a fellowship hall, a classroom.</p>
+        <div class="rows" id="spaceRows"></div>
+        <button class="btn addrow" type="button" id="spaceAdd">+ Add a space</button>
+      </section>
+
+      <!-- step 5 · giving -->
+      <section class="step" data-f="5" hidden>
+        <p class="eyebrow">Step 5 of 12</p>
+        <h2>Giving</h2>
+        <p>Check each way your church already receives gifts, and fill in the handle people use.</p>
+        <div id="giveRows" class="stack" style="--gap: var(--space-4); margin-top: var(--space-5)"></div>
+      </section>
+
+      <!-- step 6 · events -->
+      <section class="step" data-f="6" hidden>
+        <p class="eyebrow">Step 6 of 12</p>
+        <h2>Events</h2>
+        <p>Confirm your main weekly service, and the studio writes the next six weeks into your calendar.</p>
+        <div class="fieldgrid" style="margin-top:var(--space-5)">
+          <div class="field field--wide">
+            <label for="evTitle">What the weekly service is called</label>
+            <input type="text" id="evTitle" data-path="events.title" placeholder="Sunday Worship">
+          </div>
+          <div class="field">
+            <label for="evDay">Day of the week</label>
+            <select id="evDay" data-path="events.day">
+              <option value="0">Sunday</option><option value="1">Monday</option>
+              <option value="2">Tuesday</option><option value="3">Wednesday</option>
+              <option value="4">Thursday</option><option value="5">Friday</option>
+              <option value="6">Saturday</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="evTime">Start time</label>
+            <input type="text" id="evTime" data-path="events.time" placeholder="10:00 AM">
+          </div>
+        </div>
+        <p class="fine" id="evSeedLine"></p>
+        <h3 style="margin-top:var(--space-5)">One-off events <span class="muted">(optional)</span></h3>
+        <div class="rows" id="extraRows"></div>
+        <button class="btn addrow" type="button" id="extraAdd">+ Add an event</button>
+      </section>
+
+      <!-- step 7 · the look -->
+      <section class="step" data-f="7" hidden>
+        <p class="eyebrow">Step 7 of 12</p>
+        <h2>The look</h2>
+        <h3 style="margin-top:var(--space-5)">Palette</h3>
+        <div class="swatches" id="paletteRow"></div>
+        <div class="fieldgrid" id="customColors" style="margin-top:var(--space-5)" hidden>
+          <div class="field">
+            <label for="lkAccent">Accent color (hex)</label>
+            <input type="text" id="lkAccent" data-path="look.customAccent" placeholder="#2e5f92" pattern="#?[0-9a-fA-F]{6}">
+          </div>
+          <div class="field">
+            <label for="lkGround">Background (hex)</label>
+            <input type="text" id="lkGround" data-path="look.customGround" placeholder="#f7f4ec" pattern="#?[0-9a-fA-F]{6}">
+            <p class="hint">Keep it very light — dark text has to stay easy to read on it.</p>
+          </div>
+        </div>
+
+        <h3 style="margin-top:var(--space-6)">Logo → app icons, right here</h3>
+        <p class="fine">Choose your logo image and this page composes the five icon files the app uses — the same sizes and proportions as the shipped set. The image is processed on this computer only and is not saved in your draft.</p>
+        <label class="filelabel" style="margin-top:var(--space-4)">
+          <input type="file" id="logoFile" accept="image/*">
+          <span>Choose your logo image…</span>
+        </label>
+        <p class="verdict" id="iconMsg"></p>
+        <div class="icongrid" id="iconGrid"></div>
+      </section>
+
+      <!-- step 8 · keys -->
+      <section class="step" data-f="8" hidden>
+        <p class="eyebrow">Step 8 of 12</p>
+        <h2>Keys</h2>
+        <div class="field" style="margin-top:var(--space-5)">
+          <label for="keyAdmin">Admin passcode <span class="muted">(everything)</span></label>
+          <input type="text" id="keyAdmin" data-path="keys.admin" autocomplete="off" spellcheck="false" class="keybox" style="margin-top:0">
+        </div>
+        <div class="field">
+          <label for="keyEditor">Editor passcode <span class="muted">(events, announcements, go-live — nothing people-sensitive)</span></label>
+          <input type="text" id="keyEditor" data-path="keys.editor" autocomplete="off" spellcheck="false" class="keybox" style="margin-top:0">
+        </div>
+        <button class="btn" type="button" id="regenKeys">Generate fresh passcodes</button>
+
+        <h3 style="margin-top:var(--space-6)">A named demo sign-in <span class="muted">(optional)</span></h3>
+        <p class="fine">Before the real database exists, one named account can sign in to the back office by email — handy for the pastor's phone. It lives in a public file, so use a made-up password, never a real one.</p>
+        <label class="choice" style="margin-top:var(--space-4)">
+          <input type="checkbox" id="demoOn" data-path="keys.demoOn">
+          <span class="choice__card"><b>Add a demo account</b><span>Name, email, and a made-up password</span></span>
+        </label>
+        <div class="fieldgrid" id="demoFields" hidden>
+          <div class="field"><label for="demoName">Name</label><input type="text" id="demoName" data-path="keys.demoName" placeholder="Pastor Jordan"></div>
+          <div class="field"><label for="demoEmail">Email</label><input type="email" id="demoEmail" data-path="keys.demoEmail" placeholder="pastor@yourchurch.org"></div>
+          <div class="field"><label for="demoPassword">Made-up password</label><input type="text" id="demoPassword" data-path="keys.demoPassword" autocomplete="off"></div>
+          <div class="field"><label for="demoRole">Role</label>
+            <select id="demoRole" data-path="keys.demoRole"><option value="admin">admin</option><option value="editor">editor</option></select>
+          </div>
+        </div>
+      </section>
+
+      <!-- step 9 · backend -->
+      <section class="step" data-f="9" hidden>
+        <p class="eyebrow">Step 9 of 12</p>
+        <h2>Its own backend</h2>
+        <div class="choices">
+          <label class="choice">
+            <input type="radio" name="backendChoice" value="demo" data-path="backend.choice">
+            <span class="choice__card"><b>Demo mode, for now</b><span>Zero setup. Fine for a pilot — everything lives in one browser, so staff phones won't share an inbox yet. Switch later without losing this page's work.</span></span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="backendChoice" value="supabase" data-path="backend.choice">
+            <span class="choice__card"><b>Supabase — a real shared database</b><span>Free tier, real staff sign-ins, every device sees the same inbox. About 15 minutes, walked through on the left.</span></span>
+          </label>
+        </div>
+        <div id="sbFields" hidden>
+          <div class="field" style="margin-top:var(--space-5)">
+            <label for="sbUrl">Project URL</label>
+            <input type="text" id="sbUrl" data-path="backend.url" placeholder="https://abcdefgh.supabase.co" spellcheck="false">
+          </div>
+          <div class="field">
+            <label for="sbKey">anon public key</label>
+            <textarea id="sbKey" data-path="backend.key" placeholder="eyJ…" spellcheck="false" style="min-height:4rem;font-family:ui-monospace,Menlo,monospace;font-size:.8rem"></textarea>
+            <p class="hint">The one labeled <b>anon public</b> — never the service_role key.</p>
+          </div>
+          <div class="row">
+            <button class="btn" type="button" id="sqlCopyBtn">Copy the database setup</button>
+            <button class="btn btn--primary" type="button" id="sbTestBtn">Test the connection</button>
+          </div>
+          <p class="verdict" id="sqlMsg"></p>
+          <textarea id="sqlFallback" hidden style="margin-top:var(--space-3);min-height:8rem;font-family:ui-monospace,Menlo,monospace;font-size:.75rem" readonly aria-label="Database setup SQL — select all and copy"></textarea>
+          <p class="verdict" id="sbVerdict" role="status"></p>
+          <p class="fine" style="margin-top:var(--space-4)">These two values are saved only in this page's draft on this computer, and end up in the one file that's meant to carry them: data/config.json.</p>
+        </div>
+      </section>
+
+      <!-- step 10 · sundays live -->
+      <section class="step" data-f="10" hidden>
+        <p class="eyebrow">Step 10 of 12</p>
+        <h2>Going live on Sundays</h2>
+        <div class="choices">
+          <label class="choice">
+            <input type="radio" name="liveRoute" value="youtube" data-path="live.route">
+            <span class="choice__card"><b>YouTube embed</b><span>Stream to YouTube; the app plays it inside your design. Pairs with Restream (from ~$19/mo) to reach Facebook too — docs/GO-LIVE.md, Route A.</span></span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="liveRoute" value="ownbox" data-path="live.route">
+            <span class="choice__card"><b>Your own box — later</b><span>$0/month: a staff phone is the camera, a church-owned computer does the rest. A documented afternoon project — docs/GO-LIVE.md, Route D.</span></span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="liveRoute" value="skip" data-path="live.route">
+            <span class="choice__card"><b>Skip for now</b><span>The Watch screen shows your schedule and a friendly note. Add a stream any Sunday you're ready.</span></span>
+          </label>
+        </div>
+        <div class="field" id="embedField" hidden style="margin-top:var(--space-5)">
+          <label for="liveEmbed">YouTube live embed link</label>
+          <input type="text" id="liveEmbed" data-path="live.embedUrl" placeholder="https://www.youtube.com/embed/live_stream?channel=CHANNEL_ID&autoplay=1" spellcheck="false">
+          <p class="hint">From YouTube's Live Control Room — the recurring live event's embed URL. Leave it blank if you don't have it yet; the file works either way.</p>
+        </div>
+      </section>
+
+      <!-- step 11 · review & ship -->
+      <section class="step" data-f="11" hidden>
+        <p class="eyebrow">Step 11 of 12 · Review &amp; ship</p>
+        <h2>Your app, in twelve files</h2>
+        <p>Every file below was built from your answers and checked for validity on this page. Download them all (or copy one at a time), then follow the placement tutorial on the left.</p>
+        <div class="row" style="margin-top:var(--space-5)">
+          <button class="btn btn--primary" type="button" id="dlAllBtn">Download all twelve</button>
+          <button class="btn" type="button" id="rebuildBtn">Rebuild from my answers</button>
+        </div>
+        <div id="shipList" style="margin-top:var(--space-4)"></div>
+
+        <h3 style="margin-top:var(--space-6)">One more file: the manifest</h3>
+        <p class="fine">manifest.webmanifest is fetched before the app runs, so its name and colors are edited in place (pencil icon on GitHub). Your values:</p>
+        <div class="codewrap">
+          <pre class="codeblock" id="manifestFull"></pre>
+          <button class="codecopy" type="button" data-copy="#manifestFull">Copy</button>
+        </div>
+
+        <div class="closing">
+          <p class="eyebrow">That's the whole setup</p>
+          <h3>Hand the phones the link.<br>You built an app today.</h3>
+          <p class="fine">Deep checklist for every remaining corner (photos, hardcoded strings, app stores): <b>docs/TEMPLATE.md</b>. Day-to-day editing after launch: <b>docs/MANAGE.md</b>.</p>
+        </div>
+      </section>
+
+      <p class="gentle" id="gentleMsg" role="status"></p>
+
+      <div class="fnav">
+        <button class="btn" type="button" id="backBtn">Back</button>
+        <span class="fnav__count" id="stepCount"></span>
+        <button class="btn btn--primary" type="button" id="nextBtn">Next</button>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+"use strict";
+/* ============================================================================
+   Setup Studio — everything runs on this page, in this browser.
+   Pure file-builder functions live first (they never touch the DOM, so they
+   can be verified under Node); the interface wiring comes after.
+   ========================================================================= */
+
+var LS_KEY = "template.setupDraft";
+var DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+/* --------------------------------------------------------------- helpers -- */
+function esc(s) {
+  return String(s == null ? "" : s)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
+function slug(s) {
+  return String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "item";
+}
+function pad2(n) { return (n < 10 ? "0" : "") + n; }
+function isoDate(d) { return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate()); }
+function todayISO() { return isoDate(new Date()); }
+
+/* Next `count` dates falling on weekday `dow` (0=Sunday), starting today. */
+function nextWeeklyDates(dow, count, from) {
+  var d = from ? new Date(from.getTime()) : new Date();
+  d.setHours(0, 0, 0, 0);
+  d.setDate(d.getDate() + ((dow - d.getDay() + 7) % 7));
+  var out = [];
+  for (var i = 0; i < count; i++) { out.push(isoDate(d)); d.setDate(d.getDate() + 7); }
+  return out;
+}
+
+/* "9:00 AM" / "10 AM" / "18:30" -> minutes after midnight, or null. */
+function parseTimeToMinutes(str) {
+  var m = /(\d{1,2})(?::(\d{2}))?\s*(am|pm|a\.m\.|p\.m\.)?/i.exec(String(str || "").trim());
+  if (!m) return null;
+  var h = parseInt(m[1], 10), min = m[2] ? parseInt(m[2], 10) : 0;
+  if (isNaN(h) || h > 23 || min > 59) return null;
+  var ap = (m[3] || "").toLowerCase();
+  if (ap.indexOf("p") === 0 && h < 12) h += 12;
+  if (ap.indexOf("a") === 0 && h === 12) h = 0;
+  return h * 60 + min;
+}
+
+function normHex(h) {
+  var s = String(h || "").trim();
+  if (s && s[0] !== "#") s = "#" + s;
+  return /^#[0-9a-fA-F]{6}$/.test(s) ? s.toLowerCase() : null;
+}
+function mixHex(a, b, t) {
+  var pa = normHex(a) || "#000000", pb = normHex(b) || "#ffffff", out = "#";
+  for (var i = 1; i < 7; i += 2) {
+    var ca = parseInt(pa.substr(i, 2), 16), cb = parseInt(pb.substr(i, 2), 16);
+    var v = Math.round(ca + (cb - ca) * t);
+    out += (v < 16 ? "0" : "") + v.toString(16);
+  }
+  return out;
+}
+/* sRGB hex -> OKLCH string, for keeping the design system's hex+OKLCH pair
+   discipline when a custom accent is chosen. Standard Björn Ottosson matrices. */
+function hexToOklch(hex) {
+  var h = normHex(hex); if (!h) return "";
+  function lin(c) { c /= 255; return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); }
+  var r = lin(parseInt(h.substr(1, 2), 16)), g = lin(parseInt(h.substr(3, 2), 16)), b = lin(parseInt(h.substr(5, 2), 16));
+  var l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
+  var m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b);
+  var s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
+  var L = 0.2104542553 * l + 0.7936177850 * m - 0.0040720468 * s;
+  var A = 1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * s;
+  var B = 0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * s;
+  var C = Math.sqrt(A * A + B * B);
+  var H = Math.atan2(B, A) * 180 / Math.PI; if (H < 0) H += 360;
+  return "oklch(" + Math.round(L * 100) + "% " + (Math.round(C * 1000) / 1000) + " " + Math.round(H) + ")";
+}
+
+/* ------------------------------------------------------------- palettes -- */
+/* The shipped blue plus two alternates. The non-blue OKLCH+hex pairs are the
+   design system's own verified pairs (its --ok and --violet tokens), so the
+   pair discipline holds without inventing conversions for the presets. */
+var PALETTES = {
+  shiloh:    { label: "Morning blue", accent: "#2e5f92", accentOk: "oklch(47% 0.095 255)", soft: "#9cc3ee", softOk: "oklch(78% 0.08 250)" },
+  evergreen: { label: "Evergreen",    accent: "#2b6b45", accentOk: "oklch(48% 0.11 155)",  soft: "#6fd398", softOk: "oklch(80% 0.13 155)" },
+  plum:      { label: "Deep plum",    accent: "#6a4b9c", accentOk: "oklch(48% 0.13 295)",  soft: "#b79bf0", softOk: "oklch(74% 0.13 295)" }
+};
+function resolveLook(d) {
+  var lk = (d && d.look) || {};
+  if (lk.palette === "custom") {
+    var acc = normHex(lk.customAccent) || "#2e5f92";
+    var gr = normHex(lk.customGround) || "#f4f1e6";
+    return { accent: acc, accentOk: hexToOklch(acc), soft: mixHex(acc, "#ffffff", 0.55),
+             softOk: hexToOklch(mixHex(acc, "#ffffff", 0.55)), cream: gr, custom: true };
+  }
+  var p = PALETTES[lk.palette] || PALETTES.shiloh;
+  return { accent: p.accent, accentOk: p.accentOk, soft: p.soft, softOk: p.softOk, cream: "#f4f1e6", custom: false };
+}
+
+/* -------------------------------------------------------- default draft -- */
+var STARTER_MINISTRIES = ["Children", "Youth", "Women", "Men", "Music", "Ushers", "Culinary", "Outreach"];
+function defaultDraft() {
+  return {
+    v: 1, step: 0, visited: [0],
+    church: { name: "", shortName: "", tagline: "", denomination: "" },
+    facts: {
+      address: "", phone: "", email: "", website: "", facebook: "", instagram: "",
+      prayerNumber: "", prayerCode: "", kids: "", parking: "",
+      serviceTimes: [{ label: "Sunday worship", time: "Sun 10:00 AM" }]
+    },
+    people: { pastorName: "", pastorTitle: "Senior Pastor", pastorShort: "", greeting: "", staff: [] },
+    ministries: STARTER_MINISTRIES.map(function (n) { return { name: n, mission: "", on: false }; }),
+    spaces: [
+      { name: "Sanctuary", goodFor: "Worship services, weddings, funerals, and concerts." },
+      { name: "Fellowship Hall", goodFor: "Meals, meetings, receptions, and community events." }
+    ],
+    giving: {
+      giv:    { on: false, details: "", url: "" },
+      cash:   { on: false, details: "", url: "" },
+      paypal: { on: false, details: "", url: "" },
+      zelle:  { on: false, details: "", url: "" },
+      mail:   { on: false, details: "" },
+      person: { on: false, details: "" }
+    },
+    events: { title: "Sunday Worship", day: 0, time: "10:00 AM", extras: [] },
+    look: { palette: "shiloh", customAccent: "#2e5f92", customGround: "#f7f4ec" },
+    keys: { admin: "", editor: "", demoOn: false, demoName: "", demoEmail: "", demoPassword: "", demoRole: "admin" },
+    backend: { choice: "demo", url: "", key: "" },
+    live: { route: "skip", embedUrl: "" }
+  };
+}
+
+/* ----------------------------------------------------- shared deriveds --- */
+function churchName(d) { return (d.church.name || "").trim() || "Our Church"; }
+function shortName(d) { return (d.church.shortName || "").trim() || churchName(d); }
+function serviceRows(d) {
+  return (d.facts.serviceTimes || []).filter(function (r) {
+    return (r.label || "").trim() || (r.time || "").trim();
+  }).map(function (r) { return { label: (r.label || "").trim(), time: (r.time || "").trim() }; });
+}
+function weeklyLabel(d) {
+  return DAY_NAMES[d.events.day] + "s at " + ((d.events.time || "").trim() || "10:00 AM");
+}
+function supabaseReady(d) {
+  return d.backend.choice === "supabase" &&
+    /^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/i.test((d.backend.url || "").trim()) &&
+    (d.backend.key || "").trim().length > 20;
+}
+
+/* ========================================================================
+   THE TWELVE BUILDERS — each mirrors the shipped data file's shape exactly:
+   same keys, same nesting, notes rewritten for a fresh church.
+   ======================================================================== */
+
+function buildConfig(d) {
+  var demoStaff = [];
+  if (d.keys.demoOn && (d.keys.demoEmail || "").trim()) {
+    demoStaff.push({
+      name: (d.keys.demoName || "").trim(),
+      email: (d.keys.demoEmail || "").trim(),
+      password: (d.keys.demoPassword || "").trim(),
+      role: d.keys.demoRole === "editor" ? "editor" : "admin"
+    });
+  }
+  var sb = supabaseReady(d);
+  return {
+    note: "Backend configuration. mode: 'demo' stores everything in this browser (zero setup, perfect for a pilot). 'supabase' uses a real database + real admin login — see docs/BACKEND.md. Webhook automations fire in ANY mode when webhookUrl is set: point it at Zapier/Make/n8n/Resend to fan out to email, texts, or a CRM. applianceUrl/applianceToken stay blank until the church sets up its own local box (docs/APPLIANCE-SETUP.md); both blank is a normal, fully-supported state. Staff roles: adminPasscode signs in as ADMIN (everything), editorPasscode as EDITOR (events, announcements, ministries, reservations, go-live — no people/prayer/settings). These passcodes were generated by the Setup Studio; they are courtesy locks until supabase mode is on.",
+    mode: sb ? "supabase" : "demo",
+    supabaseUrl: sb ? (d.backend.url || "").trim().replace(/\/$/, "") : "",
+    supabaseAnonKey: sb ? (d.backend.key || "").trim() : "",
+    webhookUrl: "",
+    notifyEmail: "",
+    adminPasscode: (d.keys.admin || "").trim(),
+    editorPasscode: (d.keys.editor || "").trim(),
+    demoStaff: demoStaff,
+    applianceUrl: "",
+    applianceToken: ""
+  };
+}
+
+function buildTheme(d) {
+  var lk = resolveLook(d);
+  return {
+    note: "The ONLY place branding should live. Generated by the Setup Studio. Replace the two logo image files below with your own artwork, keeping the same filenames (or change these paths). Because manifest.webmanifest and favicons are fetched by the browser before any JavaScript runs, changing colors here also means updating manifest.webmanifest's theme_color/background_color by hand — see docs/MANAGE.md.",
+    churchName: churchName(d),
+    shortName: shortName(d),
+    tagline: (d.church.tagline || "").trim(),
+    website: (d.facts.website || "").trim(),
+    logo: "assets/media/logo-header.webp",
+    logoOnDark: "assets/media/logo-footer.webp",
+    colors: {
+      shiloh: lk.accent,
+      shilohSky: lk.soft,
+      navy: "#16283f",
+      navyDeep: "#0f1c30",
+      cream: lk.cream,
+      ink: "#1c261f",
+      accent: lk.accent,
+      accentSoft: lk.soft,
+      amber: "#a86a12",
+      ruby: "#b3324a",
+      ok: "#2e7d4f",
+      danger: "#b3261e",
+      warn: "#a1591f",
+      line: "#d8d0ba"
+    }
+  };
+}
+
+function buildChurch(d) {
+  var hasPrayer = !!(d.facts.prayerNumber || "").trim();
+  var onlineOn = d.live.route !== "skip";
+  return {
+    note: "Real church facts — generated by the Setup Studio from the office's own answers. Kept separate from theme.json (pure branding). Blank values are fully supported: the app simply hides that card. See docs/MANAGE.md.",
+    name: churchName(d),
+    denomination: (d.church.denomination || "").trim(),
+    pastor: (d.people.pastorName || "").trim(),
+    pastorShort: (d.people.pastorShort || "").trim(),
+    pastorTenure: "",
+    address: (d.facts.address || "").trim(),
+    phone: (d.facts.phone || "").trim(),
+    email: (d.facts.email || "").trim(),
+    website: (d.facts.website || "").trim(),
+    facebook: (d.facts.facebook || "").trim(),
+    instagram: (d.facts.instagram || "").trim(),
+    rightNowMedia: "",
+    prayerLine: {
+      number: hasPrayer ? (d.facts.prayerNumber || "").trim() : "",
+      accessCode: hasPrayer ? (d.facts.prayerCode || "").trim() : "",
+      note: hasPrayer ? "Dial-in prayer line" : ""
+    },
+    online: {
+      label: onlineOn ? "Live stream" : "",
+      when: onlineOn ? weeklyLabel(d) : "",
+      url: onlineOn ? (d.facts.facebook || "").trim() : ""
+    },
+    serviceTimes: serviceRows(d),
+    kids: (d.facts.kids || "").trim(),
+    parking: (d.facts.parking || "").trim()
+  };
+}
+
+function buildAbout(d) {
+  var name = churchName(d);
+  var greeting = (d.people.greeting || "").trim();
+  var who = greeting
+    ? greeting + "\n\nWhen you visit " + name + " for the first time, someone will be glad to welcome you, help you find your way, and answer anything you'd like to know."
+    : "We're so glad you found " + name + ". Whether you have walked with the Lord for years or are just beginning to wonder, there is a place for you here — come as you are.";
+  var staff = [];
+  if ((d.people.pastorName || "").trim()) {
+    staff.push({
+      name: (d.people.pastorName || "").trim(),
+      title: (d.people.pastorTitle || "").trim() || "Senior Pastor",
+      bio: "",
+      image: ""
+    });
+  }
+  (d.people.staff || []).forEach(function (p) {
+    if ((p.name || "").trim()) {
+      staff.push({ name: p.name.trim(), title: (p.title || "").trim(), bio: (p.bio || "").trim(), image: "" });
+    }
+  });
+  return {
+    note: "Who-we-are content, generated by the Setup Studio. 'who' opens the About screen; fill 'believe' and 'purpose' with your church's own words when ready — empty fields simply don't appear. Staff photos: put image files in assets/media/ and set each 'image' path. See docs/MANAGE.md.",
+    who: who,
+    believe: "",
+    purpose: "",
+    years: 0,
+    anniversary: { title: "", theme: "", when: "", image: "" },
+    faithCdc: "",
+    staff: staff,
+    pastorExtended: {
+      note: "Optional deeper pastor biography — roles, education, work before ministry. Empty fields don't appear in the app.",
+      roles: [],
+      beforeMinistry: "",
+      education: "",
+      consulting: ""
+    },
+    logo: ""
+  };
+}
+
+function buildMinistries(d) {
+  var items = [];
+  var used = {};
+  function uid(base) {
+    var id = slug(base), n = 2;
+    while (used[id]) { id = slug(base) + "-" + n; n++; }
+    used[id] = true; return id;
+  }
+  (d.ministries || []).forEach(function (m) {
+    if (m.on && (m.name || "").trim()) {
+      items.push({
+        id: uid(m.name), type: "ministry", name: m.name.trim(),
+        scripture: "", description: (m.mission || "").trim(), image: "", bookable: false
+      });
+    }
+  });
+  (d.spaces || []).forEach(function (s) {
+    if ((s.name || "").trim()) {
+      items.push({
+        id: uid(s.name), type: "facility", name: s.name.trim(),
+        description: (s.goodFor || "").trim(), image: "", bookable: true
+      });
+    }
+  });
+  return {
+    note: "The ministry / bookable-facility catalog, generated by the Setup Studio. Each ministry can grow a scripture line, a longer description, and an image path later. The bookable facilities power the reservation feature; their ids deliberately match data/rentals.json. Edit and push to update; see docs/MANAGE.md.",
+    ministries: items
+  };
+}
+
+function buildGiving(d) {
+  var g = d.giving, methods = [];
+  function add(on, method, details, url) {
+    if (on) methods.push({ method: method, details: (details || "").trim(), url: (url || "").trim(), image: "" });
+  }
+  add(g.giv.on, "Givelify", g.giv.details, g.giv.url);
+  add(g.cash.on, "CashApp", g.cash.details, g.cash.url);
+  add(g.paypal.on, "PayPal", g.paypal.details, g.paypal.url);
+  add(g.zelle.on, "Zelle", g.zelle.details, g.zelle.url);
+  add(g.mail.on, "Mail",
+    (g.mail.details || "").trim() || ("Mail your tithe and offering: " + churchName(d) + ((d.facts.address || "").trim() ? ", " + d.facts.address.trim() : "")), "");
+  add(g.person.on, "In Person",
+    (g.person.details || "").trim() || "Bring your tithe and offering with you to church — and bring a friend.", "");
+  return {
+    note: "Giving methods, generated by the Setup Studio. Per the design's non-negotiables, the app only LINKS out to these — it never processes or moves money itself.",
+    intro: "Thank you for your faithfulness in giving. Every gift supports the ministry and mission of " + churchName(d) + ".",
+    methods: methods
+  };
+}
+
+function buildEvents(d) {
+  var events = [];
+  var title = (d.events.title || "").trim() || "Weekly Worship";
+  var time = (d.events.time || "").trim() || "10:00 AM";
+  var location = (d.facts.address || "").trim();
+  var body = serviceRows(d).map(function (r) { return (r.label + " " + r.time).trim(); }).join(" · ");
+  nextWeeklyDates(d.events.day, 6).forEach(function (date) {
+    events.push({
+      id: slug(title) + "-" + date, title: title, date: date, time: time,
+      location: location, category: "Worship", body: body, rsvp: true
+    });
+  });
+  (d.events.extras || []).forEach(function (x) {
+    if ((x.title || "").trim() && (x.date || "").trim()) {
+      events.push({
+        id: slug(x.title) + "-" + x.date, title: x.title.trim(), date: x.date,
+        time: (x.time || "").trim(), location: location, category: "Event", body: "", rsvp: true
+      });
+    }
+  });
+  events.sort(function (a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; });
+  return {
+    note: "Generated by the Setup Studio: the next six weeks of " + title + " are seeded from the church's real schedule; one-off events should be added here or drafted in Admin → Events. Future events rise, past ones archive themselves. See docs/MANAGE.md.",
+    events: events
+  };
+}
+
+function buildNews(d) {
+  return {
+    note: "Announcements for the Home feed, generated by the Setup Studio. Anything older than 18 months hides itself automatically. Add new items here or from Admin → Announcements.",
+    news: [{
+      id: "welcome-to-the-app",
+      date: todayISO(),
+      title: "Welcome to the " + shortName(d) + " app",
+      body: churchName(d) + " now has its own app — events, prayer, giving, and Sunday worship, all in one place on your phone. Add it to your home screen and take a look around. We're glad you're here.",
+      link: "",
+      linkLabel: ""
+    }]
+  };
+}
+
+function buildLive(d) {
+  var svcMin = parseTimeToMinutes(d.events.time);
+  if (svcMin == null) svcMin = 600;
+  var label = weeklyLabel(d);
+  var route = d.live.route;
+  var embed = route === "youtube" ? (d.live.embedUrl || "").trim() : "";
+  return {
+    note: "Live streaming configuration, generated by the Setup Studio — see docs/GO-LIVE.md for the full walkthrough. The app plays ANY provider that gives an iframe embed URL. 'mode' controls when the player shows: 'schedule' shows it during the weekly window below, 'always' permanently, 'manual' only while liveNow is true, 'off' hides it.",
+    mode: route === "skip" ? "off" : "schedule",
+    liveNow: false,
+    provider: route === "youtube" ? "youtube" : "",
+    embedUrl: embed,
+    aspectRatio: "16 / 9",
+    schedule: {
+      note: "The window opens 15 minutes before the " + label + " service and closes two hours after it starts.",
+      dayOfWeek: d.events.day,
+      startMinutes: Math.max(0, svcMin - 15),
+      endMinutes: Math.min(1439, svcMin + 120),
+      timezone: (typeof Intl !== "undefined" && Intl.DateTimeFormat().resolvedOptions().timeZone) || "America/New_York",
+      label: label
+    },
+    fallback: {
+      text: route === "skip" ? "Join us in person — " + label + "." : "We go live every " + label + ".",
+      linkLabel: (d.facts.facebook || "").trim() ? "Visit us on Facebook" : "",
+      linkUrl: (d.facts.facebook || "").trim()
+    },
+    whip: {
+      note: "The church's OWN broadcast ingest (WebRTC/WHIP) — what golive.html publishes the phone camera to when the church runs its own box. Empty url = the Go Live studio runs in rehearsal mode (camera check, no broadcast). See docs/GO-LIVE.md 'Your own box'.",
+      url: ""
+    }
+  };
+}
+
+function buildRentals(d) {
+  var spaces = (d.spaces || []).filter(function (s) { return (s.name || "").trim(); }).map(function (s) {
+    return {
+      id: slug(s.name),
+      name: s.name.trim(),
+      image: "",
+      goodFor: (s.goodFor || "").trim(),
+      rate: "",
+      houseRules: [
+        "Leave the space as you found it — the next group is counting on it.",
+        "Equipment and kitchen use by arrangement with the church office.",
+        "Take your trash out and turn off the lights before you lock up."
+      ]
+    };
+  });
+  return {
+    note: "The spaces the church makes available to other congregations and community groups — generated by the Setup Studio. Space ids deliberately match the bookable facility ids in ministries.json so one double-booking check covers member reservations AND outside rentals. Rates are left for the church office to set — the app shows 'Ask about rates' until a rate string is filled in, and it NEVER processes payment (the office invoices). Edit and push; see docs/MANAGE.md.",
+    intro: "Our building serves the whole community. Request the dates you need and the church office will confirm within a couple of days.",
+    spaces: spaces,
+    policy: {
+      approval: "Every request is reviewed and confirmed by the church office — a request is not a booking until it is approved.",
+      payment: "Rates and payment are handled directly with the office. The app never takes a payment.",
+      access: "Approved guests receive a building-access pass for their booked time window — shown in this app under their booking code."
+    }
+  };
+}
+
+function buildFaq(d) {
+  var faq = [];
+  var addr = (d.facts.address || "").trim();
+  faq.push({
+    q: "Where are you located?",
+    a: addr ? ("We are located at " + addr + ". We'd love to see you — come as you are.")
+            : "Contact the church office for directions — we'd love to see you."
+  });
+  var times = serviceRows(d).map(function (r) {
+    return r.label && r.time ? r.label + " — " + r.time : (r.label || r.time);
+  });
+  faq.push({
+    q: "What time is service?",
+    a: times.length ? times.join(". ") + "." : ("Join us " + weeklyLabel(d) + ".")
+  });
+  faq.push({
+    q: "Is there something for my kids?",
+    a: (d.facts.kids || "").trim() || "Yes — children are always welcome here. Ask a greeter when you arrive and they'll point the way."
+  });
+  return {
+    note: "The visitor FAQ — three gentle starters generated by the Setup Studio from the church's own answers. Add and edit freely; see docs/MANAGE.md.",
+    faq: faq
+  };
+}
+
+function buildSermons(d) {
+  return {
+    note: "Recent messages. Generated empty-but-valid by the Setup Studio: add each sermon as {title, speaker, date, url} linking to wherever the church posts them (YouTube, the website, a podcast). sermonsUrl is the 'see all' link.",
+    sermonsUrl: (d.facts.website || "").trim(),
+    heroImage: "",
+    recentImage: "",
+    sermons: []
+  };
+}
+
+var FILE_BUILDERS = {
+  "config.json": buildConfig,
+  "theme.json": buildTheme,
+  "church.json": buildChurch,
+  "about.json": buildAbout,
+  "ministries.json": buildMinistries,
+  "giving.json": buildGiving,
+  "events.json": buildEvents,
+  "news.json": buildNews,
+  "live.json": buildLive,
+  "rentals.json": buildRentals,
+  "faq.json": buildFaq,
+  "sermons.json": buildSermons
+};
+
+/* Build every file; JSON.parse each one before it is ever offered. */
+function buildAllFiles(d) {
+  return Object.keys(FILE_BUILDERS).map(function (name) {
+    var out = { name: name, ok: false, json: "", err: "" };
+    try {
+      var obj = FILE_BUILDERS[name](d);
+      var text = JSON.stringify(obj, null, 2) + "\n";
+      JSON.parse(text); /* the honesty gate: unparseable JSON is never offered */
+      out.ok = true; out.json = text;
+    } catch (e) { out.err = String(e && e.message || e); }
+    return out;
+  });
+}
+
+function manifestColorLines(d) {
+  var lk = resolveLook(d);
+  return '  "background_color": "' + lk.cream + '",\n  "theme_color": "#16283f",';
+}
+function manifestFullSnippet(d) {
+  var lk = resolveLook(d);
+  return '  "name": ' + JSON.stringify(churchName(d)) + ',\n' +
+         '  "short_name": ' + JSON.stringify(shortName(d)) + ',\n' +
+         '  "description": ' + JSON.stringify((churchName(d) + " — " + ((d.church.tagline || "").trim() || "our church, in your pocket") + ". Events, prayer, sermons, and connection.")) + ',\n' +
+         '  "background_color": "' + lk.cream + '",\n' +
+         '  "theme_color": "#16283f",';
+}
+function cssTokenSnippet(d) {
+  var lk = resolveLook(d);
+  return "/* css/system.css — the accent token. Change it in all FOUR blocks:\n" +
+         "   :root, @media (prefers-color-scheme: dark),\n" +
+         "   :root[data-theme=\"dark\"], :root[data-theme=\"light\"].\n" +
+         "   Hex first, OKLCH second — supporting browsers use the OKLCH. */\n\n" +
+         "/* in the two LIGHT blocks: */\n" +
+         "--shiloh: " + lk.accent + ";    --shiloh: " + lk.accentOk + ";\n\n" +
+         "/* in the two DARK blocks: */\n" +
+         "--shiloh: " + lk.soft + ";    --shiloh: " + lk.softOk + ";";
+}
+
+/* Passcodes: WORD-4321-WORD from crypto randomness — readable over a phone,
+   never sent anywhere. */
+var PASS_WORDS = ["PSALM", "RIVER", "GRACE", "CEDAR", "LIGHT", "TABLE", "SHEPHERD", "OLIVE",
+  "CANAAN", "JORDAN", "GARDEN", "MANNA", "ZION", "HARVEST", "BEACON", "CANDLE",
+  "MERCY", "GOSHEN", "LANTERN", "WELL", "VINE", "DOVE", "HORIZON", "MOUNT"];
+function genPasscode() {
+  var u = new Uint32Array(3);
+  (typeof crypto !== "undefined" ? crypto : require("crypto").webcrypto).getRandomValues(u);
+  return PASS_WORDS[u[0] % PASS_WORDS.length] + "-" +
+         String(1000 + (u[1] % 9000)) + "-" +
+         PASS_WORDS[u[2] % PASS_WORDS.length];
+}
+
+/* Exposed for verification under Node (and honest debugging in devtools). */
+if (typeof globalThis !== "undefined") {
+  globalThis.__setupStudio = {
+    defaultDraft: defaultDraft, buildAllFiles: buildAllFiles, builders: FILE_BUILDERS,
+    manifestColorLines: manifestColorLines, manifestFullSnippet: manifestFullSnippet,
+    cssTokenSnippet: cssTokenSnippet, hexToOklch: hexToOklch, mixHex: mixHex,
+    nextWeeklyDates: nextWeeklyDates, parseTimeToMinutes: parseTimeToMinutes,
+    genPasscode: genPasscode, resolveLook: resolveLook, esc: esc, slug: slug
+  };
+}
+
+/* ============================================================================
+   Interface wiring — everything below touches the DOM and only runs in a
+   browser.
+   ========================================================================= */
+if (typeof document !== "undefined") (function () {
+
+  var STEPS = ["Welcome", "Your church", "The facts", "People", "Ministries & spaces",
+    "Giving", "Events", "The look", "Keys", "Its own backend", "Sundays live", "Review & ship"];
+  var draft = load();
+  var saveTimer = null, chipTimer = null;
+
+  function load() {
+    try {
+      var raw = localStorage.getItem(LS_KEY);
+      if (raw) {
+        var d = JSON.parse(raw);
+        if (d && d.v === 1) {
+          /* Merge over defaults so a draft from an older visit never misses keys. */
+          var base = defaultDraft();
+          Object.keys(base).forEach(function (k) {
+            if (typeof base[k] === "object" && base[k] !== null && !Array.isArray(base[k])) {
+              d[k] = Object.assign({}, base[k], d[k] || {});
+            } else if (d[k] === undefined) { d[k] = base[k]; }
+          });
+          return d;
+        }
+      }
+    } catch (e) {}
+    return defaultDraft();
+  }
+  function save() {
+    try { localStorage.setItem(LS_KEY, JSON.stringify(draft)); } catch (e) { return; }
+    var chip = document.getElementById("savedChip");
+    chip.hidden = false;
+    clearTimeout(chipTimer);
+    chipTimer = setTimeout(function () { chip.hidden = true; }, 2400);
+  }
+  function saveSoon() { clearTimeout(saveTimer); saveTimer = setTimeout(save, 250); }
+
+  function getPath(obj, path) {
+    return path.split(".").reduce(function (o, k) { return o == null ? o : o[k]; }, obj);
+  }
+  function setPath(obj, path, value) {
+    var keys = path.split("."), o = obj;
+    for (var i = 0; i < keys.length - 1; i++) o = o[keys[i]];
+    o[keys[keys.length - 1]] = value;
+  }
+
+  function el(tag, attrs) {
+    var n = document.createElement(tag);
+    if (attrs) Object.keys(attrs).forEach(function (k) {
+      if (k === "class") n.className = attrs[k];
+      else if (k === "text") n.textContent = attrs[k];
+      else if (k === "html") n.innerHTML = attrs[k]; /* only ever static/esc()'d strings */
+      else if (k.indexOf("on") === 0) n.addEventListener(k.slice(2), attrs[k]);
+      else if (k === "value") n.value = attrs[k];
+      else if (k === "checked") n.checked = !!attrs[k];
+      else n.setAttribute(k, attrs[k]);
+    });
+    for (var i = 2; i < arguments.length; i++) {
+      var kid = arguments[i];
+      if (kid == null) continue;
+      n.appendChild(typeof kid === "string" ? document.createTextNode(kid) : kid);
+    }
+    return n;
+  }
+
+  /* ------------------------------- rail ------------------------------- */
+  var STEP_VALIDATORS = {
+    1: function (d) { return d.church.name.trim() ? null : "Just the church's name is needed before we move on — everything else here can wait."; },
+    2: function (d) { return d.facts.address.trim() ? null : "The street address matters — it seeds your events, FAQ, and rental pages. Add it and we'll keep going."; },
+    8: function (d) { return (d.keys.admin.trim() && d.keys.editor.trim()) ? null : "Both passcodes need a value — tap “Generate fresh passcodes” and two strong ones appear."; },
+    9: function (d) {
+      if (d.backend.choice !== "supabase") return null;
+      var u = (d.backend.url || "").trim();
+      if (u && !/^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/i.test(u))
+        return "That Project URL doesn't look like https://something.supabase.co yet. You can also switch to demo mode and come back.";
+      return null;
+    }
+  };
+
+  function stepDone(i) {
+    if (draft.visited.indexOf(i) < 0) return false;
+    var v = STEP_VALIDATORS[i];
+    return v ? !v(draft) : true;
+  }
+
+  function renderRail() {
+    var rail = document.getElementById("rail");
+    rail.textContent = "";
+    var maxV = Math.max.apply(null, draft.visited.concat([0]));
+    STEPS.forEach(function (name, i) {
+      var reachable = i <= maxV + 1;
+      var b = el("button", {
+        class: "rail__step" + (i === draft.step ? " is-current" : "") + (stepDone(i) && i !== draft.step ? " is-done" : ""),
+        type: "button",
+        "aria-current": i === draft.step ? "step" : null,
+        onclick: function () { goto(i); }
+      },
+        el("span", { class: "rail__num", "aria-hidden": "true", text: stepDone(i) && i !== draft.step ? "✓" : String(i + 1) }),
+        name);
+      if (!reachable) b.disabled = true;
+      if (b.getAttribute("aria-current") === null) b.removeAttribute("aria-current");
+      rail.appendChild(b);
+    });
+  }
+
+  function showGentle(msg) {
+    var g = document.getElementById("gentleMsg");
+    g.textContent = msg || "";
+    g.classList.toggle("on", !!msg);
+  }
+
+  function goto(i) {
+    if (i < 0 || i >= STEPS.length) return;
+    var maxV = Math.max.apply(null, draft.visited.concat([0]));
+    if (i > maxV + 1) return;
+    if (i > draft.step) {
+      var v = STEP_VALIDATORS[draft.step];
+      var msg = v ? v(draft) : null;
+      if (msg && i === draft.step + 1) { showGentle(msg); return; }
+      if (msg) { showGentle(msg); return; }
+    }
+    showGentle("");
+    draft.step = i;
+    if (draft.visited.indexOf(i) < 0) draft.visited.push(i);
+    save();
+    renderStep();
+  }
+
+  function renderStep() {
+    var i = draft.step;
+    document.querySelectorAll("[data-t]").forEach(function (s) { s.hidden = +s.getAttribute("data-t") !== i; });
+    document.querySelectorAll("[data-f]").forEach(function (s) { s.hidden = +s.getAttribute("data-f") !== i; });
+    document.getElementById("backBtn").disabled = i === 0;
+    var next = document.getElementById("nextBtn");
+    next.textContent = i === STEPS.length - 1 ? "Done — stay as long as you like" : "Next";
+    next.disabled = i === STEPS.length - 1;
+    document.getElementById("stepCount").textContent = "Step " + (i + 1) + " of " + STEPS.length;
+    renderRail();
+    onEnterStep(i);
+    var pane = document.getElementById("formPane");
+    if (pane.getBoundingClientRect().top < 0) pane.scrollIntoView({ behavior: "smooth", block: "start" });
+    document.getElementById("tutorPane").scrollTop = 0;
+  }
+
+  function onEnterStep(i) {
+    if (i === 1) updateMock();
+    if (i === 6) { updateDates(); renderExtras(); }
+    if (i === 7) { renderPalettes(); updateLookSnippets(); }
+    if (i === 8) {
+      if (!draft.keys.admin.trim()) { draft.keys.admin = genPasscode(); syncInputs(); save(); }
+      if (!draft.keys.editor.trim()) { draft.keys.editor = genPasscode(); syncInputs(); save(); }
+      document.getElementById("demoFields").hidden = !draft.keys.demoOn;
+    }
+    if (i === 9) document.getElementById("sbFields").hidden = draft.backend.choice !== "supabase";
+    if (i === 10) document.getElementById("embedField").hidden = draft.live.route !== "youtube";
+    if (i === 11) { renderShip(); }
+  }
+
+  /* --------------------------- simple bindings ------------------------ */
+  function syncInputs() {
+    document.querySelectorAll("[data-path]").forEach(function (input) {
+      var v = getPath(draft, input.getAttribute("data-path"));
+      if (input.type === "checkbox") input.checked = !!v;
+      else if (input.type === "radio") input.checked = String(v) === input.value;
+      else input.value = v == null ? "" : String(v);
+    });
+  }
+
+  document.addEventListener("input", function (e) {
+    var t = e.target;
+    var path = t.getAttribute && t.getAttribute("data-path");
+    if (!path) return;
+    var val;
+    if (t.type === "checkbox") val = t.checked;
+    else if (t.type === "radio") { if (!t.checked) return; val = t.value; }
+    else val = t.value;
+    if (path === "events.day") val = parseInt(val, 10) || 0;
+    setPath(draft, path, val);
+    saveSoon();
+    afterChange(path);
+  });
+
+  function afterChange(path) {
+    if (path.indexOf("church.") === 0) updateMock();
+    if (path.indexOf("events.") === 0) updateDates();
+    if (path === "keys.demoOn") document.getElementById("demoFields").hidden = !draft.keys.demoOn;
+    if (path === "backend.choice") document.getElementById("sbFields").hidden = draft.backend.choice !== "supabase";
+    if (path === "live.route") document.getElementById("embedField").hidden = draft.live.route !== "youtube";
+    if (path.indexOf("look.") === 0) { updateLookSnippets(); renderPalettes(); }
+    showGentle("");
+  }
+
+  /* --------------------------- step 1 preview ------------------------- */
+  function updateMock() {
+    var name = draft.church.name.trim() || "Your Church Name";
+    var tag = draft.church.tagline.trim() || draft.church.denomination.trim() || "Your tagline";
+    document.getElementById("mockName").textContent = name;
+    document.getElementById("mockTag").textContent = tag;
+    document.getElementById("mockLogo").textContent = (draft.church.shortName.trim() || name).charAt(0).toUpperCase() || "A";
+    var lk = resolveLook(draft);
+    document.getElementById("mockapp").style.setProperty("--mock-accent", lk.accent);
+  }
+
+  /* ------------------------ repeatable row lists ---------------------- */
+  function renderServiceRows() {
+    var box = document.getElementById("svcRows");
+    box.textContent = "";
+    draft.facts.serviceTimes.forEach(function (row, idx) {
+      box.appendChild(el("div", { class: "rowline rowline--2" },
+        el("input", { type: "text", value: row.label, placeholder: "Sunday worship", "aria-label": "Service name",
+          oninput: function (e) { row.label = e.target.value; saveSoon(); } }),
+        el("input", { type: "text", value: row.time, placeholder: "Sun 10:00 AM", "aria-label": "Time",
+          oninput: function (e) { row.time = e.target.value; saveSoon(); } }),
+        el("button", { class: "rowdel", type: "button", "aria-label": "Remove this row", text: "×",
+          onclick: function () { draft.facts.serviceTimes.splice(idx, 1); save(); renderServiceRows(); } })));
+    });
+  }
+  document.getElementById("svcAdd").addEventListener("click", function () {
+    draft.facts.serviceTimes.push({ label: "", time: "" }); save(); renderServiceRows();
+  });
+
+  function renderStaffRows() {
+    var box = document.getElementById("staffRows");
+    box.textContent = "";
+    draft.people.staff.forEach(function (row, idx) {
+      box.appendChild(el("div", { class: "rowline rowline--3" },
+        el("input", { type: "text", value: row.name, placeholder: "Name", "aria-label": "Name",
+          oninput: function (e) { row.name = e.target.value; saveSoon(); } }),
+        el("input", { type: "text", value: row.title, placeholder: "Title", "aria-label": "Title",
+          oninput: function (e) { row.title = e.target.value; saveSoon(); } }),
+        el("input", { type: "text", value: row.bio, placeholder: "One-line bio (optional)", "aria-label": "Bio",
+          oninput: function (e) { row.bio = e.target.value; saveSoon(); } }),
+        el("button", { class: "rowdel", type: "button", "aria-label": "Remove this person", text: "×",
+          onclick: function () { draft.people.staff.splice(idx, 1); save(); renderStaffRows(); } })));
+    });
+  }
+  document.getElementById("staffAdd").addEventListener("click", function () {
+    draft.people.staff.push({ name: "", title: "", bio: "" }); save(); renderStaffRows();
+  });
+
+  function renderMinRows() {
+    var box = document.getElementById("minRows");
+    box.textContent = "";
+    draft.ministries.forEach(function (row, idx) {
+      box.appendChild(el("div", { class: "rowline rowline--min" },
+        el("input", { class: "tick", type: "checkbox", checked: row.on, "aria-label": "Include " + (row.name || "this ministry"),
+          onchange: function (e) { row.on = e.target.checked; save(); } }),
+        el("input", { type: "text", value: row.name, placeholder: "Ministry name", "aria-label": "Ministry name",
+          oninput: function (e) { row.name = e.target.value; saveSoon(); } }),
+        el("input", { type: "text", value: row.mission, placeholder: "One-line mission (optional)", "aria-label": "Mission",
+          oninput: function (e) { row.mission = e.target.value; saveSoon(); } })));
+    });
+  }
+  document.getElementById("minAdd").addEventListener("click", function () {
+    draft.ministries.push({ name: "", mission: "", on: true }); save(); renderMinRows();
+  });
+
+  function renderSpaceRows() {
+    var box = document.getElementById("spaceRows");
+    box.textContent = "";
+    draft.spaces.forEach(function (row, idx) {
+      box.appendChild(el("div", { class: "rowline rowline--2" },
+        el("input", { type: "text", value: row.name, placeholder: "Fellowship Hall", "aria-label": "Space name",
+          oninput: function (e) { row.name = e.target.value; saveSoon(); } }),
+        el("input", { type: "text", value: row.goodFor, placeholder: "Good for… meals, meetings, receptions", "aria-label": "Good for",
+          oninput: function (e) { row.goodFor = e.target.value; saveSoon(); } }),
+        el("button", { class: "rowdel", type: "button", "aria-label": "Remove this space", text: "×",
+          onclick: function () { draft.spaces.splice(idx, 1); save(); renderSpaceRows(); } })));
+    });
+  }
+  document.getElementById("spaceAdd").addEventListener("click", function () {
+    draft.spaces.push({ name: "", goodFor: "" }); save(); renderSpaceRows();
+  });
+
+  function renderExtras() {
+    var box = document.getElementById("extraRows");
+    box.textContent = "";
+    draft.events.extras.forEach(function (row, idx) {
+      box.appendChild(el("div", { class: "rowline rowline--3" },
+        el("input", { type: "text", value: row.title, placeholder: "Community Day", "aria-label": "Event name",
+          oninput: function (e) { row.title = e.target.value; saveSoon(); } }),
+        el("input", { type: "date", value: row.date, "aria-label": "Date",
+          oninput: function (e) { row.date = e.target.value; saveSoon(); } }),
+        el("input", { type: "text", value: row.time, placeholder: "12:00 PM", "aria-label": "Time",
+          oninput: function (e) { row.time = e.target.value; saveSoon(); } }),
+        el("button", { class: "rowdel", type: "button", "aria-label": "Remove this event", text: "×",
+          onclick: function () { draft.events.extras.splice(idx, 1); save(); renderExtras(); } })));
+    });
+  }
+  document.getElementById("extraAdd").addEventListener("click", function () {
+    draft.events.extras.push({ title: "", date: "", time: "" }); save(); renderExtras();
+  });
+
+  /* ------------------------------ giving ------------------------------ */
+  var GIVE_DEFS = [
+    { key: "giv", label: "Givelify", ph: "Your church's name as it appears on Givelify", urlPh: "https://giv.li/…  (your Givelify link, optional)" },
+    { key: "cash", label: "Cash App", ph: "$YourChurchHandle", urlPh: "https://cash.app/$YourChurchHandle  (optional)" },
+    { key: "paypal", label: "PayPal", ph: "paypal.me/yourchurch", urlPh: "https://www.paypal.com/paypalme/yourchurch  (optional)" },
+    { key: "zelle", label: "Zelle", ph: "Church name and the phone/email enrolled with Zelle", urlPh: "Zelle enrollment/QR link (optional)" },
+    { key: "mail", label: "By mail", ph: "Mail your tithe and offering: (we'll fill this from your address if left blank)" },
+    { key: "person", label: "In person", ph: "A warm invitation to bring your gift on Sunday (or leave blank for ours)" }
+  ];
+  function renderGiving() {
+    var box = document.getElementById("giveRows");
+    box.textContent = "";
+    GIVE_DEFS.forEach(function (def) {
+      var g = draft.giving[def.key];
+      var details = el("input", { type: "text", value: g.details, placeholder: def.ph, "aria-label": def.label + " details",
+        oninput: function (e) { g.details = e.target.value; saveSoon(); } });
+      var body = el("div", { class: "stack", style: "--gap: var(--space-3); margin-top: var(--space-3)" }, details);
+      if ("url" in g) {
+        body.appendChild(el("input", { type: "text", value: g.url, placeholder: def.urlPh, "aria-label": def.label + " link",
+          oninput: function (e) { g.url = e.target.value; saveSoon(); } }));
+      }
+      body.hidden = !g.on;
+      var card = el("div", { class: "choice__card", style: g.on ? "border-color: var(--accent)" : "" });
+      var check = el("input", { class: "tick", type: "checkbox", checked: g.on, id: "give_" + def.key, style: "margin-top:0",
+        onchange: function (e) { g.on = e.target.checked; body.hidden = !g.on; card.style.borderColor = g.on ? "var(--accent)" : ""; save(); } });
+      card.appendChild(el("label", { for: "give_" + def.key, style: "display:flex;align-items:center;gap:var(--space-3);margin:0;cursor:pointer" },
+        check, el("b", { text: def.label })));
+      card.appendChild(body);
+      box.appendChild(card);
+    });
+  }
+
+  /* ------------------------------ events ------------------------------ */
+  function updateDates() {
+    var dates = nextWeeklyDates(draft.events.day, 6);
+    var ul = document.getElementById("tutorDates");
+    ul.textContent = "";
+    dates.forEach(function (dstr) {
+      var parts = dstr.split("-");
+      var dt = new Date(+parts[0], +parts[1] - 1, +parts[2]);
+      ul.appendChild(el("li", {},
+        el("b", { text: (draft.events.title.trim() || "Weekly Worship") }),
+        " — " + dt.toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" }) +
+        " at " + (draft.events.time.trim() || "10:00 AM")));
+    });
+    document.getElementById("evSeedLine").textContent =
+      "Six " + DAY_NAMES[draft.events.day] + "s, starting " + dates[0] + " — computed on this page, shown in full on the left.";
+  }
+
+  /* ----------------------------- the look ----------------------------- */
+  function renderPalettes() {
+    var rowEl = document.getElementById("paletteRow");
+    rowEl.textContent = "";
+    Object.keys(PALETTES).concat(["custom"]).forEach(function (key) {
+      var p = key === "custom"
+        ? { label: "Custom", accent: normHex(draft.look.customAccent) || "#888888", soft: mixHex(normHex(draft.look.customAccent) || "#888888", "#ffffff", 0.55) }
+        : PALETTES[key];
+      var strip = el("div", { class: "swatch__strip", "aria-hidden": "true" },
+        el("i", { style: "background:" + p.accent }),
+        el("i", { style: "background:" + p.soft }),
+        el("i", { style: "background:" + (key === "custom" ? (normHex(draft.look.customGround) || "#f7f4ec") : "#f7f4ec") }));
+      var input = el("input", { type: "radio", name: "palette", value: key, checked: draft.look.palette === key,
+        onchange: function () { draft.look.palette = key; save(); document.getElementById("customColors").hidden = key !== "custom"; updateLookSnippets(); renderPalettes(); updateMock(); } });
+      rowEl.appendChild(el("label", { class: "choice swatch" }, input,
+        el("span", { class: "choice__card", style: "padding: var(--space-3)" }, strip, el("b", { text: p.label }))));
+    });
+    document.getElementById("customColors").hidden = draft.look.palette !== "custom";
+  }
+  function updateLookSnippets() {
+    document.getElementById("manifestSnippet").textContent = manifestColorLines(draft);
+    document.getElementById("cssSnippet").textContent = cssTokenSnippet(draft);
+    updateMock();
+  }
+
+  /* -------------------------- logo → app icons ------------------------ */
+  var ICON_SPECS = [
+    { name: "icon-512.png", px: 512, frac: 0.80 },
+    { name: "icon-192.png", px: 192, frac: 0.80 },
+    { name: "icon-maskable-512.png", px: 512, frac: 0.62 },
+    { name: "apple-touch-icon.png", px: 180, frac: 0.82 },
+    { name: "favicon-32.png", px: 32, frac: 0.94 }
+  ];
+  function iconMsg(text, cls) {
+    var m = document.getElementById("iconMsg");
+    m.textContent = text || "";
+    m.className = "verdict" + (text ? " on " + (cls || "") : "");
+  }
+  document.getElementById("logoFile").addEventListener("change", function (e) {
+    var file = e.target.files && e.target.files[0];
+    if (!file) return;
+    var img = new Image();
+    var url = URL.createObjectURL(file);
+    img.onload = function () {
+      URL.revokeObjectURL(url);
+      try { makeIcons(img); } catch (err) { iconMsg("That image couldn't be processed — try a plain JPG or PNG.", "verdict--bad"); }
+    };
+    img.onerror = function () { URL.revokeObjectURL(url); iconMsg("That file doesn't look like an image this browser can read.", "verdict--bad"); };
+    img.src = url;
+  });
+
+  /* The same pipeline as scripts/make-icons.py: flatten onto white, trim the
+     near-white margins (threshold 245), then center the artwork on a white
+     square at the shipped content fractions. Mark-splitting for the favicon is
+     the one part skipped here — the full logo at 32px is acceptable, and the
+     Python script does that part better. */
+  function makeIcons(img) {
+    var w = img.naturalWidth, h = img.naturalHeight;
+    if (!w || !h) { iconMsg("That image has no size — try another file.", "verdict--bad"); return; }
+    var flat = document.createElement("canvas");
+    flat.width = w; flat.height = h;
+    var fx = flat.getContext("2d", { willReadFrequently: true });
+    fx.fillStyle = "#ffffff"; fx.fillRect(0, 0, w, h);
+    fx.drawImage(img, 0, 0);
+    var data = fx.getImageData(0, 0, w, h).data;
+    var minX = w, minY = h, maxX = -1, maxY = -1, T = 245;
+    for (var y = 0; y < h; y++) {
+      for (var x = 0; x < w; x++) {
+        var i = (y * w + x) * 4;
+        var lum = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+        if (lum < T) {
+          if (x < minX) minX = x; if (x > maxX) maxX = x;
+          if (y < minY) minY = y; if (y > maxY) maxY = y;
+        }
+      }
+    }
+    if (maxX < 0) { iconMsg("That image looks entirely white or blank — nothing to make an icon from.", "verdict--warn"); return; }
+    var cw = maxX - minX + 1, ch = maxY - minY + 1;
+
+    var grid = document.getElementById("iconGrid");
+    grid.textContent = "";
+    ICON_SPECS.forEach(function (spec) {
+      var c = document.createElement("canvas");
+      c.width = spec.px; c.height = spec.px;
+      var ctx = c.getContext("2d");
+      ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, spec.px, spec.px);
+      var target = Math.round(spec.px * spec.frac);
+      var scale = target / Math.max(cw, ch);
+      var nw = Math.max(1, Math.round(cw * scale)), nh = Math.max(1, Math.round(ch * scale));
+      ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = "high";
+      ctx.drawImage(flat, minX, minY, cw, ch, Math.floor((spec.px - nw) / 2), Math.floor((spec.px - nh) / 2), nw, nh);
+      var cell = el("div", { class: "iconcell" });
+      cell.appendChild(c);
+      cell.appendChild(el("b", { text: spec.name }));
+      cell.appendChild(el("button", { class: "btn", type: "button", text: "Download",
+        onclick: function (ev) {
+          var btn = ev.target;
+          c.toBlob(function (blob) {
+            if (!blob) { btn.textContent = "Couldn't save"; return; }
+            var a = document.createElement("a");
+            a.href = URL.createObjectURL(blob); a.download = spec.name;
+            document.body.appendChild(a); a.click(); a.remove();
+            setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+            btn.textContent = "Saved ✓";
+            setTimeout(function () { btn.textContent = "Download"; }, 2200);
+          }, "image/png");
+        } }));
+      grid.appendChild(cell);
+    });
+    iconMsg("Five icons composed from your logo — trimmed " + cw + "×" + ch + " artwork on a white canvas, same proportions as the shipped set. Download each one; they go to assets/icons/ in step 12.", "verdict--ok");
+  }
+
+  /* ------------------------------- keys ------------------------------- */
+  document.getElementById("regenKeys").addEventListener("click", function () {
+    draft.keys.admin = genPasscode();
+    draft.keys.editor = genPasscode();
+    syncInputs(); save();
+  });
+
+  /* ------------------------------ backend ----------------------------- */
+  document.getElementById("sqlCopyBtn").addEventListener("click", function () {
+    var msg = document.getElementById("sqlMsg");
+    var fb = document.getElementById("sqlFallback");
+    msg.className = "verdict on"; msg.textContent = "Fetching docs/supabase-setup.sql…";
+    fetch("docs/supabase-setup.sql").then(function (r) {
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.text();
+    }).then(function (sql) {
+      function fallback() {
+        fb.hidden = false; fb.value = sql; fb.focus(); fb.select();
+        msg.className = "verdict on verdict--warn";
+        msg.textContent = "Copying was blocked, so here's the whole script below — select all (it's pre-selected) and copy it yourself.";
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(sql).then(function () {
+          msg.className = "verdict on verdict--ok";
+          msg.textContent = "Copied — the entire database setup is on your clipboard. Paste it in Supabase's SQL Editor and press Run.";
+        }, fallback);
+      } else fallback();
+    }).catch(function () {
+      msg.className = "verdict on verdict--bad";
+      msg.textContent = "Couldn't load the script from this page. Open docs/supabase-setup.sql in the repository and copy its contents from there.";
+    });
+  });
+
+  document.getElementById("sbTestBtn").addEventListener("click", function () {
+    var out = document.getElementById("sbVerdict");
+    var url = (draft.backend.url || "").trim().replace(/\/$/, "");
+    var key = (draft.backend.key || "").trim();
+    function say(text, cls) { out.className = "verdict on " + cls; out.textContent = text; }
+    if (!/^https:\/\/[a-z0-9-]+\.supabase\.co$/i.test(url)) {
+      say("That address doesn't look like a Supabase project — it should be https://something.supabase.co.", "verdict--warn");
+      return;
+    }
+    if (!key) { say("Paste the anon public key first — it's the long one that starts with eyJ.", "verdict--warn"); return; }
+    say("Asking your project a harmless question…", "");
+    fetch(url + "/rest/v1/", { headers: { apikey: key } }).then(function (r) {
+      if (r.status === 200) say("Connected. Your project answered and the key was accepted.", "verdict--ok");
+      else if (r.status === 401 || r.status === 403) say("That key doesn't look right — the project answered but refused it. Re-copy the anon public key from Settings → API.", "verdict--bad");
+      else if (r.status === 404) say("That address doesn't look like a Supabase project — double-check the Project URL.", "verdict--bad");
+      else say("The project answered with an unexpected status (" + r.status + "). Double-check both values.", "verdict--warn");
+    }).catch(function () {
+      say("Couldn't reach that address at all — check the URL for typos and that you're online.", "verdict--bad");
+    });
+  });
+
+  /* --------------------------- review & ship -------------------------- */
+  var builtFiles = null;
+  function downloadText(name, text) {
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([text], { type: "application/json" }));
+    a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+  }
+  function copyText(text, btn, doneLabel) {
+    function done() { var old = btn.textContent; btn.textContent = doneLabel || "Copied ✓"; setTimeout(function () { btn.textContent = old; }, 2000); }
+    function fallback() {
+      var ta = document.createElement("textarea");
+      ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); done(); } catch (e) { btn.textContent = "Copy blocked"; }
+      ta.remove();
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fallback);
+    else fallback();
+  }
+
+  function renderShip() {
+    builtFiles = buildAllFiles(draft);
+    var list = document.getElementById("shipList");
+    list.textContent = "";
+    var allOk = true;
+    builtFiles.forEach(function (f) {
+      if (!f.ok) allOk = false;
+      var row = el("div", { class: "shiprow" },
+        el("code", { text: "data/" + f.name }),
+        el("button", { class: "btn", type: "button", text: "Download", onclick: function () { if (f.ok) downloadText(f.name, f.json); } }),
+        el("button", { class: "btn btn--quiet", type: "button", text: "Copy", onclick: function (ev) { if (f.ok) copyText(f.json, ev.target); } }),
+        el("span", { class: "chip " + (f.ok ? "chip--ok" : "chip--danger"), text: f.ok ? "Valid JSON ✓" : "Failed" }));
+      if (!f.ok) row.appendChild(el("span", { class: "shipnote", text: "This file couldn't be built: " + f.err + " — press Rebuild after fixing the step it comes from." }));
+      list.appendChild(row);
+    });
+    if (!allOk) list.appendChild(el("p", { class: "verdict on verdict--bad", text: "One or more files failed validation and are not offered for download — the honest thing is to fix them first." }));
+    document.getElementById("manifestFull").textContent = manifestFullSnippet(draft);
+  }
+  document.getElementById("rebuildBtn").addEventListener("click", renderShip);
+  document.getElementById("dlAllBtn").addEventListener("click", function () {
+    if (!builtFiles) renderShip();
+    var i = 0;
+    (function tick() {
+      while (i < builtFiles.length && !builtFiles[i].ok) i++;
+      if (i >= builtFiles.length) return;
+      downloadText(builtFiles[i].name, builtFiles[i].json);
+      i++;
+      setTimeout(tick, 350); /* spaced out so the browser doesn't swallow any */
+    })();
+  });
+
+  /* --------------------------- copy buttons --------------------------- */
+  document.querySelectorAll(".codecopy").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var target = document.querySelector(btn.getAttribute("data-copy"));
+      if (target) copyText(target.textContent, btn);
+    });
+  });
+
+  /* ------------------------------ nav + reset ------------------------- */
+  document.getElementById("nextBtn").addEventListener("click", function () { goto(draft.step + 1); });
+  document.getElementById("backBtn").addEventListener("click", function () { goto(draft.step - 1); });
+  document.getElementById("beginBtn").addEventListener("click", function () { goto(1); });
+
+  var resetBtn = document.getElementById("resetBtn");
+  var resetConfirm = document.getElementById("resetConfirmBtn");
+  var resetTimer = null;
+  resetBtn.addEventListener("click", function () {
+    resetConfirm.hidden = !resetConfirm.hidden;
+    resetBtn.textContent = resetConfirm.hidden ? "Start over" : "Keep my answers";
+    clearTimeout(resetTimer);
+    if (!resetConfirm.hidden) resetTimer = setTimeout(function () {
+      resetConfirm.hidden = true; resetBtn.textContent = "Start over";
+    }, 6000);
+  });
+  resetConfirm.addEventListener("click", function () {
+    try { localStorage.removeItem(LS_KEY); } catch (e) {}
+    draft = defaultDraft();
+    resetConfirm.hidden = true; resetBtn.textContent = "Start over";
+    syncInputs(); renderAllLists(); renderStep(); save();
+  });
+
+  /* ------------------------------- boot ------------------------------- */
+  function renderAllLists() {
+    renderServiceRows(); renderStaffRows(); renderMinRows();
+    renderSpaceRows(); renderGiving(); renderExtras(); renderPalettes();
+  }
+  syncInputs();
+  renderAllLists();
+  updateLookSnippets();
+  updateDates();
+  renderStep();
+})();
+</script>
+</body>
+</html>

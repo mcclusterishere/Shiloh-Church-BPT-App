@@ -1,0 +1,7 @@
+{
+  "note": "Recent messages, shown on the Watch screen. The list ships empty — CHANGE-ME: add your church's recent sermons (title, speaker, date, and a link to wherever the church posts them), and point sermonsUrl at the full archive. An empty list is a fully supported state: the screen simply shows the live/online cards without a recent-messages section.",
+  "sermonsUrl": "",
+  "heroImage": "assets/media/sermon-hero.webp",
+  "recentImage": "assets/media/home-recent-sermon.webp",
+  "sermons": []
+}

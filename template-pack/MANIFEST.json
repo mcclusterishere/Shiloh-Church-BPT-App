@@ -1,0 +1,245 @@
+{
+  "note": "Machine-readable assembly map for building the public template repo from the Shiloh app. Apply in order: copy every 'replace' entry (from -> to, overwriting; 'to' paths are repo-root-relative), then remove every 'delete' path. Both lists were generated programmatically against the tree on 2026-08-04 \u2014 no judgment calls left.",
+  "replace": [
+    {
+      "from": "template-pack/data/about.json",
+      "to": "data/about.json"
+    },
+    {
+      "from": "template-pack/data/access.json",
+      "to": "data/access.json"
+    },
+    {
+      "from": "template-pack/data/church.json",
+      "to": "data/church.json"
+    },
+    {
+      "from": "template-pack/data/config.json",
+      "to": "data/config.json"
+    },
+    {
+      "from": "template-pack/data/events.json",
+      "to": "data/events.json"
+    },
+    {
+      "from": "template-pack/data/faq.json",
+      "to": "data/faq.json"
+    },
+    {
+      "from": "template-pack/data/giving.json",
+      "to": "data/giving.json"
+    },
+    {
+      "from": "template-pack/data/impact.json",
+      "to": "data/impact.json"
+    },
+    {
+      "from": "template-pack/data/live.json",
+      "to": "data/live.json"
+    },
+    {
+      "from": "template-pack/data/media.json",
+      "to": "data/media.json"
+    },
+    {
+      "from": "template-pack/data/ministries.json",
+      "to": "data/ministries.json"
+    },
+    {
+      "from": "template-pack/data/news.json",
+      "to": "data/news.json"
+    },
+    {
+      "from": "template-pack/data/rentals.json",
+      "to": "data/rentals.json"
+    },
+    {
+      "from": "template-pack/data/sermons.json",
+      "to": "data/sermons.json"
+    },
+    {
+      "from": "template-pack/data/theme.json",
+      "to": "data/theme.json"
+    },
+    {
+      "from": "template-pack/assets/media/about-us-banner.webp",
+      "to": "assets/media/about-us-banner.webp"
+    },
+    {
+      "from": "template-pack/assets/media/about-us-hero.webp",
+      "to": "assets/media/about-us-hero.webp"
+    },
+    {
+      "from": "template-pack/assets/media/anniversary-hero.webp",
+      "to": "assets/media/anniversary-hero.webp"
+    },
+    {
+      "from": "template-pack/assets/media/children-ministry.webp",
+      "to": "assets/media/children-ministry.webp"
+    },
+    {
+      "from": "template-pack/assets/media/fellowship-hall.webp",
+      "to": "assets/media/fellowship-hall.webp"
+    },
+    {
+      "from": "template-pack/assets/media/give-cashapp.webp",
+      "to": "assets/media/give-cashapp.webp"
+    },
+    {
+      "from": "template-pack/assets/media/give-in-person.webp",
+      "to": "assets/media/give-in-person.webp"
+    },
+    {
+      "from": "template-pack/assets/media/give-mail.webp",
+      "to": "assets/media/give-mail.webp"
+    },
+    {
+      "from": "template-pack/assets/media/give-online.webp",
+      "to": "assets/media/give-online.webp"
+    },
+    {
+      "from": "template-pack/assets/media/give-zelle.webp",
+      "to": "assets/media/give-zelle.webp"
+    },
+    {
+      "from": "template-pack/assets/media/home-hero.webp",
+      "to": "assets/media/home-hero.webp"
+    },
+    {
+      "from": "template-pack/assets/media/home-online.webp",
+      "to": "assets/media/home-online.webp"
+    },
+    {
+      "from": "template-pack/assets/media/home-recent-sermon.webp",
+      "to": "assets/media/home-recent-sermon.webp"
+    },
+    {
+      "from": "template-pack/assets/media/logo-footer.webp",
+      "to": "assets/media/logo-footer.webp"
+    },
+    {
+      "from": "template-pack/assets/media/logo-header.webp",
+      "to": "assets/media/logo-header.webp"
+    },
+    {
+      "from": "template-pack/assets/media/mens-ministry.webp",
+      "to": "assets/media/mens-ministry.webp"
+    },
+    {
+      "from": "template-pack/assets/media/music-ministry.webp",
+      "to": "assets/media/music-ministry.webp"
+    },
+    {
+      "from": "template-pack/assets/media/new-here-kids1.webp",
+      "to": "assets/media/new-here-kids1.webp"
+    },
+    {
+      "from": "template-pack/assets/media/new-here-plan-a-visit.webp",
+      "to": "assets/media/new-here-plan-a-visit.webp"
+    },
+    {
+      "from": "template-pack/assets/media/outreach-ministry.webp",
+      "to": "assets/media/outreach-ministry.webp"
+    },
+    {
+      "from": "template-pack/assets/media/pastor-mccluster.webp",
+      "to": "assets/media/pastor-mccluster.webp"
+    },
+    {
+      "from": "template-pack/assets/media/sanctuary.webp",
+      "to": "assets/media/sanctuary.webp"
+    },
+    {
+      "from": "template-pack/assets/media/sermon-hero.webp",
+      "to": "assets/media/sermon-hero.webp"
+    },
+    {
+      "from": "template-pack/assets/media/womens-ministry.webp",
+      "to": "assets/media/womens-ministry.webp"
+    },
+    {
+      "from": "template-pack/assets/media/youth-ministry.webp",
+      "to": "assets/media/youth-ministry.webp"
+    },
+    {
+      "from": "template-pack/assets/icons/apple-touch-icon.png",
+      "to": "assets/icons/apple-touch-icon.png"
+    },
+    {
+      "from": "template-pack/assets/icons/favicon-32.png",
+      "to": "assets/icons/favicon-32.png"
+    },
+    {
+      "from": "template-pack/assets/icons/icon-192.png",
+      "to": "assets/icons/icon-192.png"
+    },
+    {
+      "from": "template-pack/assets/icons/icon-512.png",
+      "to": "assets/icons/icon-512.png"
+    },
+    {
+      "from": "template-pack/assets/icons/icon-maskable-512.png",
+      "to": "assets/icons/icon-maskable-512.png"
+    },
+    {
+      "from": "template-pack/assets/logo-example.png",
+      "to": "assets/logo-example.png"
+    },
+    {
+      "from": "template-pack/manifest.webmanifest",
+      "to": "manifest.webmanifest"
+    },
+    {
+      "from": "template-pack/README-TEMPLATE.md",
+      "to": "README.md"
+    }
+  ],
+  "delete": [
+    "assets/media/about-us-dividers.webp",
+    "assets/media/adults-ministry.webp",
+    "assets/media/bethany.webp",
+    "assets/media/cashapp.webp",
+    "assets/media/christian-education-hero.webp",
+    "assets/media/christian-education.webp",
+    "assets/media/contact-us.webp",
+    "assets/media/culinary-ministry.webp",
+    "assets/media/deaconate-ministry.webp",
+    "assets/media/dr-haywood.webp",
+    "assets/media/estus-taylor.webp",
+    "assets/media/faith-cdc.webp",
+    "assets/media/favicon.webp",
+    "assets/media/givelify.webp",
+    "assets/media/giving-hero.webp",
+    "assets/media/home-christian-education.webp",
+    "assets/media/home-divider-1.webp",
+    "assets/media/home-divider-2.webp",
+    "assets/media/home-inperson.webp",
+    "assets/media/home-ministries.webp",
+    "assets/media/home-new-here.webp",
+    "assets/media/home-pastor-greetings.webp",
+    "assets/media/home-rightnow-media1.webp",
+    "assets/media/imani.webp",
+    "assets/media/impact-solidarity.jpg",
+    "assets/media/lania-boone.webp",
+    "assets/media/ministries-hero.webp",
+    "assets/media/missionary-ministry.webp",
+    "assets/media/new-here-hero.webp",
+    "assets/media/new-here-kids.webp",
+    "assets/media/our-story.webp",
+    "assets/media/pastor-aide.webp",
+    "assets/media/pastor-blog-banner.webp",
+    "assets/media/pastor-blog-hero.webp",
+    "assets/media/pastor-sermon-hero.webp",
+    "assets/media/pastor-speaking.jpg",
+    "assets/media/paypal.webp",
+    "assets/media/praise-jesus-60.webp",
+    "assets/media/primary-kids1.webp",
+    "assets/media/shiloh-logo-stacked.jpg",
+    "assets/media/staff-logo.webp",
+    "assets/media/trustee-ministry.webp",
+    "assets/media/ushers-ministry.webp",
+    "assets/media/young-adults.webp",
+    "assets/media/zelle.webp"
+  ],
+  "keep_note": "Everything not listed stays exactly as shipped: index.html/admin.html/golive.html/guide.html, js/, css/, sw.js, scripts/, docs/, native/, supabase/, .github/, assets/fonts/. Four follow-ups the assembler must still do, all documented: (1) hand-edit the <title>/<meta description> lines listed in template-pack/index-head.txt and the remaining hardcoded church-name strings mapped line-by-line in docs/TEMPLATE.md step 8 \u2014 they are fetched before JavaScript runs and cannot be re-themed; (2) regenerate events.ics from the now-empty data/events.json (node scripts/build-ics.js) or let the Pages deploy workflow do it on first push; (3) bump CACHE_VERSION in sw.js so any previously-installed client drops Shiloh's cached shell; (4) template-pack/index-head.txt and template-pack/MANIFEST.json are assembly tooling \u2014 don't ship them in the template repo. docs/ intentionally keeps its Shiloh examples (docs/TEMPLATE.md section 8f explains why that's fine)."
+}

@@ -1,0 +1,25 @@
+{
+  "note": "The ONLY place branding should live. CHANGE-ME: every value below belongs to the fictional example church, Grace Community Church — replace the names, tagline, and logo paths with your own. The colors ship as the template's blue-and-cream palette; if you change them, remember the browser fetches manifest.webmanifest and css/system.css before any JavaScript runs, so update manifest.webmanifest's theme_color/background_color and the token blocks at the top of css/system.css by hand too — see docs/TEMPLATE.md step 3 and docs/MANAGE.md.",
+  "churchName": "Grace Community Church",
+  "shortName": "Grace",
+  "tagline": "Growing together in grace",
+  "website": "https://www.example.org",
+  "logo": "assets/media/logo-header.webp",
+  "logoOnDark": "assets/media/logo-footer.webp",
+  "colors": {
+    "shiloh": "#2e5f92",
+    "shilohSky": "#a9c9ef",
+    "navy": "#16283f",
+    "navyDeep": "#0f1c30",
+    "cream": "#f4f1e6",
+    "ink": "#1c261f",
+    "accent": "#2e5f92",
+    "accentSoft": "#9cc3ee",
+    "amber": "#a86a12",
+    "ruby": "#b3324a",
+    "ok": "#2e7d4f",
+    "danger": "#b3261e",
+    "warn": "#a1591f",
+    "line": "#d8d0ba"
+  }
+}

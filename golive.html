@@ -201,6 +201,11 @@
     .watchline { text-align: center; font-size: var(--step--1); color: var(--text-muted); margin-bottom: var(--space-3); }
     .deckmsg { margin-top: var(--space-4); font-weight: 700; font-size: var(--step--1); color: var(--warn); }
     .deckmsg--bad { color: var(--danger); }
+    .deckmsg--ok { color: var(--ok); }
+
+    /* Quiet, below END with air between them — announcing is optional;
+       ending the broadcast must never be mis-tapped. Full 48px via .btn. */
+    .tellbtn { margin-top: var(--space-4); font-size: var(--step--1); }
 
     .camcard h3 { font-size: var(--step-2); }
     .camcard p { color: var(--text-muted); margin-top: var(--space-3); }
@@ -308,6 +313,7 @@
       <div id="liveRow" hidden>
         <p class="watchline">Members watch on the app's Watch screen.</p>
         <button class="golive golive--end" id="endBtn" type="button">End broadcast</button>
+        <button class="btn btn--quiet btn--block tellbtn" id="tellBtn" type="button" hidden>Tell everyone we're live</button>
       </div>
     </div>
 
@@ -390,7 +396,7 @@
   ["gate", "gateForm", "gateChurch", "gateBlurb", "gateDemo", "gateSb", "gatePass", "gateEmail", "gatePw", "gateErr",
    "studio", "cam", "filmgrain", "topChurch", "chipRehearse", "chipConn", "connDot", "connText", "clock", "backBtn",
    "signOut", "camCard", "camTitle", "camText", "camRetry", "controls", "flipBtn", "micBtn", "micIcon", "qual",
-   "goBtn", "goLabel", "rehearseCard", "rehearseText", "liveRow", "endBtn", "deckMsg",
+   "goBtn", "goLabel", "rehearseCard", "rehearseText", "liveRow", "endBtn", "tellBtn", "deckMsg",
    "sheet", "tUrl", "tUser", "tPass", "tSave", "tClear"
   ].forEach(function (id) { els[id] = document.getElementById(id); });
 
@@ -655,6 +661,7 @@
       studio.connState = out.pc.connectionState === "connected" ? "connected" : "connecting";
       studio.startedAt = Date.now();
       out.pc.addEventListener("connectionstatechange", onPcState);
+      tellReset(); /* a fresh broadcast gets a fresh announcement */
       startClock();
       lockScreen();
     } catch (err) {
@@ -706,6 +713,47 @@
   els.goBtn.addEventListener("click", function () { goLive(); });
   els.endBtn.addEventListener("click", function () { endBroadcast(true, "The broadcast has ended.", false); });
 
+  /* --------------------- "Tell everyone we're live" ---------------------
+     One quiet tap while on the air: compose the announcement with the
+     Watch-screen link and hand it to the Media desk's automation — the
+     same honesty contract as Admin -> Media. record.sent true means the
+     automation ACCEPTED it; false means it was only saved to the log.
+     This never claims "posted". The platform list loads lazily on the
+     first tap, and the result is remembered for the rest of the session. */
+  var mediaCfgPromise = null;
+  function tellReset() {
+    els.tellBtn.disabled = false;
+    els.tellBtn.textContent = "Tell everyone we're live";
+  }
+  els.tellBtn.addEventListener("click", function () {
+    if (!studio.live || els.tellBtn.disabled) return;
+    els.tellBtn.disabled = true;
+    els.tellBtn.textContent = "Telling everyone…";
+    var watchUrl = location.origin + location.pathname.replace(/golive\.html$/, "") + "#/watch";
+    if (!mediaCfgPromise) mediaCfgPromise = ShilohStore.listMediaConfig();
+    mediaCfgPromise.then(function (cfg) {
+      var ids = ((cfg && cfg.platforms) || []).filter(function (p) { return p.enabled; }).map(function (p) { return p.id; });
+      return ShilohStore.submitMediaPost({
+        kind: "live-announce",
+        text: "We're live right now — join us: " + watchUrl,
+        platforms: ids
+      });
+    }).then(function (rec) {
+      /* Once per broadcast either way — the record is in the Media log now,
+         and a second tap would only write a duplicate. */
+      if (rec.sent) {
+        setMsg("Handed to your automation — the announcement goes out from there.", false, true);
+        els.tellBtn.textContent = "Announcement handed off";
+      } else {
+        setMsg("No automation connected — the announcement was saved to the Media log. See docs/MEDIA-SUITE.md.", false);
+        els.tellBtn.textContent = "Saved to the Media log";
+      }
+    }).catch(function () {
+      setMsg("Couldn't hand the announcement off. Try again.", true);
+      tellReset();
+    });
+  });
+
   window.addEventListener("pagehide", function () {
     /* Best effort: tell the box the session ended so it frees the stream. */
     if (!studio.pc) return;
@@ -750,10 +798,11 @@
   });
 
   /* ------------------------------- render ------------------------------- */
-  function setMsg(text, bad) {
+  function setMsg(text, bad, ok) {
     els.deckMsg.hidden = !text;
     els.deckMsg.textContent = text || "";
     els.deckMsg.classList.toggle("deckmsg--bad", !!bad);
+    els.deckMsg.classList.toggle("deckmsg--ok", !bad && !!ok);
   }
 
   function render() {
@@ -809,6 +858,9 @@
     els.goLabel.textContent = studio.busy ? "Connecting…" : "Go live";
     els.rehearseCard.hidden = !camOk || hasTarget;
     els.liveRow.hidden = !studio.live;
+    /* Announcing is a media power, not a live one — an operator without
+       can("media") broadcasts fine and never sees the button. */
+    els.tellBtn.hidden = !ShilohStore.can("media");
     /* The target is per-device, so whoever holds the phone that broadcasts
        must be able to type it in — that's exactly who can("live") covers.
        The publish password only guards the stream, never member data. */

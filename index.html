@@ -340,9 +340,9 @@
       </div>
       <a class="btn btn--quiet btn--block" id="sermonArchive" href="#" target="_blank" rel="noopener">The full sermon archive</a>
       <div class="card" id="rightnowCard" hidden>
-        <p class="eyebrow">Free for the Shiloh family</p>
+        <p class="eyebrow" id="rnEyebrow">Free for the Shiloh family</p>
         <h3 style="margin-top:var(--space-2)">RightNow Media</h3>
-        <p>A huge library of Bible studies and video teaching for every age — free with a Shiloh church account.</p>
+        <p id="rnBody">A huge library of Bible studies and video teaching for every age — free with a Shiloh church account.</p>
         <a class="btn btn--quiet" id="rightnowBtn" href="#" target="_blank" rel="noopener" style="margin-top:var(--space-4)">Register free</a>
       </div>
     </div>
@@ -353,11 +353,11 @@
     <div class="wrap stack">
       <div class="screen__head">
         <p class="eyebrow">Who we are</p>
-        <h2>About Shiloh</h2>
+        <h2 id="aboutHeading">About Shiloh</h2>
       </div>
       <div class="stack" id="aboutSections"></div>
       <div class="card" id="sundayFlowCard">
-        <p class="eyebrow">Sunday morning at Shiloh</p>
+        <p class="eyebrow" id="sundayFlowEyebrow">Sunday morning at Shiloh</p>
         <div class="stack" style="--gap: var(--space-3); margin-top: var(--space-4)" id="sundayFlow"></div>
       </div>
       <div class="card">
@@ -421,7 +421,7 @@
 
       <div class="card" id="connectDone" hidden>
         <h3>Thank you</h3>
-        <p>Someone from Shiloh will reach out soon.</p>
+        <p id="connectDone">Someone from Shiloh will reach out soon.</p>
       </div>
       <form class="card" id="connectForm">
         <h3>Say hello before you come</h3>
@@ -1488,9 +1488,30 @@
      button is, "you cannot break anything" — then it flows straight into
      the app tour. Track B ("tour") is the app tour alone. Every step is one
      instruction plus one line of encouragement, with huge Next and Back. */
+  function brandShort() {
+    return (THEME && (THEME.shortName || THEME.name)) || "church";
+  }
+  /* The template rebrands itself: every church-name string that isn't data
+     gets stamped from THEME here, so a fork only ever edits data files. */
+  function brandPass() {
+    var s = brandShort();
+    OB_WELCOME.title = "Welcome to the " + s + " app";
+    var el;
+    if ((el = document.getElementById("aboutHeading"))) el.textContent = "About " + s;
+    if ((el = document.getElementById("sundayFlowEyebrow"))) el.textContent = "Sunday morning at " + s;
+    if ((el = document.getElementById("rnEyebrow"))) el.textContent = "Free for the " + s + " family";
+    if ((el = document.getElementById("rnBody"))) el.textContent = "A huge library of Bible studies and video teaching for every age — free with a " + s + " church account.";
+    if ((el = document.getElementById("visitIntro")) && /At Shiloh,/.test(el.textContent) && s !== "Shiloh") {
+      el.textContent = "At " + s + ", we love to welcome new visitors. Here is what you can expect when you come.";
+    }
+    if ((el = document.getElementById("connectDone"))) el.textContent = "Someone from " + s + " will reach out soon.";
+    var hero = document.querySelector(".photohero img");
+    if (hero && CHURCH && CHURCH.name) hero.alt = "Worship at " + CHURCH.name;
+  }
   var OB_WELCOME = {
     icon: "i-cross",
-    title: "Welcome to the Shiloh app",
+    /* title is stamped from THEME at boot — the template rebrands itself */
+    title: "Welcome to the church app",
     body: "Service times, what's coming up, and the prayers this church is holding — all in one place."
   };
   var OB_BASICS = [
@@ -1628,21 +1649,21 @@
       html = '<div class="instep"><span class="instep__num instep__num--ok" aria-hidden="true">✓</span>' +
         '<div class="instep__body"><span class="instep__pic" style="color:var(--ok)" aria-hidden="true">' + ICON("i-phonehome") + "</span>" +
         "<b>You already did this — the app is on your home screen</b>" +
-        "<p>Tap the Shiloh picture on your home screen any time, and the app opens.</p></div></div>";
+        "<p>Tap the " + esc(brandShort()) + " picture on your home screen any time, and the app opens.</p></div></div>";
     } else if (state === "ios") {
       intro.textContent = "You're on an iPhone or iPad, so these are your steps — a few gentle taps.";
       html =
         instCard(1, "i-share", "Tap the Share button", "It's the small square with an arrow pointing up, at the bottom of the screen.") +
         instCard(2, "i-addsquare", "Tap “Add to Home Screen”", "Stroke the list upward slowly until you see it, then tap it once.") +
         instCard(3, "i-check", "Tap “Add” in the top corner", "That's the last tap — you're done.") +
-        instCard(4, "i-phonehome", "Find it on your home screen", "The Shiloh picture now sits with your other apps — tap it any time to open the app.");
+        instCard(4, "i-phonehome", "Find it on your home screen", "The " + brandShort() + " picture now sits with your other apps — tap it any time to open the app.");
     } else if (state === "android") {
       intro.textContent = "You're on an Android phone, so these are your steps — a few gentle taps.";
       html =
         instCard(1, "i-dots", "Tap the three little dots", "They sit in the top corner of the screen, one above another.") +
         instCard(2, "i-addsquare", "Tap “Add to Home screen”", "Stroke the list upward slowly if you don't see it at first.") +
         instCard(3, "i-check", "Tap “Add” or “Install”", "Your phone may also offer an Install message at the bottom of the screen — tapping that works just as well.") +
-        instCard(4, "i-phonehome", "Find it on your home screen", "The Shiloh picture now sits with your other apps — tap it any time to open the app.");
+        instCard(4, "i-phonehome", "Find it on your home screen", "The " + brandShort() + " picture now sits with your other apps — tap it any time to open the app.");
     } else {
       intro.textContent = "It looks like you're on a computer right now.";
       html =
@@ -1711,6 +1732,7 @@
       cal.href = "webcal://" + location.host + location.pathname.replace(/index\.html$/, "") + "events.ics";
     }
 
+    brandPass();
     document.getElementById("comfortToggle").checked = document.documentElement.getAttribute("data-comfort") === "on";
     syncThemeIcon();
     try { ShilohAmbient.mount(); } catch (e) {} /* cosmetics must never block boot */

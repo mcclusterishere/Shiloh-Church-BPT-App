@@ -1,0 +1,37 @@
+{
+  "note": "CHANGE-ME: every fact in this file is an obvious placeholder for the fictional example church (Grace Community Church, 123 Main Street, Springfield). Replace all of it with your church's real address, phone, email, pastor, and service times before the first link goes out. Leave rightNowMedia as \"\" and that card simply never appears; same for the prayer line — a blank number hides the card. Kept separate from theme.json (pure branding). See docs/MANAGE.md.",
+  "name": "Grace Community Church",
+  "denomination": "Nondenominational",
+  "pastor": "Rev. Alex Morgan",
+  "pastorShort": "Pastor Alex",
+  "pastorTenure": "twelve years at Grace",
+  "address": "123 Main Street, Springfield, ST 12345",
+  "phone": "(555) 555-0100",
+  "email": "office@example.org",
+  "website": "https://www.example.org",
+  "facebook": "",
+  "instagram": "",
+  "rightNowMedia": "",
+  "prayerLine": {
+    "number": "",
+    "accessCode": "",
+    "note": "Dial-in prayer line — fill in a number and access code to show the card in Help."
+  },
+  "online": {
+    "label": "Online worship",
+    "when": "Sundays at 10:00 AM",
+    "url": ""
+  },
+  "serviceTimes": [
+    {
+      "label": "Sunday worship",
+      "time": "Sun 10:00 AM"
+    },
+    {
+      "label": "Bible study",
+      "time": "Wed 7:00 PM"
+    }
+  ],
+  "kids": "Children are welcome in every service, and a staffed nursery is available on Sunday mornings.",
+  "parking": "Free parking is available in the church lot, right off Main Street."
+}

@@ -1,0 +1,36 @@
+{
+  "note": "CHANGE-ME: the giving handles below are placeholders — replace every CHANGE-ME with your church's real handles and links before launch, and delete any method you don't use. Per the design's non-negotiables, the app only LINKS out to these — it never processes or moves money itself. No prices or fees are invented here: what each provider costs is between your church and that provider.",
+  "intro": "Thank you for your faithfulness in giving. Every gift supports the ministry and mission of Grace Community Church.",
+  "methods": [
+    {
+      "method": "In Person",
+      "details": "Bring your tithe and offering with you to church on Sunday.",
+      "url": "",
+      "image": "assets/media/give-in-person.webp"
+    },
+    {
+      "method": "Mail",
+      "details": "Mail your tithe and offering: Grace Community Church, 123 Main Street, Springfield, ST 12345",
+      "url": "",
+      "image": "assets/media/give-mail.webp"
+    },
+    {
+      "method": "Online",
+      "details": "CHANGE-ME — paste your church's online giving link into the url field and describe it here.",
+      "url": "",
+      "image": "assets/media/give-online.webp"
+    },
+    {
+      "method": "Cash App",
+      "details": "$CHANGE-ME",
+      "url": "",
+      "image": "assets/media/give-cashapp.webp"
+    },
+    {
+      "method": "Zelle",
+      "details": "CHANGE-ME — the email or phone number on your church's Zelle account.",
+      "url": "",
+      "image": "assets/media/give-zelle.webp"
+    }
+  ]
+}

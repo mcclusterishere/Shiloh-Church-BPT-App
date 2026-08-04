@@ -1,0 +1,46 @@
+THE <title> AND <meta description> LINES A FORKER REPLACES
+===========================================================
+
+These lines are fetched by the browser before any JavaScript runs, so the
+app cannot re-theme them at runtime — they are what search engines,
+bookmarks, and the install prompt see. Edit each one by hand after forking.
+Line numbers are from the current tree (verify with the grep below if the
+files have moved since):
+
+    grep -n '<title>\|name="description"' index.html admin.html golive.html guide.html
+
+index.html
+----------
+line 6:   <title>Shiloh Baptist Church</title>
+          -> replace with:  <title>Your Church Name</title>
+
+line 7:   <meta name="description" content="Shiloh Baptist Church, Bridgeport CT — Where Christ Is Lifted Up. Events, prayer, sermons, and connection.">
+          -> replace with:  <meta name="description" content="Your Church Name, Your City — your tagline. Events, prayer, sermons, and connection.">
+
+admin.html
+----------
+line 6:   <title>Back office · Shiloh Baptist Church</title>
+          -> replace with:  <title>Back office · Your Church Name</title>
+
+golive.html
+-----------
+line 6:   <title>Broadcast studio · Shiloh Baptist Church</title>
+          -> replace with:  <title>Broadcast studio · Your Church Name</title>
+
+guide.html
+----------
+line 6:   <title>The Shiloh App — Paper Guide</title>
+          -> replace with:  <title>The Your-Church App — Paper Guide</title>
+
+line 7:   <meta name="description" content="A large-print paper guide to the Shiloh Baptist Church app — how to put it on your phone and how to use it.">
+          -> replace with:  <meta name="description" content="A large-print paper guide to the Your Church Name app — how to put it on your phone and how to use it.">
+
+manifest.webmanifest
+--------------------
+lines 2-4 (name, short_name, description) are the same kind of
+before-JavaScript metadata. template-pack/manifest.webmanifest already
+carries the example-church values — replace them with your own church's.
+
+The rest of the hardcoded church-name strings (hero eyebrow, onboarding
+title, install instructions, and so on) are enumerated line-by-line in
+docs/TEMPLATE.md step 8 — that map is the complete, honest list.

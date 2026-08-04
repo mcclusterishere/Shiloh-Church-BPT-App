@@ -1,0 +1,29 @@
+{
+  "note": "CHANGE-ME: everything here is generic example copy for the fictional Grace Community Church. Replace 'who', 'believe', and 'purpose' with your church's own words — members can tell the difference between their pastor's voice and filler. Staff: two example entries show both render paths (with a photo, and without — no photo shows initials). One deliberate omission: the original app's about.json also carries a 'pastorExtended' block (a documented civic-service record for the pastor); it is left out of the template because an invented record would be dishonest — add one back only if your pastor has a real, citable one.",
+  "who": "Grace Community Church is a church family in the heart of Springfield. We have a simple hope: to see people come to know Jesus Christ and grow in their faith, whatever their age and wherever they're starting from.\n\nIf you're looking for a church home, we'd love to meet you on Sunday. A greeter will help you find your way — the sanctuary, the restrooms, a cup of coffee, and anything else you need.",
+  "believe": "We believe in God the Father, in Jesus Christ the Son, and in the Holy Spirit. We believe the Bible is God's Word, that Jesus died and rose for us, and that His grace is a gift offered to everyone. Everything we sing, pray, and teach is grounded in Scripture.",
+  "purpose": "God calls us to be a loving, giving, and forgiving fellowship — to worship together, to grow together, and to serve our neighbors in Jesus' name. After the service, stay for a while: say hello, give us a chance to hear your story, and share ours with you.",
+  "years": 50,
+  "anniversary": {
+    "title": "Our 50th Anniversary",
+    "theme": "Faithful then, faithful now",
+    "when": "This year",
+    "image": "assets/media/anniversary-hero.webp"
+  },
+  "faithCdc": "",
+  "staff": [
+    {
+      "name": "Rev. Alex Morgan",
+      "title": "Senior Pastor",
+      "bio": "Pastor Alex has served Grace Community Church for twelve years, and loves nothing more than seeing this church family care for its city. This is example text — replace it with your pastor's real story.",
+      "image": "assets/media/pastor-mccluster.webp"
+    },
+    {
+      "name": "Jordan Lee",
+      "title": "Church Administrator",
+      "bio": "Jordan keeps the week running — the calendar, the building, and the church office. This is example text — replace it with your administrator's real story.",
+      "image": ""
+    }
+  ],
+  "logo": "assets/logo-example.png"
+}

@@ -1,0 +1,17 @@
+{
+  "note": "CHANGE-ME: three generic starter questions for the fictional Grace Community Church. Replace them with the questions visitors actually ask your church — and keep the answers in your church's own voice.",
+  "faq": [
+    {
+      "q": "Where are you located?",
+      "a": "We are located at 123 Main Street, Springfield. Free parking is available in the church lot, and someone at the door will be glad to point you the right way."
+    },
+    {
+      "q": "What time is service?",
+      "a": "Sunday worship begins at 10:00 AM. We also gather for Bible study on Wednesdays at 7:00 PM."
+    },
+    {
+      "q": "Is there something for my kids?",
+      "a": "Yes! Children are welcome in every service, and our Children's Ministry offers safe, engaging, age-appropriate activities on Sunday mornings."
+    }
+  ]
+}

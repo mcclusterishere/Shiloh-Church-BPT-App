@@ -1,0 +1,59 @@
+{
+  "name": "Grace Community Church",
+  "short_name": "Grace",
+  "description": "Grace Community Church, Springfield — Growing together in grace. Events, prayer, sermons, and connection.",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f4f1e6",
+  "theme_color": "#16283f",
+  "lang": "en",
+  "categories": [
+    "lifestyle",
+    "social"
+  ],
+  "icons": [
+    {
+      "src": "assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Watch live",
+      "url": "./#/watch",
+      "description": "Live worship and recent sermons"
+    },
+    {
+      "name": "Events",
+      "url": "./#/events",
+      "description": "See what's coming up and RSVP"
+    },
+    {
+      "name": "Prayer wall",
+      "url": "./#/prayer",
+      "description": "Share or pray over a request"
+    },
+    {
+      "name": "Give",
+      "url": "./#/give",
+      "description": "Tithes and offering"
+    }
+  ]
+}
