@@ -28,6 +28,10 @@ jobs:
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
+        with:
+          # Creates the Pages site on first run, so going live never depends
+          # on anyone finding the right toggle under Settings -> Pages.
+          enablement: true
 
       - name: Upload site
         uses: actions/upload-pages-artifact@v3
