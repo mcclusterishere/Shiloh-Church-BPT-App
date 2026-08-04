@@ -49,7 +49,8 @@
     <h1 id="gateChurch">Shiloh</h1>
     <p class="muted gate__blurb" id="gateBlurb">Sign in to run the back office.</p>
     <div id="gateDemo" hidden>
-      <div class="field"><label for="gatePass">Staff passcode</label><input id="gatePass" type="password" autocomplete="current-password"></div>
+      <div class="field"><label for="gateDemoEmail">Email <span class="muted">(passcode users leave this blank)</span></label><input id="gateDemoEmail" type="email" autocomplete="email" autocapitalize="none"></div>
+      <div class="field"><label for="gatePass">Password or staff passcode</label><input id="gatePass" type="password" autocomplete="current-password"></div>
     </div>
     <div id="gateSb" hidden>
       <div class="field"><label for="gateEmail">Email</label><input id="gateEmail" type="email" autocomplete="email"></div>
@@ -324,7 +325,7 @@
       document.getElementById("gateBlurb").textContent = "Sign in with your staff account.";
     } else {
       document.getElementById("gateDemo").hidden = false;
-      document.getElementById("gateBlurb").textContent = "Demo mode: enter a staff passcode from data/config.json.";
+      document.getElementById("gateBlurb").textContent = "Sign in with your staff account, or just a passcode.";
     }
     if (ShilohStore.staffRole()) openAdmin();
   });
@@ -336,7 +337,7 @@
     err.style.display = "none";
     var signin = config.mode === "supabase"
       ? ShilohStore.staffSignInSupabase(document.getElementById("gateEmail").value.trim(), document.getElementById("gatePw").value)
-      : ShilohStore.staffSignIn(document.getElementById("gatePass").value);
+      : ShilohStore.staffSignIn(document.getElementById("gatePass").value, document.getElementById("gateDemoEmail").value.trim());
     signin.then(openAdmin).catch(function (ex) {
       err.textContent = (ex && ex.message) ? ex.message : "That didn't work. Try again.";
       err.style.display = "block";

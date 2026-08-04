@@ -301,11 +301,25 @@ window.ShilohStore = (function () {
     admin: ["dashboard", "inbox", "content", "reservations", "live", "assistant",
             "people", "prayer", "volunteers", "settings", "automations"]
   };
-  function staffSignIn(passcode) {
+  function staffSignIn(passcode, email) {
     /* Passcodes are demo-mode only. In supabase mode a passcode "success"
        would write a role that staffRole() immediately voids (no token) —
        a toast saying welcome over a card still signed out. Fail honestly. */
     if (isSupabase()) return Promise.reject(new Error("This church uses real staff accounts — sign in with your email on the back office page."));
+    /* Named demo accounts (config.demoStaff): an email+password that signs
+       in like the real thing so a client can preview the back office —
+       but it is the same courtesy lock as the passcodes, nothing more. */
+    if (email) {
+      var em = String(email).trim().toLowerCase();
+      var hit = (config.demoStaff || []).filter(function (a) {
+        return String(a.email || "").trim().toLowerCase() === em && a.password === passcode;
+      })[0];
+      if (!hit || (hit.role !== "admin" && hit.role !== "editor")) {
+        return Promise.reject(new Error("That email and password didn't match."));
+      }
+      write(LS.role, { role: hit.role, name: hit.name || "", at: new Date().toISOString() });
+      return Promise.resolve(hit.role);
+    }
     var role = null;
     if (passcode && config.adminPasscode && passcode === config.adminPasscode) role = "admin";
     else if (passcode && config.editorPasscode && passcode === config.editorPasscode) role = "editor";

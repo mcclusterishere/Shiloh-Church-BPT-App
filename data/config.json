@@ -7,6 +7,14 @@
   "notifyEmail": "",
   "adminPasscode": "shiloh2026",
   "editorPasscode": "shilohmedia2026",
+  "demoStaff": [
+    {
+      "name": "Pastor McCluster",
+      "email": "pastormccl@gmail.com",
+      "password": "pastormccluster",
+      "role": "admin"
+    }
+  ],
   "applianceUrl": "",
   "applianceToken": ""
 }
