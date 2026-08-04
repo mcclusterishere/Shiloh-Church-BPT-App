@@ -13,10 +13,14 @@ mapping, and the open questions still waiting on real answers — lives in
 [`docs/DESIGN.md`](docs/DESIGN.md). Read that first if you're wondering why something
 below is built the way it is, or why something obvious isn't here yet.
 
-**Built to be forked.** Nothing church-specific lives in code — name, colors, tagline,
-ministries, and events all live in `data/*.json`. Forking this repo, editing those
-files, and swapping the church name and colors is the whole rebranding process for
-another congregation. See `docs/MANAGE.md`.
+**Built to be forked.** This app is a template. Name, tagline, ministries, events,
+giving, and every other screen's content live in `data/*.json`; the full icon set
+regenerates from any church's logo with one command
+(`python3 scripts/make-icons.py their-logo.jpg`). The complete fork-to-launch
+checklist — every file to edit, in dependency order, including an honest map of the
+handful of hardcoded spots that still say "Shiloh" — is
+[`docs/TEMPLATE.md`](docs/TEMPLATE.md). Day-to-day content editing after launch is
+`docs/MANAGE.md`.
 
 ## The app
 
@@ -93,10 +97,12 @@ the code is the guest's key, exactly how Airbnb hosts run smart locks.
 - `data/rentals.json` — the spaces outside groups can rent: descriptions, house rules, and rates (a blank rate shows "Ask about rates")
 - `data/access.json` — door and camera names for Admin → Building (names and ids only — data files are public, so nothing secret ever lives here)
 - `scripts/build-ics.js` — generates `events.ics` from `data/events.json` at deploy time
+- `scripts/make-icons.py` — regenerates the full `assets/icons/` set from any church's logo (Pillow; trims margins, splits a stacked logo's mark for the favicon)
 - `supabase/functions/assistant-gemini/` — ready-to-deploy Gemini brain for the admin Assistant
 - `docs/GO-LIVE.md` — the launch runbook: Pages setup, streaming routes and real costs, Workspace vs Gemini API
 - `docs/BACKEND.md` — go-live guide for Supabase + automations
 - `docs/MANAGE.md` — the one-page content-editing guide
+- `docs/TEMPLATE.md` — the fork checklist: give this app to another church in an afternoon
 - `docs/supabase-setup.sql` — schema + Row Level Security policies for live mode
 - `docs/DESIGN.md` — the full design proposal this build follows
 - `docs/APPLIANCE-SETUP.md` — turning a Mac mini into the Church OS "brain and pipe" appliance

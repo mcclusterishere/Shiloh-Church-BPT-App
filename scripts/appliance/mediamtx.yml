@@ -8,9 +8,10 @@
 # relay". MediaMTX treats this file as a partial config: only the settings
 # that differ from its defaults are listed; everything else stays default.
 #
-# Two placeholders to fill in before first use, both ALL-CAPS below:
+# Three placeholders to fill in before first use, all ALL-CAPS below:
 #   CHANGE-ME-TO-A-LONG-RANDOM-STRING  — the publish password staff phones use
 #   YT_KEY / FB_KEY                    — the two persistent stream keys
+#   YOURUSER                           — the Mac's account name, in recordPath
 
 # ---------------------------------------------------------------------------
 # Who may do what. Anyone may WATCH (that lets the app's Watch screen and the
@@ -86,3 +87,33 @@ paths:
     # If ffmpeg exits (a destination hiccup, a mistyped key), start it again
     # for as long as the phone is still publishing.
     runOnReadyRestart: yes
+
+    # -----------------------------------------------------------------------
+    # Record the broadcast to disk while it happens — the video half of the
+    # sermon archive (docs/SOUND-AND-SERVICE.md, "The service pipeline").
+    # MediaMTX records ONLY while a stream is actually being published, so
+    # this starts when the staff phone goes live and stops when it stops:
+    # nothing is ever captured outside the broadcast itself. That boundary is
+    # the privacy rule in SOUND-AND-SERVICE.md section 4, enforced here by
+    # the mechanism rather than by memory.
+    record: yes
+    # Where the files land — the video/ branch of the ShilohSermons tree that
+    # SOUND-AND-SERVICE.md lays out (audio + transcripts live beside it).
+    # The date pattern becomes the filename (e.g. 2026-08-09_08-45-12-000000);
+    # MediaMTX appends the .mp4 extension itself. Put the Mac's real account
+    # name in place of YOURUSER — same placeholder habit as the plists in
+    # docs/APPLIANCE-SETUP.md.
+    recordPath: /Users/YOURUSER/ShilohSermons/video/%Y-%m-%d_%H-%M-%S-%f
+    # Fragmented MP4: plays anywhere MP4 plays, and — unlike plain MP4 — the
+    # file stays readable up to the last written fragment if the box loses
+    # power mid-service.
+    recordFormat: fmp4
+    # One file per hour of broadcast; a normal Sunday service is 1-3 segments.
+    recordSegmentDuration: 1h
+    # Retention: keep 30 days, then delete automatically. The local video is
+    # a safety net, not the archive — the broadcast already lands on YouTube/
+    # Facebook, and the long-lived artifacts are the audio + transcript
+    # (SOUND-AND-SERVICE.md). Disk math: a ~5 Mbps broadcast is roughly
+    # 2.3 GB/hour, so ~2 hours x 5 Sundays stays around 25 GB — comfortable
+    # on a 512GB mini. Set to 0s to keep everything forever (watch the disk).
+    recordDeleteAfter: 30d

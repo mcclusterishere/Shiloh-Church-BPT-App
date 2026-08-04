@@ -6,7 +6,7 @@ for any of this.
 
 | I want to… | Edit this | Notes |
 | --- | --- | --- |
-| Change the church **name, tagline, or colors** | `data/theme.json` | This is branding *only*. If you change a color here, also update `manifest.webmanifest`'s `theme_color`/`background_color` by hand — the browser fetches that file before any of the app's JavaScript runs, so it can't be re-themed live the way the rest of the app can. |
+| Change the church **name, tagline, or colors** | `data/theme.json` | Name and tagline apply live everywhere. The color fields are honest-to-a-point: the app's rendered palette lives in `css/system.css`, so changing a hex here updates previews and exports but re-skinning the actual look means editing the custom properties at the top of `css/system.css` too — the fork checklist (`docs/TEMPLATE.md`) walks through exactly which ones. Also update `manifest.webmanifest`'s `theme_color`/`background_color` by hand. |
 | Change the church's **address, phone, pastor, or service times** | `data/church.json` | Kept separate from branding on purpose. |
 | Add or change a **ministry, small group, or bookable space** | `data/ministries.json` | Set `"bookable": true` on anything that should show "Request to book" instead of "I'm interested." |
 | Change the **spaces outside groups can rent** | `data/rentals.json` | The spaces, what each is good for, and the house rules. Leave a `rate` as `""` and the app shows "Ask about rates" — the office quotes and invoices; the app never takes a payment. |

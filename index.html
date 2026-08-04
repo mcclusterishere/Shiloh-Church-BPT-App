@@ -28,6 +28,19 @@
 </head>
 <body>
 
+<noscript>
+  <!-- The one audience that reaches this has no JavaScript at all — likely a
+       very old device. Plain inline styles on purpose: no var(), no modern CSS. -->
+  <div style="max-width:34em;margin:2em auto;padding:1.5em;font-family:Georgia,serif;font-size:20px;line-height:1.6;color:#1c2030;background:#f7f4ec;border:2px solid #16283f;border-radius:12px">
+    <h1 style="font-size:1.4em;margin:0 0 .5em">Shiloh Baptist Church</h1>
+    <p style="margin:.4em 0">477 Broad Street, Bridgeport, CT 06604</p>
+    <p style="margin:.4em 0">Sunday worship at 9:00 AM &middot; breakfast at 8:00 AM</p>
+    <p style="margin:.4em 0">Office: <a href="tel:+12035791504" style="color:#16283f">(203) 579-1504</a></p>
+    <p style="margin:.4em 0">Prayer line: (605) 313-5088, code 1054312#</p>
+    <p style="margin:1em 0 0">This device's browser can't run the full app, but everything above is what matters most. Our website: shilohchurchbpt.org</p>
+  </div>
+</noscript>
+
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
   <g id="i-home"><path d="M3 10.6 12 3.2l9 7.4V20a1.4 1.4 0 0 1-1.4 1.4h-4.2v-6.6H8.6v6.6H4.4A1.4 1.4 0 0 1 3 20z"/></g>
   <g id="i-cal"><rect x="3.2" y="5" width="17.6" height="16" rx="2.6"/><path d="M3.2 10h17.6M8 3v4M16 3v4"/></g>
@@ -44,6 +57,16 @@
   <g id="i-play"><circle cx="12" cy="12" r="9"/><path d="M10 8.6v6.8l5.4-3.4z"/></g>
   <g id="i-phone"><path d="M6.8 3.4h3l1.5 4-2 1.5a12.8 12.8 0 0 0 5.8 5.8l1.5-2 4 1.5v3a2 2 0 0 1-2.2 2A16.8 16.8 0 0 1 4.8 5.6a2 2 0 0 1 2-2.2z"/></g>
   <g id="i-pin"><path d="M12 21.4s6.8-6 6.8-11A6.8 6.8 0 0 0 5.2 10.4c0 5 6.8 11 6.8 11z"/><circle cx="12" cy="10.2" r="2.6"/></g>
+  <!-- Tutorial pictograms — the new-to-phones track and the install chapter. -->
+  <g id="i-tap"><circle cx="12" cy="14.8" r="2.8" fill="currentColor" stroke="none"/><path d="M7.2 9.6a6.8 6.8 0 0 1 9.6 0"/><path d="M4.4 6.8a10.8 10.8 0 0 1 15.2 0"/></g>
+  <g id="i-scroll"><circle cx="12" cy="19" r="2.2" fill="currentColor" stroke="none"/><path d="M12 15.2V4.4M7.6 8.8 12 4.4l4.4 4.4"/></g>
+  <g id="i-back"><path d="M20.4 12H4.8M11 5.8 4.8 12l6.2 6.2"/></g>
+  <g id="i-btn"><rect x="2.8" y="7.8" width="18.4" height="8.4" rx="4.2"/><path d="M8 12h8"/></g>
+  <g id="i-shield"><path d="M12 2.8 4.8 5.6v5.4c0 4.7 3 8.3 7.2 10.2 4.2-1.9 7.2-5.5 7.2-10.2V5.6z"/><path d="M8.8 12l2.3 2.3 4.4-4.4"/></g>
+  <g id="i-dots"><circle cx="12" cy="5.2" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="18.8" r="1.5" fill="currentColor" stroke="none"/></g>
+  <g id="i-addsquare"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="3.4"/><path d="M12 8.4v7.2M8.4 12h7.2"/></g>
+  <g id="i-phonehome"><rect x="6.6" y="2.6" width="10.8" height="18.8" rx="2.4"/><rect x="9.2" y="6.2" width="5.6" height="5.6" rx="1.3"/><path d="M10.6 18.4h2.8"/></g>
+  <g id="i-print"><path d="M6.8 8.4V3.4h10.4v5"/><path d="M6.8 17H5.4a2 2 0 0 1-2-2v-4.6a2 2 0 0 1 2-2h13.2a2 2 0 0 1 2 2V15a2 2 0 0 1-2 2h-1.4"/><rect x="6.8" y="13.6" width="10.4" height="7"/></g>
 </defs></svg>
 
 <!-- ============================ onboarding ============================ -->
@@ -53,6 +76,23 @@
     <div class="onboard__steps" id="obSteps" aria-hidden="true"></div>
     <div class="onboard__body" id="obBody"></div>
     <div class="onboard__actions" id="obActions"></div>
+  </div>
+</div>
+
+<!-- ================= install chapter — "put it on your phone" ========== -->
+<!-- Platform-detected: iOS Safari, Android Chrome, desktop, or the
+     already-installed state. Opened from the end of the tour and from Help,
+     forever. Content is rendered by openInstaller() so it always matches the
+     phone it's actually shown on. -->
+<div class="installer" id="installer" role="dialog" aria-modal="true" aria-labelledby="instTitle" hidden>
+  <div class="installer__inner">
+    <p class="eyebrow">One-time setup</p>
+    <h2 id="instTitle">Put this app on your phone</h2>
+    <p class="muted" id="instIntro"></p>
+    <div class="stack" id="instBody" style="--gap: var(--space-4)"></div>
+    <div class="installer__actions">
+      <button class="btn btn--primary btn--block" data-inst="close" type="button">Done</button>
+    </div>
   </div>
 </div>
 
@@ -520,6 +560,21 @@
       </div>
 
       <button class="btn btn--primary btn--block" id="replayTour" type="button">Watch the tour again</button>
+
+      <button class="quick" id="teachMe" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-tap"/></svg>
+        <span><b>Teach me from the very beginning</b><small>How to tap and how to move around — one gentle step at a time</small></span>
+      </button>
+
+      <button class="quick" id="installHelp" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-phonehome"/></svg>
+        <span><b>How to put the app on your phone</b><small>So it opens from your home screen, like any other app</small></span>
+      </button>
+
+      <a class="quick" href="guide.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-print"/></svg>
+        <span><b>Print the paper guide</b><small>A large-print handout to keep beside your phone</small></span>
+      </a>
 
       <button class="quick" data-nav="profile" type="button">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-people"/></svg>
@@ -1421,49 +1476,189 @@
   });
 
   /* -------------------------------- help ------------------------------ */
-  document.getElementById("replayTour").addEventListener("click", function () { startOnboarding(); });
+  document.getElementById("replayTour").addEventListener("click", function () { startTrack("tour"); });
+  document.getElementById("teachMe").addEventListener("click", function () { startTrack("basics"); });
+  document.getElementById("installHelp").addEventListener("click", function () { openInstaller(); });
   document.getElementById("comfortToggle").addEventListener("change", function () { setComfort(this.checked); });
   document.getElementById("darkToggle").addEventListener("change", function () { setTheme(this.checked ? "dark" : "light"); });
 
   /* ---------------------------- onboarding ---------------------------- */
-  var OB = [
-    { icon: "i-cross", title: "Welcome to the Shiloh app", body: "Service times, what's coming up, and the prayers this church is holding — all in one place.", first: true },
-    { icon: "i-flame", title: "You choose who sees it", body: "When you share a prayer request, you decide: the whole church, the prayer team, or the pastor alone. Nothing is ever shared for you." },
-    { icon: "i-cal", title: "Never miss a gathering", body: "Tap Yes on any event and we'll know to expect you. You can add it straight to your phone's own calendar." },
-    { icon: "i-home", title: "Keep it on your home screen", body: "Tap your browser's Share button, then \"Add to Home Screen.\" It opens like any other app — and works even with no signal.", last: true }
+  /* Two tracks. Track A ("basics") is for someone who has never used a
+     smartphone: phone basics first — tap, scroll, getting back, what a
+     button is, "you cannot break anything" — then it flows straight into
+     the app tour. Track B ("tour") is the app tour alone. Every step is one
+     instruction plus one line of encouragement, with huge Next and Back. */
+  var OB_WELCOME = {
+    icon: "i-cross",
+    title: "Welcome to the Shiloh app",
+    body: "Service times, what's coming up, and the prayers this church is holding — all in one place."
+  };
+  var OB_BASICS = [
+    { icon: "i-tap", big: true, title: "How to tap",
+      body: "Touch the screen once, gently, like pressing a doorbell.",
+      cheer: "That one little touch is how you do everything here." },
+    { icon: "i-scroll", big: true, title: "How to move down a page",
+      body: "Stroke the screen upward slowly, like smoothing a tablecloth.",
+      cheer: "The page follows your finger — go as slowly as you like." },
+    { icon: "i-back", big: true, title: "You can always get back",
+      body: "If the screen ever looks unfamiliar, tap the picture of a house at the bottom and you'll be home again.",
+      cheer: "There is no way to get lost." },
+    { icon: "i-btn", big: true, title: "What a button looks like",
+      body: "A button is words inside a soft rounded shape — the blue “Next” below is one.",
+      cheer: "When you're ready, give it one gentle tap." },
+    { icon: "i-shield", big: true, title: "You cannot break anything",
+      body: "Nothing you tap can hurt the app or your phone.",
+      cheer: "Wander freely — the house at the bottom always brings you home." }
   ];
-  var obIndex = 0;
+  var OB_TOUR = [
+    { icon: "i-flame", title: "You choose who sees it",
+      body: "When you share a prayer request, you decide: the whole church, the prayer team, or the pastor alone.",
+      cheer: "Nothing is ever shared for you." },
+    { icon: "i-cal", title: "Never miss a gathering",
+      body: "Tap Yes on any event and the church will know to expect you.",
+      cheer: "We'd love to see you there." },
+    { icon: "i-help", title: "Help is always close",
+      body: "Tap Help at the bottom any time — the tour, the paper guide, and the church office number all live there.",
+      cheer: "You are never on your own." },
+    { icon: "i-home", title: "Keep it on your phone",
+      body: "You can put this app on your home screen, so it opens like any other app.",
+      cheer: "We'll show you each step whenever you're ready.", install: true }
+  ];
+  var obMode = "choose", obQueue = [], obIndex = 0;
   function renderOb() {
-    var s = OB[obIndex];
-    document.getElementById("obSteps").innerHTML = OB.map(function (_, i) {
+    var steps = document.getElementById("obSteps");
+    var body = document.getElementById("obBody");
+    var acts = document.getElementById("obActions");
+    if (obMode === "choose") {
+      steps.innerHTML = "";
+      body.innerHTML =
+        '<div class="onboard__mark">' + ICON(OB_WELCOME.icon) + "</div>" +
+        '<h1 id="obTitle">' + esc(OB_WELCOME.title) + "</h1><p>" + esc(OB_WELCOME.body) + "</p>";
+      /* Three equal-weight doors in — nobody is nudged past the gentle one. */
+      acts.innerHTML =
+        '<button class="btn btn--block onboard__choice" data-ob="basics" type="button">I’m new to phones — teach me everything</button>' +
+        '<button class="btn btn--block onboard__choice" data-ob="tour" type="button">Show me around the app</button>' +
+        '<button class="btn btn--block onboard__choice" data-ob="skip" type="button">Skip</button>';
+      document.getElementById("onboard").scrollTop = 0;
+      return;
+    }
+    var s = obQueue[obIndex];
+    steps.innerHTML = obQueue.map(function (_, i) {
       return '<i data-on="' + (i <= obIndex) + '"></i>';
     }).join("");
-    document.getElementById("obBody").innerHTML =
-      '<div class="onboard__mark">' + ICON(s.icon) + "</div>" +
-      '<h1 id="obTitle">' + esc(s.title) + "</h1><p>" + esc(s.body) + "</p>";
-    var acts = "";
-    if (s.first) {
-      acts = '<button class="btn btn--primary btn--block" data-ob="next" type="button">Show me around</button>' +
-             '<button class="btn btn--quiet btn--block" data-ob="skip" type="button">Skip for now</button>';
-    } else if (s.last) {
-      acts = '<button class="btn btn--primary btn--block" data-ob="skip" type="button">Get started</button>';
+    body.innerHTML =
+      '<div class="onboard__mark' + (s.big ? " onboard__mark--big" : "") + '">' + ICON(s.icon) + "</div>" +
+      '<h1 id="obTitle">' + esc(s.title) + "</h1><p>" + esc(s.body) + "</p>" +
+      (s.cheer ? '<p class="onboard__cheer">' + esc(s.cheer) + "</p>" : "");
+    var last = obIndex === obQueue.length - 1;
+    var html = "";
+    if (s.install) {
+      html = '<button class="btn btn--primary btn--block" data-ob="install" type="button">Show me how</button>' +
+             '<button class="btn btn--block" data-ob="done" type="button">Maybe later</button>';
+    } else if (last) {
+      html = '<button class="btn btn--primary btn--block" data-ob="done" type="button">Get started</button>';
     } else {
-      acts = '<button class="btn btn--primary btn--block" data-ob="next" type="button">Next</button>' +
-             '<button class="btn btn--quiet btn--block" data-ob="skip" type="button">Skip for now</button>';
+      html = '<button class="btn btn--primary btn--block" data-ob="next" type="button">Next</button>';
     }
-    document.getElementById("obActions").innerHTML = acts;
+    html += '<button class="btn btn--quiet btn--block" data-ob="back" type="button">Back</button>';
+    acts.innerHTML = html;
+    document.getElementById("onboard").scrollTop = 0;
   }
   function startOnboarding() {
-    obIndex = 0; renderOb();
+    obMode = "choose"; obQueue = []; obIndex = 0;
+    renderOb();
     document.getElementById("onboard").classList.add("on");
+  }
+  function startTrack(track) {
+    obMode = "steps";
+    obQueue = track === "basics" ? OB_BASICS.concat(OB_TOUR) : OB_TOUR.slice();
+    obIndex = 0;
+    renderOb();
+    document.getElementById("onboard").classList.add("on");
+  }
+  function finishOb() {
+    ShilohStore.setOnboardingDone(true);
+    document.getElementById("onboard").classList.remove("on");
   }
   document.getElementById("onboard").addEventListener("click", function (e) {
     var b = e.target.closest("[data-ob]");
     if (!b) return;
     haptic();
-    if (b.getAttribute("data-ob") === "next") { obIndex++; renderOb(); return; }
-    ShilohStore.setOnboardingDone(true);
-    document.getElementById("onboard").classList.remove("on");
+    var act = b.getAttribute("data-ob");
+    if (act === "basics" || act === "tour") { startTrack(act); return; }
+    if (act === "next") { obIndex++; renderOb(); return; }
+    if (act === "back") {
+      if (obIndex === 0) { obMode = "choose"; } else { obIndex--; }
+      renderOb();
+      return;
+    }
+    if (act === "install") { finishOb(); openInstaller(); return; }
+    finishOb(); /* "skip" or "done" */
+  });
+
+  /* -------------------------- install chapter -------------------------- */
+  /* Show ONLY the steps for the phone in hand. navigator.standalone covers
+     iOS Safari's installed state; display-mode covers everyone else. */
+  function installState() {
+    var standalone = false;
+    try {
+      standalone = (window.navigator.standalone === true) ||
+        (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches);
+    } catch (e) {}
+    if (standalone) return "installed";
+    var ua = navigator.userAgent || "";
+    var iOS = /iPad|iPhone|iPod/.test(ua) ||
+      (/Macintosh/.test(ua) && (navigator.maxTouchPoints || 0) > 1); /* iPadOS reports as Mac */
+    if (iOS) return "ios";
+    if (/Android/i.test(ua)) return "android";
+    return "desktop";
+  }
+  function instCard(n, icon, title, body) {
+    return '<div class="instep">' +
+      '<span class="instep__num" aria-hidden="true">' + n + "</span>" +
+      '<div class="instep__body"><span class="instep__pic" aria-hidden="true">' + ICON(icon) + "</span>" +
+      "<b>" + esc(title) + "</b><p>" + esc(body) + "</p></div></div>";
+  }
+  function openInstaller() {
+    var state = installState();
+    var intro = document.getElementById("instIntro");
+    var html = "";
+    if (state === "installed") {
+      intro.textContent = "Good news — there is nothing left to do.";
+      html = '<div class="instep"><span class="instep__num instep__num--ok" aria-hidden="true">✓</span>' +
+        '<div class="instep__body"><span class="instep__pic" style="color:var(--ok)" aria-hidden="true">' + ICON("i-phonehome") + "</span>" +
+        "<b>You already did this — the app is on your home screen</b>" +
+        "<p>Tap the Shiloh picture on your home screen any time, and the app opens.</p></div></div>";
+    } else if (state === "ios") {
+      intro.textContent = "You're on an iPhone or iPad, so these are your steps — a few gentle taps.";
+      html =
+        instCard(1, "i-share", "Tap the Share button", "It's the small square with an arrow pointing up, at the bottom of the screen.") +
+        instCard(2, "i-addsquare", "Tap “Add to Home Screen”", "Stroke the list upward slowly until you see it, then tap it once.") +
+        instCard(3, "i-check", "Tap “Add” in the top corner", "That's the last tap — you're done.") +
+        instCard(4, "i-phonehome", "Find it on your home screen", "The Shiloh picture now sits with your other apps — tap it any time to open the app.");
+    } else if (state === "android") {
+      intro.textContent = "You're on an Android phone, so these are your steps — a few gentle taps.";
+      html =
+        instCard(1, "i-dots", "Tap the three little dots", "They sit in the top corner of the screen, one above another.") +
+        instCard(2, "i-addsquare", "Tap “Add to Home screen”", "Stroke the list upward slowly if you don't see it at first.") +
+        instCard(3, "i-check", "Tap “Add” or “Install”", "Your phone may also offer an Install message at the bottom of the screen — tapping that works just as well.") +
+        instCard(4, "i-phonehome", "Find it on your home screen", "The Shiloh picture now sits with your other apps — tap it any time to open the app.");
+    } else {
+      intro.textContent = "It looks like you're on a computer right now.";
+      html =
+        instCard(1, "i-phonehome", "Open the app on your phone", "Open this same address on your phone — or ask a family member to help you.") +
+        instCard(2, "i-help", "Then open Help on the phone", "Tap Help at the bottom, then “How to put the app on your phone” — it will show the right steps for that phone.");
+    }
+    document.getElementById("instBody").innerHTML = html;
+    var inst = document.getElementById("installer");
+    inst.hidden = false;
+    inst.scrollTop = 0;
+  }
+  document.getElementById("installer").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-inst]");
+    if (!b) return;
+    haptic();
+    document.getElementById("installer").hidden = true;
   });
 
   /* -------------------------------- boot ------------------------------ */
@@ -1518,9 +1713,13 @@
 
     document.getElementById("comfortToggle").checked = document.documentElement.getAttribute("data-comfort") === "on";
     syncThemeIcon();
-    ShilohAmbient.mount();
+    try { ShilohAmbient.mount(); } catch (e) {} /* cosmetics must never block boot */
     route();
     if (!ShilohStore.isOnboardingDone()) startOnboarding();
+  }).catch(function () {
+    /* Data failed to load (ancient browser, dead network mid-boot): the
+       shell is still standing — navigation must still work. */
+    try { route(); } catch (e) {}
   });
 })();
 </script>

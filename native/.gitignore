@@ -1,0 +1,10 @@
+# Everything in this directory except the four checked-in files is a
+# generated artifact. `npm install` recreates node_modules, `npx cap add`
+# recreates ios/ and android/, and `npm run sync` recreates www/ from the
+# repo root. None of it belongs in git.
+node_modules/
+ios/
+android/
+www/
+.DS_Store
+*.log

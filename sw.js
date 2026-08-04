@@ -7,13 +7,14 @@
    instead of a stale cache. */
 "use strict";
 
-var CACHE_VERSION = "shiloh-v11";
+var CACHE_VERSION = "shiloh-v12";
 var MEDIA_CACHE = "shiloh-media-v1";
 var SHELL = [
   "./",
   "index.html",
   "admin.html",
   "golive.html",
+  "guide.html",
   "manifest.webmanifest",
   "js/store.js",
   "js/ambient.js",

@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Shiloh App — Paper Guide</title>
+  <meta name="description" content="A large-print paper guide to the Shiloh Baptist Church app — how to put it on your phone and how to use it.">
+  <link rel="icon" href="assets/icons/favicon-32.png" type="image/png">
+  <link rel="stylesheet" href="css/system.css">
+  <script>
+    /* Same first-paint theme snippet as the app, so the guide matches the
+       reader's chosen look on screen. Print always overrides to ink. */
+    (function () {
+      try {
+        var t = localStorage.getItem("shiloh.theme");
+        if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+        if (localStorage.getItem("shiloh.comfort") === "on") document.documentElement.setAttribute("data-comfort", "on");
+      } catch (e) {}
+    })();
+  </script>
+  <style>
+    /* ------------------------------------------------------------ screen -- */
+    body { padding: var(--space-6) 0 var(--space-8); }
+    .gwrap { width: min(100% - 2 * var(--space-5), 44rem); margin-inline: auto; }
+    .gbar {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: var(--space-3); flex-wrap: wrap;
+      margin-bottom: var(--space-6);
+    }
+    .cover {
+      text-align: center;
+      padding: var(--space-8) var(--space-5) var(--space-7);
+      border: 1px solid var(--edge);
+      border-radius: var(--radius-xl);
+      background: color-mix(in oklch, var(--surface) var(--glass), transparent);
+      box-shadow: 0 1px 0 0 var(--edge-light) inset, 0 18px 40px -24px var(--shadow);
+    }
+    .cover h1 { font-size: var(--step-5); margin: var(--space-3) 0 var(--space-2); }
+    .cover .gsub { font-size: var(--step-2); color: var(--text-muted); margin-inline: auto; }
+    .gcontact { margin-top: var(--space-6); margin-inline: auto; }
+    .gcontact b { display: block; font-size: var(--step-1); }
+    .gurl {
+      margin: var(--space-5) auto 0;
+      padding: var(--space-4);
+      border: 1.5px dashed var(--edge);
+      border-radius: var(--radius-md);
+      color: var(--text-muted);
+    }
+    .gurl b { color: var(--text); overflow-wrap: anywhere; }
+    .sheet { margin-top: var(--space-7); }
+    .sheet h2 { margin-bottom: var(--space-2); }
+    .sheet .lead { color: var(--text-muted); margin-bottom: var(--space-5); }
+    .gstep {
+      display: grid; grid-template-columns: auto auto 1fr;
+      gap: var(--space-4); align-items: center;
+      padding: var(--space-5);
+      border: 1px solid var(--edge);
+      border-radius: var(--radius-lg);
+      background: color-mix(in oklch, var(--surface) var(--glass), transparent);
+    }
+    .gstep + .gstep, .gscreen + .gscreen, .gcallout + .gcallout { margin-top: var(--space-4); }
+    .gstep__num {
+      display: grid; place-items: center;
+      width: 3rem; height: 3rem;
+      border-radius: 50%;
+      font-family: var(--font-display);
+      font-variation-settings: var(--display-settings);
+      font-weight: 800;
+      font-size: var(--step-2);
+      font-variant-numeric: tabular-nums;
+      color: color-mix(in oklch, var(--accent) 32%, var(--text));
+      border: 1.5px solid color-mix(in oklch, var(--accent) 34%, transparent);
+      background: color-mix(in oklch, var(--accent) 10%, transparent);
+    }
+    .gstep__pic, .gscreen__pic { color: var(--accent); }
+    .gstep__pic svg { width: 52px; height: 52px; }
+    .gstep__body { min-width: 0; }
+    .gstep__body b { display: block; font-size: var(--step-1); margin-bottom: var(--space-1); }
+    .gstep__body p, .gscreen p { color: var(--text-muted); }
+    .gscreen {
+      display: grid; grid-template-columns: auto 1fr;
+      gap: var(--space-4); align-items: center;
+      padding: var(--space-4) var(--space-5);
+      border: 1px solid var(--edge);
+      border-radius: var(--radius-lg);
+      background: color-mix(in oklch, var(--surface) var(--glass), transparent);
+    }
+    .gscreen__pic svg { width: 40px; height: 40px; }
+    .gscreen b { display: block; font-size: var(--step-1); }
+    .gcallout {
+      padding: var(--space-5);
+      border: 1.5px solid var(--edge);
+      border-radius: var(--radius-lg);
+      background: color-mix(in oklch, var(--surface) var(--glass), transparent);
+    }
+    .gphone {
+      font-family: var(--font-display);
+      font-variation-settings: var(--display-settings);
+      font-weight: 800;
+      font-size: var(--step-3);
+      margin-top: var(--space-2);
+      overflow-wrap: anywhere;
+    }
+    .gnote { margin-top: var(--space-5); color: var(--text-muted); }
+
+    /* ------------------------------------------------------------- print -- */
+    /* Ink rules: white paper, black text, large print, one section per page,
+       no glass, no shadows, full URLs. Legible at arm's length. */
+    @media print {
+      :root, :root[data-theme="dark"], :root[data-theme="light"] {
+        --ground: #fff; --ground-deep: #fff; --surface: #fff;
+        --text: #000; --text-muted: #000; --text-faint: #333;
+        --edge: #000; --edge-light: transparent; --shadow: transparent;
+        --accent: #000; --shiloh: #000; --ruby: #000; --amber: #000;
+        --teal: #000; --violet: #000; --ok: #000;
+        --glass: 100%; --light-strength: 0;
+      }
+      @page { margin: 1.8cm; }
+      html { font-size: 15pt; } /* ≈ 15pt body text — large print */
+      body { background: #fff; color: #000; padding: 0; }
+      .no-print { display: none !important; }
+      .gwrap { width: 100%; }
+      .cover, .gstep, .gscreen, .gcallout, .gurl {
+        background: #fff; box-shadow: none; border-color: #000;
+      }
+      .gstep__num { color: #000; border-color: #000; background: #fff; }
+      .sheet { break-before: page; margin-top: 0; }
+      .gstep, .gscreen, .gcallout { break-inside: avoid; }
+      a { color: #000; }
+      a[href^="http"]::after { content: " (" attr(href) ")"; font-weight: 400; }
+      svg { color: #000 !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Pictograms, self-contained. Same drawing rules as the app's icon set. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <g id="g-globe"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.5 4 5.6 4 9s-1.4 6.5-4 9c-2.6-2.5-4-5.6-4-9s1.4-6.5 4-9z"/></g>
+  <g id="g-share"><path d="M4 12v7.2A1.8 1.8 0 0 0 5.8 21h12.4a1.8 1.8 0 0 0 1.8-1.8V12"/><path d="M12 15.4V3.2M7.8 7.4 12 3.2l4.2 4.2"/></g>
+  <g id="g-addsquare"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="3.4"/><path d="M12 8.4v7.2M8.4 12h7.2"/></g>
+  <g id="g-check"><path d="M4.5 12.6 9.4 17.5 19.5 7.4"/></g>
+  <g id="g-dots"><circle cx="12" cy="5.2" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="18.8" r="1.5" fill="currentColor" stroke="none"/></g>
+  <g id="g-phonehome"><rect x="6.6" y="2.6" width="10.8" height="18.8" rx="2.4"/><rect x="9.2" y="6.2" width="5.6" height="5.6" rx="1.3"/><path d="M10.6 18.4h2.8"/></g>
+  <g id="g-home"><path d="M3 10.6 12 3.2l9 7.4V20a1.4 1.4 0 0 1-1.4 1.4h-4.2v-6.6H8.6v6.6H4.4A1.4 1.4 0 0 1 3 20z"/></g>
+  <g id="g-cal"><rect x="3.2" y="5" width="17.6" height="16" rx="2.6"/><path d="M3.2 10h17.6M8 3v4M16 3v4"/></g>
+  <g id="g-flame"><path d="M12 21.6c3.2 0 5.6-2.5 5.6-5.7 0-4.4-5.6-11-5.6-11S6.4 11.5 6.4 15.9c0 3.2 2.4 5.7 5.6 5.7z"/><path d="M12 17.8a2 2 0 0 0 2-2c0-1.5-2-3.6-2-3.6s-2 2.1-2 3.6a2 2 0 0 0 2 2z"/></g>
+  <g id="g-people"><circle cx="9" cy="8" r="3.4"/><path d="M2.6 20.4a6.4 6.4 0 0 1 12.8 0"/><path d="M16.2 5.2a3.4 3.4 0 0 1 0 6.6M17.6 14.6a6.4 6.4 0 0 1 3.8 5.8"/></g>
+  <g id="g-heart"><path d="M12 20.6S3.4 15.4 3.4 9.6a4.6 4.6 0 0 1 8.6-2.3A4.6 4.6 0 0 1 20.6 9.6c0 5.8-8.6 11-8.6 11z"/></g>
+  <g id="g-call"><path d="M6.8 3.4h3l1.5 4-2 1.5a12.8 12.8 0 0 0 5.8 5.8l1.5-2 4 1.5v3a2 2 0 0 1-2.2 2A16.8 16.8 0 0 1 4.8 5.6a2 2 0 0 1 2-2.2z"/></g>
+</defs></svg>
+
+<div class="gwrap">
+
+  <div class="gbar no-print">
+    <a class="btn" href="index.html">← Back to the app</a>
+    <button class="btn btn--primary" id="printBtn" type="button">Print this guide</button>
+  </div>
+
+  <!-- ------------------------------- cover ------------------------------ -->
+  <header class="cover">
+    <p class="eyebrow" id="gName">Shiloh Baptist Church</p>
+    <h1>The Shiloh App</h1>
+    <p class="gsub">A paper guide to get you started</p>
+    <p style="margin:var(--space-5) auto 0"><b>Take your time. There is no wrong button.</b></p>
+    <div class="gcontact">
+      <b>The church office is always glad to help</b>
+      <span id="gPhoneTop">Call or visit the church office — the number is on your Sunday bulletin.</span><br>
+      <span id="gAddress">Bridgeport, Connecticut</span>
+    </div>
+    <p class="gurl">The app lives at this address:<br><b id="gAppUrl">_______________________________</b></p>
+  </header>
+
+  <!-- ------------------------ section 1: iPhone ------------------------- -->
+  <section class="sheet">
+    <p class="eyebrow">Section 1</p>
+    <h2>Putting the app on an iPhone</h2>
+    <p class="lead">These steps are for an iPhone or iPad. If your phone is an Android, skip to Section 2. A family member or the church office can sit with you — it takes about a minute.</p>
+
+    <div class="gstep">
+      <span class="gstep__num" aria-hidden="true">1</span>
+      <span class="gstep__pic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#g-globe"/></svg></span>
+      <span class="gstep__body"><b>Open the app in Safari</b><p>Type the address from the front of this guide, or ask someone to open it for you.</p></span>
+    </div>
+    <div class="gstep">
+      <span class="gstep__num" aria-hidden="true">2</span>
+      <span class="gstep__pic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#g-share"/></svg></span>
+      <span class="gstep__body"><b>Tap the Share button</b><p>It's the small square with an arrow pointing up, at the bottom of the screen — this picture shows it.</p></span>
+    </div>
+    <div class="gstep">
+      <span class="gstep__num" aria-hidden="true">3</span>
+      <span class="gstep__pic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#g-addsquare"/></svg></span>
+      <span class="gstep__body"><b>Tap “Add to Home Screen”</b><p>Stroke the list upward slowly until you see it — it sits beside a square with a plus sign, like this one.</p></span>
+    </div>
+    <div class="gstep">
+      <span class="gstep__num" aria-hidden="true">4</span>
+      <span class="gstep__pic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#g-check"/></svg></span>
+      <span class="gstep__body"><b>Tap “Add” in the top corner</b><p>That's the last tap — you're done.</p></span>
+    </div>
+    <div class="gstep">
+      <span class="gstep__num" aria-hidden="true">5</span>
+      <span class="gstep__pic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#g-phonehome"/></svg></span>
+      <span class="gstep__body"><b>Look at your home screen</b><p>The Shiloh picture now sits with your other apps. From now on, one tap on it opens the app.</p></span>
+    </div>
+  </section>
+
+  <!-- ------------------------ section 2: Android ------------------------ -->
+  <section class="sheet">
+    <p class="eyebrow">Section 2</p>
+    <h2>Putting the app on an Android phone</h2>
+    <p class="lead">These steps are for Android phones using Chrome. If your phone is an iPhone, use Section 1 instead.</p>
+
+    <div class="gstep">
+      <span class="gstep__num" aria-hidden="true">1</span>
+      <span class="gstep__pic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#g-globe"/></svg></span>
+      <span class="gstep__body"><b>Open the app in Chrome</b><p>Type the address from the front of this guide, or ask someone to open it for you.</p></span>
+    </div>
+    <div class="gstep">
+      <span class="gstep__num" aria-hidden="true">2</span>
+      <span class="gstep__pic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#g-dots"/></svg></span>
+      <span class="gstep__body"><b>Tap the three little dots</b><p>They sit in the top corner of the screen, one above another — like this picture.</p></span>
+    </div>
+    <div class="gstep">
+      <span class="gstep__num" aria-hidden="true">3</span>
+      <span class="gstep__pic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#g-addsquare"/></svg></span>
+      <span class="gstep__body"><b>Tap “Add to Home screen”</b><p>Stroke the list upward slowly if you don't see it at first.</p></span>
+    </div>
+    <div class="gstep">
+      <span class="gstep__num" aria-hidden="true">4</span>
+      <span class="gstep__pic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#g-check"/></svg></span>
+      <span class="gstep__body"><b>Tap “Add” or “Install”</b><p>Your phone may also offer an Install message at the bottom of the screen — tapping that works just as well.</p></span>
+    </div>
+    <div class="gstep">
+      <span class="gstep__num" aria-hidden="true">5</span>
+      <span class="gstep__pic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#g-phonehome"/></svg></span>
+      <span class="gstep__body"><b>Look at your home screen</b><p>The Shiloh picture now sits with your other apps. From now on, one tap on it opens the app.</p></span>
+    </div>
+  </section>
+
+  <!-- ----------------------- section 3: using it ------------------------ -->
+  <section class="sheet">
+    <p class="eyebrow">Section 3</p>
+    <h2>Using the app</h2>
+    <p class="lead">Six buttons sit along the bottom of the app. Here is what the first five do. The sixth one, Help, can teach you all of this again — right on the phone.</p>
+
+    <div class="gscreen">
+      <span class="gscreen__pic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#g-home"/></svg></span>
+      <span><b>Home — the picture of a house</b><p>The front page: service times, what's happening next, and a greeting from the pastor. If you ever feel lost, tap the house and you're back here.</p></span>
+    </div>
+    <div class="gscreen">
+      <span class="gscreen__pic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#g-cal"/></svg></span>
+      <span><b>Events — the little calendar</b><p>Everything coming up at church. Tap Yes on anything and the church will know to expect you.</p></span>
+    </div>
+    <div class="gscreen">
+      <span class="gscreen__pic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#g-flame"/></svg></span>
+      <span><b>Prayer — the small flame</b><p>Share a prayer request and pray along with the church family. You choose who sees yours: the whole church, the prayer team, or the pastor alone.</p></span>
+    </div>
+    <div class="gscreen">
+      <span class="gscreen__pic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#g-people"/></svg></span>
+      <span><b>Groups — the two people</b><p>The ministries of the church. Find your place and tap “I'm interested” — the leader will reach out to you.</p></span>
+    </div>
+    <div class="gscreen">
+      <span class="gscreen__pic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#g-heart"/></svg></span>
+      <span><b>Give — the heart</b><p>Tithes and offering. Every button there goes straight to the church's own giving accounts — the app never touches your money.</p></span>
+    </div>
+    <p class="gnote">Wherever you are in the app, stroke the screen upward slowly to read more — like smoothing a tablecloth.</p>
+  </section>
+
+  <!-- ---------------------- section 4: if stuck ------------------------- -->
+  <section class="sheet">
+    <p class="eyebrow">Section 4</p>
+    <h2>If you get stuck</h2>
+    <p class="lead">Take a breath — you have done nothing wrong.</p>
+
+    <div class="gcallout">
+      <p><b>There is no wrong button.</b> Nothing you tap can hurt the app or your phone.</p>
+    </div>
+    <div class="gcallout">
+      <p><b>Call the church office</b> — a real person will gladly help you:</p>
+      <p class="gphone" id="gPhone">The number is on your Sunday bulletin.</p>
+    </div>
+    <div class="gcallout">
+      <p><b>Or bring this guide to church.</b> Hand it to any deacon after service and ask — they will be glad you did.</p>
+    </div>
+    <p class="gnote">Church website: <b id="gWebsite">ask the church office for the address</b></p>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+  function put(id, text) {
+    var el = document.getElementById(id);
+    if (el && text) el.textContent = text;
+  }
+  /* Church facts come from data/church.json when this page loads. If the
+     file can't be reached (offline, or printing a saved copy), the gentle
+     fallback text already on the page stays put — nothing is invented. */
+  fetch("data/church.json", { cache: "no-cache" })
+    .then(function (r) { return r.json(); })
+    .then(function (c) {
+      if (!c) return;
+      put("gName", c.name);
+      put("gAddress", c.address);
+      put("gPhone", c.phone);
+      if (c.phone) put("gPhoneTop", "Office: " + c.phone);
+      put("gWebsite", c.website);
+    })
+    .catch(function () {});
+  /* The app's own address is only knowable when this page is served from
+     it. Otherwise the blank line stays for the office to fill in by hand. */
+  if (/^https?:$/.test(location.protocol)) {
+    put("gAppUrl", location.href.replace(/guide\.html.*$/, ""));
+  }
+  document.getElementById("printBtn").addEventListener("click", function () {
+    window.print();
+  });
+})();
+</script>
+</body>
+</html>
