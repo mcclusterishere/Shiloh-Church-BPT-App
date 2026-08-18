@@ -1,0 +1,2955 @@
+name: Apply Redesign v2
+on:
+  workflow_dispatch:
+jobs:
+  redesign:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Write system.css
+        run: |
+          cat > css/system.css << 'SYSEOF'
+/* ============================================================================
+   Shiloh — Sacred Architecture Design System v2
+   Concept: "Light through stained glass, now in motion."
+
+   Non-negotiables preserved:
+   - Body text never below 1rem (20px)
+   - WCAG AAA contrast ratios maintained
+   - 48px+ tap targets
+   - Comfort mode strips all motion & glass
+   ========================================================================= */
+
+/* --------------------------------------------------------------- fonts -- */
+@font-face {
+  font-family: "Atkinson";
+  src: url("../assets/fonts/atkinson-hyperlegible-latin-400-normal.woff2") format("woff2");
+  font-weight: 400; font-display: swap;
+}
+@font-face {
+  font-family: "Atkinson";
+  src: url("../assets/fonts/atkinson-hyperlegible-latin-700-normal.woff2") format("woff2");
+  font-weight: 700; font-display: swap;
+}
+@font-face {
+  font-family: "Fraunces";
+  src: url("../assets/fonts/fraunces-latin-var.woff2") format("woff2-variations");
+  font-weight: 100 900; font-display: swap;
+}
+
+/* --------------------------------------------------- registered props -- */
+@property --glow-angle {
+  syntax: "<angle>"; initial-value: 0deg; inherits: false;
+}
+@property --sheen {
+  syntax: "<percentage>"; initial-value: 0%; inherits: false;
+}
+@property --glass-opacity {
+  syntax: "<number>"; initial-value: 0.72; inherits: false;
+}
+@property --spotlight-x {
+  syntax: "<percentage>"; initial-value: 50%; inherits: false;
+}
+@property --spotlight-y {
+  syntax: "<percentage>"; initial-value: 50%; inherits: false;
+}
+
+/* -------------------------------------------------------------- reset -- */
+*, *::before, *::after {
+  box-sizing: border-box; margin: 0; padding: 0;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+body {
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.55;
+  color: var(--text);
+  background: var(--ground);
+  min-height: 100dvh;
+  overflow-x: hidden;
+  transition: background-color var(--dur-base) var(--ease-out),
+              color var(--dur-base) var(--ease-out);
+}
+
+/* ---------------------------------------------------------- theme core -- */
+:root {
+  /* Typography — refined scale with more breathing room */
+  --font-body: "Atkinson", system-ui, -apple-system, sans-serif;
+  --font-display: "Fraunces", Georgia, serif;
+  --display-settings: "opsz" 144, "SOFT" 30, "WONK" 1;
+  --display-settings-lg: "opsz" 144, "SOFT" 50, "WONK" 1;
+
+  --step--2: clamp(0.78rem, 0.76rem + 0.1vw, 0.84rem);
+  --step--1: clamp(0.88rem, 0.84rem + 0.2vw, 0.96rem);
+  --step-0:  clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --step-1:  clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
+  --step-2:  clamp(1.5rem, 1.25rem + 0.8vw, 2rem);
+  --step-3:  clamp(1.85rem, 1.45rem + 1.2vw, 2.6rem);
+  --step-4:  clamp(2.2rem, 1.7rem + 1.6vw, 3.4rem);
+  --step-5:  clamp(2.8rem, 2.1rem + 2.2vw, 4.5rem);
+
+  /* Space — more granular, luxurious spacing */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 2.75rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+
+  /* Motion — spring physics for organic feel */
+  --dur-instant: 120ms;
+  --dur-fast: 200ms;
+  --dur-base: 320ms;
+  --dur-slow: 600ms;
+  --dur-dramatic: 900ms;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-elastic: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-dramatic: cubic-bezier(0.87, 0, 0.13, 1);
+
+  /* Shape — softer, more contemporary radius */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.75rem;
+  --radius-pill: 999px;
+
+  /* Interaction */
+  --tap: 48px;
+}
+
+/* Light theme — warmer, more sophisticated */
+:root[data-theme="light"], :root:not([data-theme="dark"]) {
+  --shiloh: #2e5f92;
+  --shilohSky: #a9c9ef;
+  --navy: #16283f;
+  --navyDeep: #0f1c30;
+  --cream: #f4f1e6;
+  --ink: #1c261f;
+  --accent: #2e5f92;
+  --accentSoft: #9cc3ee;
+  --amber: #a86a12;
+  --ruby: #b3324a;
+
+  --ground: #f7f4ec;
+  --ground-elevated: #ffffff;
+  --surface: rgba(255, 255, 255, 0.65);
+  --surface-solid: #ffffff;
+  --text: #0f1724;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --edge: rgba(15, 40, 63, 0.08);
+  --edge-light: rgba(255, 255, 255, 0.5);
+  --shadow: rgba(15, 28, 48, 0.12);
+  --shadow-deep: rgba(15, 28, 48, 0.22);
+  --glow: rgba(46, 95, 146, 0.15);
+}
+
+/* Dark theme — deeper, more luminous */
+:root[data-theme="dark"] {
+  --ground: #0a0f1a;
+  --ground-elevated: #111827;
+  --surface: rgba(17, 24, 39, 0.6);
+  --surface-solid: #111827;
+  --text: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --edge: rgba(148, 163, 184, 0.08);
+  --edge-light: rgba(255, 255, 255, 0.03);
+  --shadow: rgba(0, 0, 0, 0.4);
+  --shadow-deep: rgba(0, 0, 0, 0.6);
+  --glow: rgba(169, 201, 239, 0.12);
+}
+
+/* Comfort mode — strip all glass & motion */
+:root[data-comfort="on"] {
+  --surface: var(--surface-solid);
+  --glass-opacity: 1;
+}
+:root[data-comfort="on"] * {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+/* -------------------------------------------------------- light field -- */
+.light-field {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.light-field::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: 
+    radial-gradient(ellipse 80% 50% at 20% 40%, var(--glow) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 40% at 80% 60%, var(--glow) 0%, transparent 45%),
+    radial-gradient(ellipse 50% 60% at 50% 50%, var(--glow) 0%, transparent 40%);
+  animation: lightDrift 20s ease-in-out infinite alternate;
+  opacity: 0.6;
+}
+@keyframes lightDrift {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  100% { transform: translate(-2%, -2%) rotate(3deg); }
+}
+:root[data-comfort="on"] .light-field::before,
+:root[data-theme="dark"] .light-field::before {
+  opacity: 0.3;
+}
+
+/* ----------------------------------------------------------- grain -- */
+.noise-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+:root[data-comfort="on"] .noise-overlay { display: none; }
+
+/* ---------------------------------------------------------- utilities -- */
+.wrap { width: min(100% - 2 * var(--space-5), 40rem); margin-inline: auto; }
+.wrap--wide { width: min(100% - 2 * var(--space-5), 72rem); }
+.stack { display: flex; flex-direction: column; }
+.stack > * + * { margin-top: var(--gap, var(--space-5)); }
+.row { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; }
+.grid { display: grid; gap: var(--space-4); }
+.muted { color: var(--text-muted); }
+.tnum { font-variant-numeric: tabular-nums; }
+.scroll-x { 
+  overflow-x: auto; 
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scroll-x::-webkit-scrollbar { display: none; }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
+.empty {
+  padding: var(--space-6);
+  text-align: center;
+  color: var(--text-muted);
+  border: 1.5px dashed var(--edge);
+  border-radius: var(--radius-lg);
+}
+
+/* -------------------------------------------------------- animations -- */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+@keyframes breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+/* Scroll-triggered entrance classes */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity var(--dur-slow) var(--ease-out),
+              transform var(--dur-slow) var(--ease-out);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-delay-1 { transition-delay: 80ms; }
+.reveal-delay-2 { transition-delay: 160ms; }
+.reveal-delay-3 { transition-delay: 240ms; }
+.reveal-delay-4 { transition-delay: 320ms; }
+
+/* Magnetic hover effect base */
+.magnetic {
+  transition: transform var(--dur-fast) var(--ease-spring);
+}
+
+SYSEOF
+
+      - name: Write app.css
+        run: |
+          cat > css/app.css << 'APPEOF'
+/* ============================================================================
+   Shiloh Member App — Sacred Architecture Components v2
+   ========================================================================= */
+
+body {
+  padding-bottom: 7.2rem;
+  padding-bottom: calc(7.2rem + env(safe-area-inset-bottom, 0px));
+}
+
+/* ------------------------------------------------------------- app bar --- */
+.appbar {
+  position: sticky; top: 0; z-index: 20;
+  padding: var(--space-4) var(--space-5);
+  background: color-mix(in oklch, var(--ground) 75%, transparent);
+  border-bottom: 1px solid var(--edge);
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-4);
+  transition: background var(--dur-base) var(--ease-smooth),
+              box-shadow var(--dur-base) var(--ease-smooth);
+}
+.appbar--scrolled {
+  background: color-mix(in oklch, var(--ground) 92%, transparent);
+  box-shadow: 0 4px 30px -10px var(--shadow);
+}
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root:not([data-comfort="on"]) .appbar { 
+    backdrop-filter: blur(24px) saturate(180%) brightness(1.05);
+    -webkit-backdrop-filter: blur(24px) saturate(180%) brightness(1.05);
+  }
+}
+.appbar__name {
+  font-family: var(--font-display);
+  font-variation-settings: var(--display-settings);
+  font-weight: 800;
+  font-size: var(--step-1);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.appbar__name span { 
+  display: block; 
+  font-size: var(--step--1); 
+  font-weight: 500; 
+  letter-spacing: 0.02em; 
+  color: var(--text-muted); 
+  font-family: var(--font-body);
+  -webkit-text-fill-color: var(--text-muted);
+}
+.appbar__actions { display: flex; gap: var(--space-2); }
+
+/* Icon buttons — glass pills with hover lift */
+.iconbtn {
+  display: grid; place-items: center;
+  width: var(--tap); height: var(--tap);
+  border-radius: var(--radius-pill);
+  border: 1.5px solid var(--edge);
+  background: linear-gradient(135deg, 
+    color-mix(in oklch, var(--surface) 80%, transparent) 0%,
+    color-mix(in oklch, var(--surface) 40%, transparent) 100%);
+  color: var(--text);
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--dur-fast) var(--ease-spring), 
+              border-color var(--dur-fast),
+              box-shadow var(--dur-fast);
+  cursor: pointer;
+}
+.iconbtn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, var(--edge-light) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity var(--dur-fast);
+}
+.iconbtn:hover::before, .iconbtn:active::before { opacity: 1; }
+.iconbtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px -8px var(--shadow-deep);
+  border-color: color-mix(in oklch, var(--accent) 30%, var(--edge));
+}
+.iconbtn:active { transform: scale(0.92) translateY(0); }
+.iconbtn svg { width: 22px; height: 22px; }
+
+/* --------------------------------------------------------------- screens - */
+main { padding: var(--space-6) 0 var(--space-8); }
+.screen { display: none; opacity: 0; }
+.screen.on { 
+  display: block; 
+  animation: fadeUp var(--dur-base) var(--ease-out) forwards;
+}
+.screen__head { 
+  margin-bottom: var(--space-6);
+  animation: fadeUp var(--dur-slow) var(--ease-out) forwards;
+}
+.screen__title {
+  font-family: var(--font-display);
+  font-variation-settings: var(--display-settings-lg);
+  font-size: var(--step-3);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+.screen__lead {
+  margin-top: var(--space-3);
+  color: var(--text-secondary);
+  font-size: var(--step-0);
+  line-height: 1.5;
+  max-width: 32ch;
+}
+
+/* ---------------------------------------------------------- bottom nav --- */
+.nav {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 30;
+  padding: var(--space-3) var(--space-5) calc(var(--space-3) + env(safe-area-inset-bottom, 0px));
+  background: linear-gradient(to top, 
+    color-mix(in oklch, var(--ground) 95%, transparent) 0%,
+    color-mix(in oklch, var(--ground) 80%, transparent) 60%,
+    transparent 100%);
+  display: flex; justify-content: space-around; align-items: center;
+}
+.nav::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--surface);
+  border-top: 1px solid var(--edge);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  margin: 0 var(--space-4);
+  margin-bottom: env(safe-area-inset-bottom, 0px);
+  box-shadow: 0 -8px 32px -8px var(--shadow);
+  z-index: -1;
+  transition: transform var(--dur-base) var(--ease-spring);
+}
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root:not([data-comfort="on"]) .nav::before {
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+  }
+}
+.nav__btn {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  min-width: var(--tap); min-height: var(--tap);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  font-family: inherit;
+  font-size: var(--step--2);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  position: relative;
+  transition: color var(--dur-fast), transform var(--dur-fast) var(--ease-spring);
+}
+.nav__btn::after {
+  content: "";
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%) scale(0);
+  width: 4px; height: 4px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  transition: transform var(--dur-fast) var(--ease-spring);
+}
+.nav__btn[aria-current="page"] {
+  color: var(--accent);
+  transform: translateY(-2px);
+}
+.nav__btn[aria-current="page"]::after {
+  transform: translateX(-50%) scale(1);
+}
+.nav__btn svg {
+  width: 24px; height: 24px;
+  transition: transform var(--dur-fast) var(--ease-spring);
+}
+.nav__btn[aria-current="page"] svg {
+  transform: scale(1.15);
+  filter: drop-shadow(0 2px 8px var(--glow));
+}
+.nav__btn:active { transform: scale(0.9); }
+
+/* --------------------------------------------------------------- cards --- */
+.card {
+  background: linear-gradient(165deg, 
+    color-mix(in oklch, var(--surface) 90%, transparent) 0%,
+    color-mix(in oklch, var(--surface) 60%, transparent) 100%);
+  border: 1px solid var(--edge);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--dur-base) var(--ease-spring),
+              box-shadow var(--dur-base) var(--ease-out);
+}
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root:not([data-comfort="on"]) .card {
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+  }
+}
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--edge-light), transparent);
+}
+.card:hover, .card:focus-within {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px -16px var(--shadow-deep),
+              0 0 0 1px color-mix(in oklch, var(--accent) 15%, var(--edge));
+}
+.card--media {
+  padding: 0;
+  display: flex; flex-direction: column;
+}
+.card--media .card__thumb {
+  width: 100%; aspect-ratio: 16/10; object-fit: cover;
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+.card--media:hover .card__thumb {
+  transform: scale(1.04);
+}
+.card--media .card__body { padding: var(--space-5); }
+.card__title {
+  font-family: var(--font-display);
+  font-variation-settings: var(--display-settings);
+  font-size: var(--step-1);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+.card__meta {
+  margin-top: var(--space-2);
+  color: var(--text-muted);
+  font-size: var(--step--1);
+  display: flex; align-items: center; gap: var(--space-2);
+}
+.card__meta svg { width: 16px; height: 16px; opacity: 0.6; }
+
+/* Hero card — the big welcome */
+.hero {
+  position: relative;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  margin-bottom: var(--space-6);
+  background: var(--navyDeep);
+  color: var(--cream);
+}
+.hero__media {
+  width: 100%; aspect-ratio: 16/10; object-fit: cover;
+  opacity: 0.85;
+  transition: transform 8s ease-out, opacity var(--dur-slow);
+}
+.hero:hover .hero__media {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+.hero__overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, 
+    var(--navyDeep) 0%,
+    color-mix(in oklch, var(--navyDeep) 60%, transparent) 50%,
+    transparent 100%);
+}
+.hero__content {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: var(--space-6) var(--space-5);
+}
+.hero__tagline {
+  font-family: var(--font-display);
+  font-variation-settings: var(--display-settings-lg);
+  font-size: var(--step-4);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+}
+.hero__sub {
+  margin-top: var(--space-3);
+  font-size: var(--step-0);
+  opacity: 0.9;
+  max-width: 32ch;
+  line-height: 1.5;
+}
+
+/* ---------------------------------------------------------- buttons --- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
+  min-height: var(--tap);
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-pill);
+  border: 1.5px solid transparent;
+  font-family: inherit;
+  font-size: var(--step-0);
+  font-weight: 700;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--dur-fast) var(--ease-spring),
+              box-shadow var(--dur-fast),
+              filter var(--dur-fast);
+}
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transform: translateX(-100%);
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+.btn:hover::before {
+  transform: translateX(100%);
+}
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px -8px var(--shadow-deep);
+}
+.btn:active {
+  transform: scale(0.96) translateY(0);
+}
+.btn--primary {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--shiloh) 100%);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 4px 16px -4px color-mix(in oklch, var(--accent) 40%, transparent);
+}
+.btn--primary:hover {
+  box-shadow: 0 8px 28px -6px color-mix(in oklch, var(--accent) 50%, transparent);
+}
+.btn--secondary {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--edge);
+}
+.btn--ghost {
+  background: transparent;
+  color: var(--accent);
+  border-color: color-mix(in oklch, var(--accent) 25%, transparent);
+}
+.btn--small {
+  min-height: 40px;
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--step--1);
+}
+
+/* ---------------------------------------------------------- lists --- */
+.list {
+  list-style: none;
+  display: flex; flex-direction: column; gap: var(--space-3);
+}
+.list__item {
+  background: linear-gradient(165deg, 
+    color-mix(in oklch, var(--surface) 85%, transparent) 0%,
+    color-mix(in oklch, var(--surface) 55%, transparent) 100%);
+  border: 1px solid var(--edge);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+  display: flex; align-items: center; gap: var(--space-4);
+  transition: transform var(--dur-fast) var(--ease-spring),
+              box-shadow var(--dur-fast),
+              border-color var(--dur-fast);
+  position: relative;
+  overflow: hidden;
+}
+.list__item::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0; width: 3px;
+  background: linear-gradient(to bottom, var(--accent), var(--accentSoft));
+  opacity: 0;
+  transition: opacity var(--dur-fast);
+}
+.list__item:hover, .list__item:focus-within {
+  transform: translateX(4px);
+  box-shadow: 0 8px 24px -12px var(--shadow);
+  border-color: color-mix(in oklch, var(--accent) 20%, var(--edge));
+}
+.list__item:hover::before, .list__item:focus-within::before {
+  opacity: 1;
+}
+.list__icon {
+  width: 44px; height: 44px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--accentSoft) 0%, var(--accent) 100%);
+  color: #fff;
+  display: grid; place-items: center;
+  flex-shrink: 0;
+  transition: transform var(--dur-fast) var(--ease-spring);
+}
+.list__item:hover .list__icon {
+  transform: scale(1.1) rotate(-5deg);
+}
+.list__icon svg { width: 20px; height: 20px; }
+.list__body { min-width: 0; }
+.list__title {
+  font-weight: 700;
+  font-size: var(--step-0);
+  line-height: 1.3;
+}
+.list__text {
+  color: var(--text-muted);
+  font-size: var(--step--1);
+  margin-top: 2px;
+}
+
+/* -------------------------------------------------------- prayer wall --- */
+.prayer-card {
+  background: linear-gradient(165deg, 
+    color-mix(in oklch, var(--surface) 90%, transparent) 0%,
+    color-mix(in oklch, var(--surface) 60%, transparent) 100%);
+  border: 1px solid var(--edge);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  position: relative;
+  transition: transform var(--dur-base) var(--ease-spring),
+              box-shadow var(--dur-base);
+}
+.prayer-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 32px -12px var(--shadow-deep);
+}
+.prayer-card__header {
+  display: flex; align-items: center; gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+.prayer-card__avatar {
+  width: 44px; height: 44px;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(135deg, var(--accentSoft), var(--accent));
+  display: grid; place-items: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: var(--step-0);
+  flex-shrink: 0;
+}
+.prayer-card__name {
+  font-weight: 700;
+  font-size: var(--step-0);
+}
+.prayer-card__time {
+  font-size: var(--step--2);
+  color: var(--text-muted);
+}
+.prayer-card__text {
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+.prayer-card__actions {
+  margin-top: var(--space-4);
+  display: flex; gap: var(--space-3);
+}
+.prayer-card__pray {
+  display: inline-flex; align-items: center; gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-pill);
+  border: 1.5px solid var(--edge);
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: var(--step--1);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--dur-fast) var(--ease-spring);
+}
+.prayer-card__pray:hover {
+  background: color-mix(in oklch, var(--accent) 10%, transparent);
+  border-color: color-mix(in oklch, var(--accent) 30%, transparent);
+  color: var(--accent);
+  transform: scale(1.05);
+}
+.prayer-card__pray:active { transform: scale(0.95); }
+.prayer-card__pray.prayed {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--shiloh) 100%);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 4px 16px -4px color-mix(in oklch, var(--accent) 40%, transparent);
+}
+
+/* ---------------------------------------------------------- forms --- */
+.field {
+  display: flex; flex-direction: column; gap: var(--space-2);
+  margin-bottom: var(--space-5);
+}
+.field__label {
+  font-weight: 700;
+  font-size: var(--step--1);
+  color: var(--text-secondary);
+  letter-spacing: 0.02em;
+}
+.input, .textarea, select {
+  min-height: var(--tap);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--edge);
+  background: var(--surface);
+  color: var(--text);
+  font-family: inherit;
+  font-size: var(--step-0);
+  line-height: 1.4;
+  width: 100%;
+  transition: border-color var(--dur-fast),
+              box-shadow var(--dur-fast),
+              transform var(--dur-fast);
+}
+.input:focus, .textarea:focus, select:focus {
+  outline: none;
+  border-color: color-mix(in oklch, var(--accent) 50%, var(--edge));
+  box-shadow: 0 0 0 4px color-mix(in oklch, var(--accent) 15%, transparent),
+              0 4px 12px -4px var(--shadow);
+  transform: translateY(-1px);
+}
+.textarea { min-height: 120px; resize: vertical; }
+
+/* -------------------------------------------------------- giving --- */
+.give-option {
+  background: linear-gradient(165deg, 
+    color-mix(in oklch, var(--surface) 85%, transparent) 0%,
+    color-mix(in oklch, var(--surface) 55%, transparent) 100%);
+  border: 1.5px solid var(--edge);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  text-align: center;
+  transition: all var(--dur-base) var(--ease-spring);
+  position: relative;
+  overflow: hidden;
+}
+.give-option::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--accentSoft), var(--accent), var(--shilohSky));
+  opacity: 0;
+  transition: opacity var(--dur-fast);
+}
+.give-option:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 48px -16px var(--shadow-deep);
+  border-color: color-mix(in oklch, var(--accent) 25%, var(--edge));
+}
+.give-option:hover::after { opacity: 1; }
+.give-option__icon {
+  width: 56px; height: 56px;
+  margin: 0 auto var(--space-4);
+  border-radius: var(--radius-pill);
+  background: linear-gradient(135deg, var(--accentSoft) 0%, var(--accent) 100%);
+  display: grid; place-items: center;
+  color: #fff;
+  transition: transform var(--dur-fast) var(--ease-spring);
+}
+.give-option:hover .give-option__icon {
+  transform: scale(1.15) rotate(-10deg);
+}
+.give-option__icon svg { width: 28px; height: 28px; }
+
+/* --------------------------------------------------------- events --- */
+.event-row {
+  display: flex; gap: var(--space-4);
+  padding: var(--space-4) 0;
+  border-bottom: 1px solid var(--edge);
+  transition: padding var(--dur-fast), background var(--dur-fast);
+  border-radius: var(--radius-md);
+}
+.event-row:hover {
+  background: color-mix(in oklch, var(--surface) 50%, transparent);
+  padding: var(--space-4) var(--space-3);
+  margin: 0 calc(-1 * var(--space-3));
+}
+.event-row__date {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  width: 56px; height: 56px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--accent) 0%, var(--navy) 100%);
+  color: #fff;
+  flex-shrink: 0;
+  transition: transform var(--dur-fast) var(--ease-spring);
+}
+.event-row:hover .event-row__date {
+  transform: scale(1.1) rotate(-3deg);
+}
+.event-row__month {
+  font-size: var(--step--2);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.event-row__day {
+  font-size: var(--step-2);
+  font-weight: 800;
+  line-height: 1;
+}
+.event-row__title {
+  font-weight: 700;
+  font-size: var(--step-0);
+}
+.event-row__meta {
+  color: var(--text-muted);
+  font-size: var(--step--1);
+  margin-top: 2px;
+}
+
+/* -------------------------------------------------------- onboarding --- */
+.onboard {
+  position: fixed; inset: 0; z-index: 100;
+  display: flex; align-items: flex-end; justify-content: center;
+  padding-bottom: calc(var(--space-8) + env(safe-area-inset-bottom, 0px));
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--dur-slow) var(--ease-out);
+}
+.onboard.on {
+  pointer-events: all;
+  opacity: 1;
+}
+.onboard__glass {
+  position: absolute; inset: 0;
+  background: color-mix(in oklch, var(--navyDeep) 85%, transparent);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+.onboard__inner {
+  position: relative;
+  width: min(100% - 2 * var(--space-5), 28rem);
+  background: var(--surface);
+  border: 1px solid var(--edge);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  box-shadow: 0 32px 64px -24px var(--shadow-deep);
+  transform: translateY(40px);
+  transition: transform var(--dur-dramatic) var(--ease-spring);
+}
+.onboard.on .onboard__inner {
+  transform: translateY(0);
+}
+.onboard__steps {
+  display: flex; gap: var(--space-2);
+  margin-bottom: var(--space-5);
+}
+.onboard__step {
+  height: 4px; flex: 1;
+  border-radius: var(--radius-pill);
+  background: var(--edge);
+  transition: background var(--dur-fast);
+}
+.onboard__step.on {
+  background: linear-gradient(90deg, var(--accent), var(--accentSoft));
+}
+
+/* --------------------------------------------------------- toasts --- */
+.toast {
+  position: fixed; top: var(--space-5); left: 50%; z-index: 50;
+  transform: translateX(-50%) translateY(-120%);
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navyDeep) 100%);
+  color: var(--cream);
+  padding: var(--space-4) var(--space-6);
+  border-radius: var(--radius-pill);
+  border: 1px solid color-mix(in oklch, var(--accent) 30%, transparent);
+  box-shadow: 0 16px 40px -12px var(--shadow-deep);
+  font-weight: 600;
+  font-size: var(--step--1);
+  display: flex; align-items: center; gap: var(--space-3);
+  transition: transform var(--dur-slow) var(--ease-spring);
+  pointer-events: none;
+}
+.toast.on { transform: translateX(-50%) translateY(0); }
+.toast svg { width: 20px; height: 20px; color: var(--accentSoft); }
+
+/* ---------------------------------------------------------- misc --- */
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--edge), transparent);
+  margin: var(--space-6) 0;
+}
+.badge {
+  display: inline-flex; align-items: center;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  font-size: var(--step--2);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.badge--live {
+  background: linear-gradient(135deg, var(--ruby) 0%, #dc2626 100%);
+  color: #fff;
+  animation: pulse-soft 2s ease-in-out infinite;
+}
+.badge--accent {
+  background: color-mix(in oklch, var(--accent) 15%, transparent);
+  color: var(--accent);
+}
+
+APPEOF
+
+      - name: Write animations.js
+        run: |
+          mkdir -p js
+          cat > js/animations.js << 'JSEOF'
+/* ============================================================================
+   Shiloh — Sacred Architecture Interactions
+   ========================================================================= */
+(function() {
+  'use strict';
+
+  // Intersection Observer for scroll-triggered reveals
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, {
+    root: null,
+    rootMargin: '0px 0px -40px 0px',
+    threshold: 0.1
+  });
+
+  // Observe all .reveal elements
+  function initReveals() {
+    document.querySelectorAll('.reveal').forEach(el => {
+      revealObserver.observe(el);
+    });
+  }
+
+  // Appbar scroll behavior — add shadow/background when scrolled
+  function initAppbar() {
+    const appbar = document.querySelector('.appbar');
+    if (!appbar) return;
+
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const scrolled = window.scrollY > 10;
+          appbar.classList.toggle('appbar--scrolled', scrolled);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+  }
+
+  // Magnetic button effect for desktop
+  function initMagnetic() {
+    if (window.matchMedia('(pointer: coarse)').matches) return;
+
+    document.querySelectorAll('.magnetic').forEach(btn => {
+      btn.addEventListener('mousemove', (e) => {
+        const rect = btn.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        btn.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
+      });
+      btn.addEventListener('mouseleave', () => {
+        btn.style.transform = '';
+      });
+    });
+  }
+
+  // Parallax for hero images
+  function initParallax() {
+    const heroes = document.querySelectorAll('.hero__media');
+    if (!heroes.length) return;
+
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          heroes.forEach(img => {
+            const rect = img.parentElement.getBoundingClientRect();
+            if (rect.top < window.innerHeight && rect.bottom > 0) {
+              const progress = (window.innerHeight - rect.top) / (window.innerHeight + rect.height);
+              img.style.transform = `translateY(${progress * -20}px) scale(1.05)`;
+            }
+          });
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+  }
+
+  // Staggered list item entrance
+  function initStaggerLists() {
+    document.querySelectorAll('.list').forEach(list => {
+      const items = list.querySelectorAll('.list__item');
+      items.forEach((item, i) => {
+        item.style.opacity = '0';
+        item.style.transform = 'translateX(-20px)';
+        item.style.transition = `opacity var(--dur-base) var(--ease-out) ${i * 60}ms, 
+                                 transform var(--dur-base) var(--ease-spring) ${i * 60}ms`;
+        requestAnimationFrame(() => {
+          item.style.opacity = '1';
+          item.style.transform = 'translateX(0)';
+        });
+      });
+    });
+  }
+
+  // Ripple effect for buttons
+  function initRipples() {
+    document.querySelectorAll('.btn, .iconbtn, .nav__btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        const rect = this.getBoundingClientRect();
+        const ripple = document.createElement('span');
+        const size = Math.max(rect.width, rect.height);
+        ripple.style.cssText = `
+          position: absolute;
+          border-radius: 50%;
+          background: rgba(255,255,255,0.35);
+          width: ${size}px;
+          height: ${size}px;
+          left: ${e.clientX - rect.left - size/2}px;
+          top: ${e.clientY - rect.top - size/2}px;
+          pointer-events: none;
+          animation: rippleScale 0.6s ease-out forwards;
+        `;
+        this.style.position = 'relative';
+        this.style.overflow = 'hidden';
+        this.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 600);
+      });
+    });
+  }
+
+  // Add ripple keyframes dynamically
+  const rippleStyle = document.createElement('style');
+  rippleStyle.textContent = `
+    @keyframes rippleScale {
+      to { transform: scale(2.5); opacity: 0; }
+    }
+  `;
+  document.head.appendChild(rippleStyle);
+
+  // Initialize everything
+  function init() {
+    initReveals();
+    initAppbar();
+    initMagnetic();
+    initParallax();
+    initStaggerLists();
+    initRipples();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+  // Re-init reveals when switching screens
+  const originalShowScreen = window.showScreen;
+  if (originalShowScreen) {
+    window.showScreen = function(...args) {
+      originalShowScreen.apply(this, args);
+      setTimeout(initReveals, 50);
+      setTimeout(initStaggerLists, 100);
+    };
+  }
+})();
+
+JSEOF
+
+      - name: Write index.html
+        run: |
+          cat > index.html << 'HTMLEOF'
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Shiloh Baptist Church</title>
+  <meta name="description" content="Shiloh Baptist Church, Bridgeport CT — Where Christ Is Lifted Up. Events, prayer, sermons, and connection.">
+  <meta name="theme-color" content="#f7f4ec" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#10131d" media="(prefers-color-scheme: dark)">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+  <link rel="icon" href="assets/icons/favicon-32.png" type="image/png">
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/atkinson-hyperlegible-latin-400-normal.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/fraunces-latin-var.woff2" crossorigin>
+  <link rel="preload" as="image" href="assets/media/home-hero.webp" fetchpriority="high">
+  <link rel="stylesheet" href="css/system.css">
+  <link rel="stylesheet" href="css/app.css">
+  <script>
+    /* Applied before first paint so the app never flashes the wrong theme. */
+    (function () {
+      try {
+        var t = localStorage.getItem("shiloh.theme");
+        if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+        if (localStorage.getItem("shiloh.comfort") === "on") document.documentElement.setAttribute("data-comfort", "on");
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+
+<div class="light-field" aria-hidden="true"></div>
+<div class="noise-overlay" aria-hidden="true"></div>
+
+<noscript>
+  <!-- The one audience that reaches this has no JavaScript at all — likely a
+       very old device. Plain inline styles on purpose: no var(), no modern CSS. -->
+  <div style="max-width:34em;margin:2em auto;padding:1.5em;font-family:Georgia,serif;font-size:20px;line-height:1.6;color:#1c2030;background:#f7f4ec;border:2px solid #16283f;border-radius:12px">
+    <h1 style="font-size:1.4em;margin:0 0 .5em">Shiloh Baptist Church</h1>
+    <p style="margin:.4em 0">477 Broad Street, Bridgeport, CT 06604</p>
+    <p style="margin:.4em 0">Sunday worship at 9:00 AM &middot; breakfast at 8:00 AM</p>
+    <p style="margin:.4em 0">Office: <a href="tel:+12035791504" style="color:#16283f">(203) 579-1504</a></p>
+    <p style="margin:.4em 0">Prayer line: (605) 313-5088, code 1054312#</p>
+    <p style="margin:1em 0 0">This device's browser can't run the full app, but everything above is what matters most. Our website: shilohchurchbpt.org</p>
+  </div>
+</noscript>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <g id="i-home"><path d="M3 10.6 12 3.2l9 7.4V20a1.4 1.4 0 0 1-1.4 1.4h-4.2v-6.6H8.6v6.6H4.4A1.4 1.4 0 0 1 3 20z"/></g>
+  <g id="i-cal"><rect x="3.2" y="5" width="17.6" height="16" rx="2.6"/><path d="M3.2 10h17.6M8 3v4M16 3v4"/></g>
+  <g id="i-flame"><path d="M12 21.6c3.2 0 5.6-2.5 5.6-5.7 0-4.4-5.6-11-5.6-11S6.4 11.5 6.4 15.9c0 3.2 2.4 5.7 5.6 5.7z"/><path d="M12 17.8a2 2 0 0 0 2-2c0-1.5-2-3.6-2-3.6s-2 2.1-2 3.6a2 2 0 0 0 2 2z"/></g>
+  <g id="i-people"><circle cx="9" cy="8" r="3.4"/><path d="M2.6 20.4a6.4 6.4 0 0 1 12.8 0"/><path d="M16.2 5.2a3.4 3.4 0 0 1 0 6.6M17.6 14.6a6.4 6.4 0 0 1 3.8 5.8"/></g>
+  <g id="i-chat"><path d="M20.8 12.4c0 4-3.9 7.2-8.8 7.2a10 10 0 0 1-2.6-.33L4.2 21l1.3-3.9a6.8 6.8 0 0 1-2.3-4.7c0-4 3.9-7.2 8.8-7.2s8.8 3.2 8.8 7.2z"/></g>
+  <g id="i-help"><circle cx="12" cy="12" r="9"/><path d="M9.3 9.2a2.8 2.8 0 0 1 5.4 1c0 1.9-2.7 2.4-2.7 4.2"/><path d="M12 17.7v.01"/></g>
+  <g id="i-sun"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.4v2.2M12 19.4v2.2M4.2 12H2M22 12h-2.2M6.5 6.5 4.9 4.9M19.1 19.1l-1.6-1.6M17.5 6.5l1.6-1.6M4.9 19.1l1.6-1.6"/></g>
+  <g id="i-moon"><path d="M20.4 13.6A8.6 8.6 0 0 1 10.4 3.6a8.6 8.6 0 1 0 10 10z"/></g>
+  <g id="i-share"><path d="M4 12v7.2A1.8 1.8 0 0 0 5.8 21h12.4a1.8 1.8 0 0 0 1.8-1.8V12"/><path d="M12 15.4V3.2M7.8 7.4 12 3.2l4.2 4.2"/></g>
+  <g id="i-check"><path d="M4.5 12.6 9.4 17.5 19.5 7.4"/></g>
+  <g id="i-cross"><path d="M12 3v18M6.4 8.4h11.2"/></g>
+  <g id="i-heart"><path d="M12 20.6S3.4 15.4 3.4 9.6a4.6 4.6 0 0 1 8.6-2.3A4.6 4.6 0 0 1 20.6 9.6c0 5.8-8.6 11-8.6 11z"/></g>
+  <g id="i-play"><circle cx="12" cy="12" r="9"/><path d="M10 8.6v6.8l5.4-3.4z"/></g>
+  <g id="i-phone"><path d="M6.8 3.4h3l1.5 4-2 1.5a12.8 12.8 0 0 0 5.8 5.8l1.5-2 4 1.5v3a2 2 0 0 1-2.2 2A16.8 16.8 0 0 1 4.8 5.6a2 2 0 0 1 2-2.2z"/></g>
+  <g id="i-pin"><path d="M12 21.4s6.8-6 6.8-11A6.8 6.8 0 0 0 5.2 10.4c0 5 6.8 11 6.8 11z"/><circle cx="12" cy="10.2" r="2.6"/></g>
+  <!-- Tutorial pictograms — the new-to-phones track and the install chapter. -->
+  <g id="i-tap"><circle cx="12" cy="14.8" r="2.8" fill="currentColor" stroke="none"/><path d="M7.2 9.6a6.8 6.8 0 0 1 9.6 0"/><path d="M4.4 6.8a10.8 10.8 0 0 1 15.2 0"/></g>
+  <g id="i-scroll"><circle cx="12" cy="19" r="2.2" fill="currentColor" stroke="none"/><path d="M12 15.2V4.4M7.6 8.8 12 4.4l4.4 4.4"/></g>
+  <g id="i-back"><path d="M20.4 12H4.8M11 5.8 4.8 12l6.2 6.2"/></g>
+  <g id="i-btn"><rect x="2.8" y="7.8" width="18.4" height="8.4" rx="4.2"/><path d="M8 12h8"/></g>
+  <g id="i-shield"><path d="M12 2.8 4.8 5.6v5.4c0 4.7 3 8.3 7.2 10.2 4.2-1.9 7.2-5.5 7.2-10.2V5.6z"/><path d="M8.8 12l2.3 2.3 4.4-4.4"/></g>
+  <g id="i-dots"><circle cx="12" cy="5.2" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="18.8" r="1.5" fill="currentColor" stroke="none"/></g>
+  <g id="i-addsquare"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="3.4"/><path d="M12 8.4v7.2M8.4 12h7.2"/></g>
+  <g id="i-phonehome"><rect x="6.6" y="2.6" width="10.8" height="18.8" rx="2.4"/><rect x="9.2" y="6.2" width="5.6" height="5.6" rx="1.3"/><path d="M10.6 18.4h2.8"/></g>
+  <g id="i-print"><path d="M6.8 8.4V3.4h10.4v5"/><path d="M6.8 17H5.4a2 2 0 0 1-2-2v-4.6a2 2 0 0 1 2-2h13.2a2 2 0 0 1 2 2V15a2 2 0 0 1-2 2h-1.4"/><rect x="6.8" y="13.6" width="10.4" height="7"/></g>
+</defs></svg>
+
+<!-- ============================ onboarding ============================ -->
+<div class="onboard" id="onboard" role="dialog" aria-modal="true" aria-labelledby="obTitle">
+  <div class="onboard__glass" aria-hidden="true"></div>
+  <div class="onboard__inner">
+    <div class="onboard__steps" id="obSteps" aria-hidden="true"></div>
+    <div class="onboard__body" id="obBody"></div>
+    <div class="onboard__actions" id="obActions"></div>
+  </div>
+</div>
+
+<!-- ================= install chapter — "put it on your phone" ========== -->
+<!-- Platform-detected: iOS Safari, Android Chrome, desktop, or the
+     already-installed state. Opened from the end of the tour and from Help,
+     forever. Content is rendered by openInstaller() so it always matches the
+     phone it's actually shown on. -->
+<div class="installer" id="installer" role="dialog" aria-modal="true" aria-labelledby="instTitle" hidden>
+  <div class="installer__inner">
+    <p class="eyebrow">One-time setup</p>
+    <h2 id="instTitle">Put this app on your phone</h2>
+    <p class="muted" id="instIntro"></p>
+    <div class="stack" id="instBody" style="--gap: var(--space-4)"></div>
+    <div class="installer__actions">
+      <button class="btn btn--primary btn--block" data-inst="close" type="button">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== app bar ============================= -->
+<header class="appbar">
+  <div class="appbar__name" id="barName">Shiloh<span id="barTagline"></span></div>
+  <div class="appbar__actions">
+    <button class="iconbtn" id="themeBtn" type="button" aria-label="Switch between light and dark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-sun" id="themeIcon"/></svg>
+    </button>
+  </div>
+</header>
+
+<main>
+  <!-- ------------------------------- home ------------------------------ -->
+  <section class="screen on" id="screen-home">
+    <div class="wrap stack reveal">
+      <div class="photohero rise">
+        <img src="assets/media/home-hero.webp" alt="Worship at Shiloh Baptist Church" fetchpriority="high">
+        <div class="photohero__scrim" aria-hidden="true"></div>
+        <div class="photohero__body">
+          <p class="eyebrow">Shiloh Baptist Church · Bridgeport, CT</p>
+          <h1>Where Christ<br>Is Lifted Up</h1>
+          <p>Celebrating our past &amp; laying foundations for our future.</p>
+        </div>
+      </div>
+
+      <button class="livebanner rise rise-2" id="liveBanner" data-nav="watch" type="button" hidden>
+        <span class="livedot" aria-hidden="true"></span>
+        <b>We're live right now</b>
+        <span class="livebanner__cta">Watch&nbsp;→</span>
+      </button>
+
+      <div class="card rise rise-2" id="heroNext" hidden>
+        <div class="row" style="justify-content:space-between; align-items:baseline">
+          <span class="eyebrow">Next</span>
+          <span class="muted" id="heroNextWhen" style="font-size:var(--step--1)"></span>
+        </div>
+        <b id="heroNextTitle" style="display:block;margin-top:var(--space-2)"></b>
+      </div>
+
+      <div class="quickgrid rise rise-3">
+        <button class="quick quick--prayer" data-nav="prayer" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-flame"/></svg>
+          <span><b>Share a prayer request</b><small>The church will pray with you</small></span>
+        </button>
+        <button class="quick quick--connect" data-nav="connect" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-chat"/></svg>
+          <span><b>New here? Plan a visit</b><small>We'd love to meet you</small></span>
+        </button>
+        <button class="quick quick--rent" data-nav="rent" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-pin"/></svg>
+          <span><b>Rent our space</b><small>Our sanctuary &amp; hall, open to your group</small></span>
+        </button>
+      </div>
+
+      <div class="card rise rise-4" id="serviceCard" hidden>
+        <p class="eyebrow">Sundays &amp; through the week</p>
+        <div id="serviceList" class="stack" style="--gap: var(--space-3); margin-top: var(--space-4)"></div>
+        <hr class="leading" style="margin: var(--space-4) 0">
+        <div class="stack" style="--gap: var(--space-2)">
+          <div class="row" style="justify-content:space-between"><b>Online</b><span class="muted" id="onlineWhen"></span></div>
+          <p class="muted" style="font-size:var(--step--1)" id="addressLine"></p>
+        </div>
+      </div>
+
+      <div class="card pastorcard rise rise-5" id="pastorCard" hidden>
+        <img class="portrait" id="pastorPhoto" src="assets/media/pastor-mccluster.webp" alt="Portrait of the pastor" loading="lazy" decoding="async">
+        <div>
+          <p class="eyebrow">Greetings from the pastor</p>
+          <h3 id="pastorName" style="margin-top:var(--space-2)"></h3>
+          <p class="muted" id="pastorTenure" style="font-size:var(--step--1)"></p>
+          <p id="pastorGreetingLead" style="margin-top:var(--space-3)"></p>
+          <details id="pastorMore">
+            <summary class="btn btn--quiet" style="list-style:none;margin-top:var(--space-3)">Read the full greeting</summary>
+            <div id="pastorGreetingRest" style="margin-top:var(--space-3)"></div>
+          </details>
+        </div>
+      </div>
+
+      <button class="card photocard reveal" data-nav="watch" type="button" style="text-align:left;width:100%">
+        <img src="assets/media/home-recent-sermon.webp" alt="" loading="lazy" decoding="async">
+        <div class="photocard__body">
+          <p class="eyebrow">Watch</p>
+          <h3>The most recent message</h3>
+          <p>Sermons from Pastor Carl, and Facebook Live every Sunday at 9 AM.</p>
+        </div>
+      </button>
+
+      <button class="card photocard reveal" data-nav="about" type="button" style="text-align:left;width:100%">
+        <img src="assets/media/about-us-banner.webp" alt="" loading="lazy" decoding="async">
+        <div class="photocard__body">
+          <p class="eyebrow">Who we are</p>
+          <h3>85 years in Bridgeport</h3>
+          <p>Our story, what we believe, and the people who serve here.</p>
+        </div>
+      </button>
+
+      <div>
+        <p class="eyebrow" style="margin-bottom: var(--space-4)">Latest</p>
+        <div class="stack" id="newsList"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ------------------------------ events ----------------------------- -->
+  <section class="screen" id="screen-events">
+    <div class="wrap stack reveal">
+      <div class="screen__head">
+        <p class="eyebrow">What's coming up</p>
+        <h2>Events</h2>
+      </div>
+      <div class="card">
+        <h3>See it in your own calendar</h3>
+        <p>Subscribe once and every event appears in your phone's own calendar — you'll never have to open this app to know what's next.</p>
+        <div class="row" style="margin-top: var(--space-4)">
+          <a class="btn btn--quiet" id="subscribeCal" href="events.ics">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-cal"/></svg>
+            Subscribe
+          </a>
+          <a class="btn btn--quiet" href="https://www.shilohchurchbpt.org/events-2/" target="_blank" rel="noopener">Full calendar on the website</a>
+        </div>
+      </div>
+      <div class="stack" id="eventsUpcoming"></div>
+      <details id="pastWrap">
+        <summary class="btn btn--quiet btn--block" style="list-style:none">Past events</summary>
+        <div class="stack" id="eventsPast" style="margin-top: var(--space-4)"></div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ------------------------------ prayer ----------------------------- -->
+  <section class="screen" id="screen-prayer">
+    <div class="wrap stack reveal">
+      <div class="screen__head">
+        <p class="eyebrow">Held together</p>
+        <h2>Prayer wall</h2>
+      </div>
+
+      <div class="card" id="prayerLineCard" hidden>
+        <p class="eyebrow">The prayer line</p>
+        <p style="margin-top:var(--space-3)">Can't be there in person? The church prays together by phone, Monday to Friday at 6:00 AM and 8:00 PM.</p>
+        <div class="row" style="margin-top:var(--space-4)">
+          <a class="btn btn--primary" id="prayerLineCall" href="#">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-phone"/></svg>
+            Call the prayer line
+          </a>
+          <span class="muted" id="prayerLineCode" style="font-size:var(--step--1)"></span>
+        </div>
+      </div>
+
+      <form class="card" id="prayerForm">
+        <h3>Share a request</h3>
+        <div class="field" style="margin-top: var(--space-4)">
+          <label for="prName">Your name <span class="muted" style="font-weight:400">(optional)</span></label>
+          <input type="text" id="prName" placeholder="Leave blank to share anonymously" autocomplete="name">
+        </div>
+        <div class="field">
+          <label for="prText">What's on your heart?</label>
+          <textarea id="prText" required></textarea>
+        </div>
+        <div class="field">
+          <label id="tierLabel">Who should see this?</label>
+          <div class="tierpick" role="radiogroup" aria-labelledby="tierLabel">
+            <label><input type="radio" name="prVis" value="church" checked>
+              <span><b>The whole church family</b><small>Everyone sees it on the prayer wall</small></span></label>
+            <label><input type="radio" name="prVis" value="team">
+              <span><b>The prayer team only</b><small>Kept to the people who pray over requests</small></span></label>
+            <label><input type="radio" name="prVis" value="pastor">
+              <span><b>The pastor only</b><small>Private — nobody else will see it</small></span></label>
+          </div>
+          <p class="hint">Nothing you mark private ever appears on the church-wide wall.</p>
+        </div>
+        <button class="btn btn--primary btn--block" type="submit">Share this request</button>
+      </form>
+
+      <div>
+        <p class="eyebrow" style="margin-bottom: var(--space-4)">The church family is praying for</p>
+        <div class="stack" id="prayerList"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------------------------- ministries --------------------------- -->
+  <section class="screen" id="screen-directory">
+    <div class="wrap stack reveal">
+      <div class="screen__head">
+        <p class="eyebrow">There is a place for you here</p>
+        <h2>Ministries</h2>
+      </div>
+      <div class="ministrygrid" id="ministryList"></div>
+      <div>
+        <p class="eyebrow" style="margin: var(--space-4) 0">Spaces you can book</p>
+        <div class="ministrygrid" id="facilityList"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ------------------------------- give ------------------------------ -->
+  <section class="screen" id="screen-give">
+    <div class="wrap stack reveal">
+      <div class="screen__head">
+        <p class="eyebrow">Tithes &amp; offering</p>
+        <h2>Giving</h2>
+      </div>
+      <p id="giveIntro" class="muted"></p>
+      <div class="givegrid" id="giveGrid"></div>
+      <div class="stack" id="giveOffline" style="--gap: var(--space-4)"></div>
+      <p class="hint">These buttons open the church's own giving accounts. This app never handles or stores your money or card details.</p>
+    </div>
+  </section>
+
+  <!-- ------------------------------ watch ------------------------------ -->
+  <section class="screen" id="screen-watch">
+    <div class="wrap stack reveal">
+      <div class="screen__head">
+        <p class="eyebrow">Sermons &amp; live worship</p>
+        <h2>Watch</h2>
+      </div>
+      <!-- The live player. Fed by data/live.json — any provider that gives an
+           iframe embed URL (Restream website player, YouTube live, Facebook,
+           Cloudflare Stream) plays right here, on the church's own site. -->
+      <div class="liveplayer" id="livePlayer" hidden>
+        <div class="liveplayer__head">
+          <span class="livedot" aria-hidden="true"></span>
+          <b id="liveHeadline">Live from the sanctuary</b>
+        </div>
+        <div class="liveplayer__frame" id="liveFrame"></div>
+      </div>
+
+      <div class="card photocard" id="liveFallbackCard">
+        <img src="assets/media/home-online.webp" alt="" loading="lazy" decoding="async">
+        <div class="photocard__body">
+          <h3 id="liveFallbackTitle">Live — Sundays at 9 AM</h3>
+          <p id="liveFallbackText">Worship with the Shiloh family from anywhere.</p>
+          <a class="btn btn--primary" id="watchLiveBtn" href="#" target="_blank" rel="noopener" style="margin-top:var(--space-4)">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-play"/></svg>
+            Watch live
+          </a>
+        </div>
+      </div>
+      <div>
+        <p class="eyebrow" style="margin-bottom: var(--space-4)">Recent messages from Pastor Carl</p>
+        <div class="stack" id="sermonList"></div>
+      </div>
+      <a class="btn btn--quiet btn--block" id="sermonArchive" href="#" target="_blank" rel="noopener">The full sermon archive</a>
+      <div class="card" id="rightnowCard" hidden>
+        <p class="eyebrow" id="rnEyebrow">Free for the Shiloh family</p>
+        <h3 style="margin-top:var(--space-2)">RightNow Media</h3>
+        <p id="rnBody">A huge library of Bible studies and video teaching for every age — free with a Shiloh church account.</p>
+        <a class="btn btn--quiet" id="rightnowBtn" href="#" target="_blank" rel="noopener" style="margin-top:var(--space-4)">Register free</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ------------------------------ about ------------------------------ -->
+  <section class="screen" id="screen-about">
+    <div class="wrap stack reveal">
+      <div class="screen__head">
+        <p class="eyebrow">Who we are</p>
+        <h2 id="aboutHeading">About Shiloh</h2>
+      </div>
+      <div class="stack" id="aboutSections"></div>
+      <div class="card" id="sundayFlowCard">
+        <p class="eyebrow" id="sundayFlowEyebrow">Sunday morning at Shiloh</p>
+        <div class="stack" style="--gap: var(--space-3); margin-top: var(--space-4)" id="sundayFlow"></div>
+      </div>
+      <div class="card">
+        <p class="eyebrow">Bible Discovery Classes</p>
+        <p style="margin-top:var(--space-3)">Christian Education — one of the "backbone" ministries of the church — has classes for every age:</p>
+        <div class="stack" style="--gap: var(--space-2); margin-top: var(--space-4)" id="classGroups"></div>
+      </div>
+      <div id="impactWrap" hidden>
+        <p class="eyebrow" style="margin-bottom: var(--space-2)">Beyond the sanctuary door</p>
+        <p class="muted" id="impactIntro" style="margin-bottom: var(--space-5)"></p>
+        <figure class="impactfig" id="impactFig" hidden>
+          <img id="impactImg" src="" alt="" loading="lazy" decoding="async">
+          <figcaption id="impactCap"></figcaption>
+        </figure>
+        <div class="stack" id="impactList"></div>
+      </div>
+
+      <div>
+        <p class="eyebrow" style="margin-bottom: var(--space-4)">The people who serve here</p>
+        <div class="stack" id="staffList"></div>
+      </div>
+      <div class="card photocard" id="annivCard" hidden>
+        <img id="annivImg" src="" alt="" loading="lazy" decoding="async">
+        <div class="photocard__body">
+          <p class="eyebrow" id="annivWhen"></p>
+          <h3 id="annivTitle"></h3>
+          <p id="annivTheme"></p>
+        </div>
+      </div>
+      <div class="card" id="socialCard">
+        <p class="eyebrow">Find us</p>
+        <div class="row" style="margin-top:var(--space-4)" id="socialRow"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ------------------------------ connect ---------------------------- -->
+  <section class="screen" id="screen-connect">
+    <div class="wrap stack reveal">
+      <div class="screen__head">
+        <p class="eyebrow">We'd love to meet you</p>
+        <h2>Plan a visit</h2>
+      </div>
+      <div class="card photocard">
+        <img src="assets/media/new-here-plan-a-visit.webp" alt="" loading="lazy" decoding="async">
+        <div class="photocard__body">
+          <h3>A place you can call home</h3>
+          <p id="visitIntro">At Shiloh, we love to welcome new visitors. Here is what you can expect when you come.</p>
+          <div class="row" style="margin-top:var(--space-4)">
+            <a class="btn btn--quiet" id="directionsBtn" href="#" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-pin"/></svg>
+              Directions
+            </a>
+            <a class="btn btn--quiet" id="callBtn" href="#">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-phone"/></svg>
+              Call the office
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" id="connectDone" hidden>
+        <h3>Thank you</h3>
+        <p id="connectDone">Someone from Shiloh will reach out soon.</p>
+      </div>
+      <form class="card" id="connectForm">
+        <h3>Say hello before you come</h3>
+        <p class="muted" style="margin-bottom:var(--space-4)">Leave your details and we'll look out for you on Sunday.</p>
+        <div class="field"><label for="cName">Name</label><input type="text" id="cName" required autocomplete="name"></div>
+        <div class="field"><label for="cEmail">Email</label><input type="email" id="cEmail" autocomplete="email"></div>
+        <div class="field"><label for="cPhone">Phone</label><input type="tel" id="cPhone" autocomplete="tel"></div>
+        <div class="field">
+          <label for="cWho">I am a</label>
+          <select id="cWho">
+            <option>First-time visitor</option>
+            <option>Returning visitor</option>
+            <option>Member updating my info</option>
+          </select>
+        </div>
+        <div class="field"><label for="cMsg">Anything you'd like us to know? <span class="muted" style="font-weight:400">(optional)</span></label><textarea id="cMsg"></textarea></div>
+        <button class="btn btn--primary btn--block" type="submit">Send</button>
+      </form>
+
+      <div class="card photocard">
+        <img src="assets/media/new-here-kids1.webp" alt="" loading="lazy" decoding="async">
+        <div class="photocard__body">
+          <h3>Bringing kids?</h3>
+          <p id="kidsText"></p>
+        </div>
+      </div>
+
+      <div class="card">
+        <p class="eyebrow">Room for your congregation</p>
+        <h3 style="margin-top:var(--space-2)">Does your congregation need a home?</h3>
+        <p>We rent our sanctuary and fellowship hall — see dates and request a booking.</p>
+        <button class="btn btn--primary" data-nav="rent" type="button" style="margin-top:var(--space-4)">Rent our space</button>
+      </div>
+
+      <div class="card">
+        <p class="eyebrow">Questions &amp; answers</p>
+        <div class="stack" style="--gap: var(--space-2); margin-top: var(--space-4)" id="faqList"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ------------------------------ profile ---------------------------- -->
+  <section class="screen" id="screen-profile">
+    <div class="wrap stack reveal">
+      <div class="screen__head">
+        <p class="eyebrow">Your details</p>
+        <h2>Your profile</h2>
+      </div>
+      <form class="card" id="profileForm">
+        <div class="field"><label for="pName">Name</label><input type="text" id="pName" autocomplete="name"></div>
+        <div class="field"><label for="pEmail">Email</label><input type="email" id="pEmail" autocomplete="email"></div>
+        <div class="field"><label for="pPhone">Phone</label><input type="tel" id="pPhone" autocomplete="tel"></div>
+        <button class="btn btn--quiet" type="submit">Save</button>
+      </form>
+      <div>
+        <p class="eyebrow" style="margin-bottom: var(--space-4)">Your RSVPs</p>
+        <div class="stack" id="myRsvpList"></div>
+      </div>
+      <!-- Staff entrance. Last and collapsed on purpose — members never need
+           it, so it stays one quiet line until a staffer opens it. -->
+      <div class="card" id="staffCard"></div>
+    </div>
+  </section>
+
+  <!-- ------------------------------- rent ------------------------------ -->
+  <!-- Routed like #/profile: reachable from Home, Connect, and Help, never
+       in the tab bar. Public-facing — visiting congregations and community
+       groups requesting Shiloh's spaces. A request is never called a booking
+       here until the office marks it approved. -->
+  <section class="screen" id="screen-rent">
+    <div class="wrap stack reveal">
+      <div class="screen__head">
+        <p class="eyebrow">Our doors are open</p>
+        <h2>Rent our space</h2>
+      </div>
+      <p class="muted" id="rentIntro"></p>
+      <div class="stack" id="rentSpaces"></div>
+
+      <div class="card" id="rentDone" hidden>
+        <p class="eyebrow">Request received</p>
+        <h3 style="margin-top:var(--space-2)">Your booking code</h3>
+        <p class="bookingcode" id="rentCode"></p>
+        <p style="color:var(--text)"><b>Write this code down or screenshot this page.</b> You'll use it below, under "Already booked?", to check on your request.</p>
+        <p class="muted" id="rentApprovalNote" style="margin-top:var(--space-3)"></p>
+        <div class="row" style="margin-top:var(--space-4)">
+          <a class="btn btn--quiet" id="rentDoneCall" href="#">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-phone"/></svg>
+            <span id="rentDonePhone">Call the church office</span>
+          </a>
+          <button class="btn btn--quiet" id="rentAgain" type="button">Make another request</button>
+        </div>
+      </div>
+
+      <form class="card" id="rentForm">
+        <h3>Request your dates</h3>
+        <p class="muted" style="margin-bottom:var(--space-4)">Tell us what you need and the church office will call you back.</p>
+        <div class="field">
+          <label id="rentSpaceLabel">Which space?</label>
+          <div class="tierpick" id="rentSpacePick" role="radiogroup" aria-labelledby="rentSpaceLabel"></div>
+        </div>
+        <div class="field"><label for="rOrg">Your church or group</label><input type="text" id="rOrg" required autocomplete="organization"></div>
+        <div class="field"><label for="rName">Contact name</label><input type="text" id="rName" required autocomplete="name"></div>
+        <div class="field"><label for="rPhone">Phone</label><input type="tel" id="rPhone" required autocomplete="tel"></div>
+        <div class="field"><label for="rEmail">Email <span class="muted" style="font-weight:400">(optional)</span></label><input type="email" id="rEmail" autocomplete="email"></div>
+        <div class="field"><label for="rDate">Date</label><input type="date" id="rDate" required></div>
+        <div class="field"><label for="rStart">Start time</label><input type="time" id="rStart" required></div>
+        <div class="field"><label for="rEnd">End time</label><input type="time" id="rEnd" required></div>
+        <div class="field"><label for="rPurpose">What are you planning? <span class="muted" style="font-weight:400">(optional)</span></label><textarea id="rPurpose"></textarea></div>
+        <p class="hint" id="rentPolicyHint" style="margin-bottom:var(--space-4)"></p>
+        <button class="btn btn--primary btn--block" type="submit">Send this request</button>
+      </form>
+
+      <form class="card" id="rentLookupForm">
+        <p class="eyebrow">Already booked?</p>
+        <h3 style="margin-top:var(--space-2)">Check on your booking</h3>
+        <div id="rentMineWrap" hidden>
+          <p class="hint">Your codes from this phone — tap one:</p>
+          <div class="row" id="rentMyCodes" style="margin-top:var(--space-2)"></div>
+        </div>
+        <div class="field" style="margin-top:var(--space-4)">
+          <label for="rentLookup">Your booking code</label>
+          <input type="text" id="rentLookup" placeholder="SHILOH-XXXX" autocomplete="off" autocapitalize="characters" spellcheck="false">
+        </div>
+        <button class="btn btn--primary btn--block" type="submit">Look it up</button>
+      </form>
+      <div id="rentStatus"></div>
+    </div>
+  </section>
+
+  <!-- -------------------------------- help ----------------------------- -->
+  <section class="screen" id="screen-help">
+    <div class="wrap stack reveal">
+      <div class="screen__head">
+        <p class="eyebrow">However you need it</p>
+        <h2>Help</h2>
+      </div>
+
+      <button class="btn btn--primary btn--block" id="replayTour" type="button">Watch the tour again</button>
+
+      <button class="quick" id="teachMe" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-tap"/></svg>
+        <span><b>Teach me from the very beginning</b><small>How to tap and how to move around — one gentle step at a time</small></span>
+      </button>
+
+      <button class="quick" id="installHelp" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-phonehome"/></svg>
+        <span><b>How to put the app on your phone</b><small>So it opens from your home screen, like any other app</small></span>
+      </button>
+
+      <a class="quick" href="guide.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-print"/></svg>
+        <span><b>Print the paper guide</b><small>A large-print handout to keep beside your phone</small></span>
+      </a>
+
+      <button class="quick" data-nav="profile" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-people"/></svg>
+        <span><b>Your profile &amp; RSVPs</b><small>Your name, contact details, and what you've said yes to</small></span>
+      </button>
+
+      <button class="quick" data-nav="rent" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-pin"/></svg>
+        <span><b>Rent our space</b><small>Request a booking, or look yours up with your code</small></span>
+      </button>
+
+      <div class="card">
+        <p class="eyebrow">Make it easier to use</p>
+        <div class="togglerow" style="margin-top: var(--space-3)">
+          <div class="togglerow__label">
+            <b>Comfort mode</b>
+            <small>Bigger text and a plain, still background.</small>
+          </div>
+          <span class="switch"><input type="checkbox" id="comfortToggle" aria-label="Comfort mode"><i></i></span>
+        </div>
+        <div class="togglerow">
+          <div class="togglerow__label">
+            <b>Dark background</b>
+            <small>Easier on the eyes in a dim room.</small>
+          </div>
+          <span class="switch"><input type="checkbox" id="darkToggle" aria-label="Dark background"><i></i></span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Reach a person</h3>
+        <p id="helpPhone" class="muted"></p>
+        <div class="row" style="margin-top:var(--space-4)">
+          <a class="btn btn--quiet" id="helpCallBtn" href="#">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-phone"/></svg>
+            Call the church office
+          </a>
+        </div>
+      </div>
+
+      <dl class="card faq">
+        <dt>How do I let the church know I'm coming to something?</dt>
+        <dd>Open Events at the bottom of the screen, find it, and tap Yes, Maybe, or No.</dd>
+        <dt>How do I share a prayer request?</dt>
+        <dd>Open Prayer at the bottom of the screen and fill in the short form. You choose who can see it.</dd>
+        <dt>What if I don't want everyone to see my request?</dt>
+        <dd>Choose "The prayer team only" or "The pastor only" when you share it. It will never show on the church-wide wall.</dd>
+        <dt>How do I give my tithe or offering in the app?</dt>
+        <dd>Open Give at the bottom of the screen. Every button there goes straight to the church's own giving accounts.</dd>
+        <dt>What if something isn't working?</dt>
+        <dd>Ask any deacon after service, or call the church office above. Nothing you tap can break anything.</dd>
+      </dl>
+    </div>
+  </section>
+</main>
+
+<nav class="tabbar" id="tabbar" aria-label="Main">
+  <button data-nav="home" aria-current="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-home"/></svg>Home</button>
+  <button data-nav="events"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-cal"/></svg>Events</button>
+  <button data-nav="prayer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-flame"/></svg>Prayer</button>
+  <button data-nav="directory"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-people"/></svg>Groups</button>
+  <button data-nav="give"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-heart"/></svg>Give</button>
+  <button data-nav="help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-help"/></svg>Help</button>
+</nav>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="js/store.js"></script>
+<script src="js/ambient.js"></script>
+<script>
+(function () {
+  "use strict";
+  var CHURCH = null, THEME = null, EVENTS = [], MINISTRIES = [], GIVING = null, ABOUT = null, SERMONS = null, FAQ = [], IMPACT = null, LIVE = null, RENTALS = null;
+  var ICON = function (id) {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#' + id + '"/></svg>';
+  };
+
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function paras(s) {
+    return String(s || "").split(/\n+/).filter(Boolean).map(function (p) { return "<p>" + esc(p) + "</p>"; }).join("");
+  }
+  function fmtDate(iso) {
+    if (!iso) return "";
+    return new Date(iso + "T00:00:00").toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
+  }
+  function monthOf(iso) { return new Date(iso + "T00:00:00").toLocaleDateString("en-US", { month: "short" }); }
+  function dayOf(iso) { return new Date(iso + "T00:00:00").getDate(); }
+  /* "14:00" -> "2:00 PM" — plain words for a time window, elder-first. */
+  function fmtTime(t) {
+    var m = /^(\d{1,2}):(\d{2})/.exec(String(t || ""));
+    if (!m) return String(t || "");
+    var h = parseInt(m[1], 10);
+    var ap = h >= 12 ? "PM" : "AM";
+    h = h % 12 || 12;
+    return h + ":" + m[2] + " " + ap;
+  }
+  function timeAgo(iso) {
+    var mins = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
+    if (mins < 60) return mins <= 1 ? "just now" : mins + " minutes ago";
+    var hrs = Math.floor(mins / 60);
+    if (hrs < 24) return hrs + " hour" + (hrs === 1 ? "" : "s") + " ago";
+    var days = Math.floor(hrs / 24);
+    return days + " day" + (days === 1 ? "" : "s") + " ago";
+  }
+  function telHref(num) { return "tel:" + String(num || "").replace(/[^0-9+]/g, ""); }
+  function haptic(ms) { if (navigator.vibrate) { try { navigator.vibrate(ms || 12); } catch (e) {} } }
+
+  var toastTimer = null;
+  function toast(msg) {
+    var el = document.getElementById("toast");
+    el.textContent = msg;
+    el.classList.add("on");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { el.classList.remove("on"); }, 3200);
+  }
+
+  /* ------------------------------ theme ------------------------------- */
+  function systemPrefersDark() {
+    return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  }
+  function isDarkNow() {
+    var a = document.documentElement.getAttribute("data-theme");
+    return a ? a === "dark" : systemPrefersDark();
+  }
+  function syncThemeIcon() {
+    document.getElementById("themeIcon").setAttribute("href", isDarkNow() ? "#i-moon" : "#i-sun");
+    var d = document.getElementById("darkToggle");
+    if (d) d.checked = isDarkNow();
+  }
+  function setTheme(mode) {
+    document.documentElement.setAttribute("data-theme", mode);
+    try { localStorage.setItem("shiloh.theme", mode); } catch (e) {}
+    syncThemeIcon();
+    ShilohAmbient.refresh();
+  }
+  document.getElementById("themeBtn").addEventListener("click", function () {
+    haptic();
+    setTheme(isDarkNow() ? "light" : "dark");
+  });
+
+  /* --------------------------- comfort mode --------------------------- */
+  function setComfort(on) {
+    document.documentElement.setAttribute("data-comfort", on ? "on" : "off");
+    try { localStorage.setItem("shiloh.comfort", on ? "on" : "off"); } catch (e) {}
+    ShilohAmbient.setComfort(on);
+    toast(on ? "Comfort mode on." : "Comfort mode off.");
+  }
+
+  /* ------------------------------ router ------------------------------ */
+  var ROUTES = ["home", "events", "prayer", "directory", "give", "watch", "about", "connect", "profile", "help", "rent"];
+  function paint(r) {
+    document.querySelectorAll(".screen").forEach(function (s) { s.classList.toggle("on", s.id === "screen-" + r); });
+    document.querySelectorAll("#tabbar button").forEach(function (b) {
+      b.setAttribute("aria-current", b.getAttribute("data-nav") === r ? "true" : "false");
+    });
+    if (r === "events") renderEvents();
+    if (r === "prayer") renderPrayer();
+    if (r === "directory") renderMinistries();
+    if (r === "profile") renderProfile();
+    if (r === "rent") renderRent();
+    window.scrollTo(0, 0);
+  }
+  function route() {
+    var r = (location.hash || "#/home").replace("#/", "");
+    if (ROUTES.indexOf(r) === -1) r = "home";
+    if (document.startViewTransition && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      document.startViewTransition(function () { paint(r); });
+    } else { paint(r); }
+  }
+  window.addEventListener("hashchange", route);
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-nav]");
+    if (!b) return;
+    haptic();
+    location.hash = "#/" + b.getAttribute("data-nav");
+  });
+
+  /* ------------------------------- home ------------------------------- */
+  function renderServiceTimes() {
+    var times = (CHURCH.serviceTimes || []).filter(function (t) { return t.time; });
+    if (!times.length) return;
+    document.getElementById("serviceCard").hidden = false;
+    document.getElementById("serviceList").innerHTML = times.map(function (t) {
+      return '<div class="row" style="justify-content:space-between"><b>' + esc(t.label) + "</b><span class=\"muted tnum\">" + esc(t.time) + "</span></div>";
+    }).join("");
+    if (CHURCH.online) document.getElementById("onlineWhen").textContent = CHURCH.online.label + " · " + CHURCH.online.when;
+    document.getElementById("addressLine").textContent = CHURCH.address || "";
+  }
+  function renderPastor() {
+    if (!ABOUT || !ABOUT.staff || !ABOUT.staff.length) return;
+    var p = ABOUT.staff[0];
+    document.getElementById("pastorCard").hidden = false;
+    document.getElementById("pastorName").textContent = p.name;
+    document.getElementById("pastorTenure").textContent = (p.title || "") + (CHURCH.pastorTenure ? " · " + CHURCH.pastorTenure : "");
+    /* The greeting, verbatim from the church's own site. */
+    var greeting = [
+      "We greet you today with the Joy of Our Risen Savior Jesus Christ! Thank you for taking the time to visit with us. We hope that something you see, hear, learn, or feel will bring you encouragement and hope through the Salvation of our Lord.",
+      "As you continue your journey of faith, we ask that you would pray for: clarity of vision and focus to the ministry which God has called us; the Holy Spirit's moving upon your heart as to how you can participate within the ministry; and the opportunity for us to join together in person through joint worship, as well as the ministry assignment that would best fit your God-given gifting as we sojourn.",
+      "Our prayer is that God will continue to bless and nourish you in His anointing for your life. We look forward to working together for the Cause of Christ!",
+      "In His Love,\nPastor Carl"
+    ];
+    document.getElementById("pastorGreetingLead").textContent = greeting[0];
+    document.getElementById("pastorGreetingRest").innerHTML = paras(greeting.slice(1).join("\n"));
+  }
+  /* "Today" in the church's own timezone — with UTC, a Sunday service would
+     fall off the calendar at 8 PM Eastern on the day itself. */
+  function churchToday() {
+    try {
+      return new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York",
+        year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
+    } catch (e) { return new Date().toISOString().slice(0, 10); }
+  }
+  function renderHeroNext() {
+    var today = churchToday();
+    var next = EVENTS.filter(function (e) { return e.date >= today; })
+      .sort(function (a, b) { return a.date.localeCompare(b.date); })[0];
+    if (!next) return;
+    document.getElementById("heroNext").hidden = false;
+    document.getElementById("heroNextTitle").textContent = next.title;
+    document.getElementById("heroNextWhen").textContent = fmtDate(next.date) + (next.time ? " · " + next.time : "");
+  }
+  function renderNews(news) {
+    var cutoff = Date.now() - 18 * 30 * 864e5;
+    var fresh = news.filter(function (n) { return new Date(n.date).getTime() >= cutoff; })
+      .sort(function (a, b) { return b.date.localeCompare(a.date); });
+    document.getElementById("newsList").innerHTML = fresh.length ? fresh.map(function (n) {
+      var link = n.link ? '<a class="btn btn--quiet" href="' + esc(n.link) + '" target="_blank" rel="noopener" style="margin-top:var(--space-4)">' + esc(n.linkLabel || "More") + "</a>" : "";
+      return '<article class="card reveal"><h3>' + esc(n.title) + "</h3><p>" + esc(n.body) + "</p>" + link + "</article>";
+    }).join("") : '<div class="empty">Nothing new right now — check back soon.</div>';
+  }
+
+  /* ------------------------------ events ------------------------------ */
+  function renderEvents() {
+    var today = churchToday();
+    var future = EVENTS.filter(function (e) { return e.date >= today; }).sort(function (a, b) { return a.date.localeCompare(b.date); });
+    var past = EVENTS.filter(function (e) { return e.date < today; }).sort(function (a, b) { return b.date.localeCompare(a.date); });
+    var rsvps, mineIds;
+    try { rsvps = JSON.parse(localStorage.getItem("shiloh.rsvps") || "[]") || []; } catch (e2) { rsvps = []; }
+    try { mineIds = JSON.parse(localStorage.getItem("shiloh.myRsvps") || "[]") || []; } catch (e2) { mineIds = []; }
+    var SEG = { yes: 0, maybe: 1, no: 2 };
+    var SEGC = { yes: "var(--ok)", maybe: "var(--warn)", no: "var(--text-faint)" };
+
+    function card(e, isPast) {
+      var yes = rsvps.filter(function (r) { return r.eventId === e.id && r.answer === "yes"; }).length;
+      var mine = rsvps.filter(function (r) { return r.eventId === e.id && mineIds.indexOf(r.id) !== -1; })[0];
+      var picked = mine && mine.answer;
+      var controls = "";
+      if (!isPast && e.rsvp !== false) {
+        controls =
+          '<div class="segmented"' + (picked ? ' data-picked="' + esc(picked) + '"' : "") +
+            ' style="--seg-i:' + (picked ? SEG[picked] : 0) + ';--seg-c:' + (picked ? SEGC[picked] : "var(--ok)") + '" role="group" aria-label="Are you coming?">' +
+            '<span class="segmented__thumb" aria-hidden="true"></span>' +
+            ["yes", "maybe", "no"].map(function (a) {
+              var label = a === "yes" ? "Yes" : a === "maybe" ? "Maybe" : "No";
+              return '<button type="button" data-rsvp="' + esc(e.id) + '" data-ans="' + a + '" aria-pressed="' + (picked === a) + '">' + label + "</button>";
+            }).join("") +
+          "</div>" +
+          '<div class="headcount"><b class="tnum">' + yes + "</b> coming so far</div>" +
+          '<div class="row" style="margin-top:var(--space-4)">' +
+            '<button class="btn btn--quiet" data-ics="' + esc(e.id) + '" type="button">' + ICON("i-cal") + "Add to calendar</button>" +
+            '<button class="btn btn--quiet" data-share="' + esc(e.id) + '" type="button">' + ICON("i-share") + "Share</button>" +
+          "</div>";
+      }
+      return '<article class="card eventcard reveal">' +
+        '<div class="eventcard__top">' +
+          '<div class="datechip"><span class="m">' + esc(monthOf(e.date)) + '</span><span class="d">' + dayOf(e.date) + "</span></div>" +
+          "<div><h3>" + esc(e.title) + '</h3><div class="eventcard__meta">' +
+            esc(fmtDate(e.date)) + (e.time ? " · " + esc(e.time) : "") + (e.location ? " · " + esc(e.location) : "") +
+          "</div></div>" +
+        "</div>" +
+        (e.body ? '<div class="eventcard__body"><p>' + esc(e.body) + "</p></div>" : "") +
+        controls + "</article>";
+    }
+    document.getElementById("eventsUpcoming").innerHTML = future.length
+      ? future.map(function (e) { return card(e, false); }).join("")
+      : '<div class="empty">Nothing on the calendar yet — check back soon.</div>';
+    document.getElementById("eventsPast").innerHTML = past.length
+      ? past.map(function (e) { return card(e, true); }).join("")
+      : '<div class="empty">No past events.</div>';
+    document.getElementById("pastWrap").hidden = !past.length;
+  }
+
+  document.addEventListener("click", function (e) {
+    var r = e.target.closest("button[data-rsvp]");
+    if (r) {
+      haptic(14);
+      var profile = ShilohStore.getProfile() || {};
+      var ans = r.getAttribute("data-ans");
+      var seg = r.closest(".segmented");
+      var idx = { yes: 0, maybe: 1, no: 2 }[ans];
+      var col = { yes: "var(--ok)", maybe: "var(--warn)", no: "var(--text-faint)" }[ans];
+      seg.setAttribute("data-picked", ans);
+      seg.style.setProperty("--seg-i", idx);
+      seg.style.setProperty("--seg-c", col);
+      seg.querySelectorAll("button").forEach(function (b) { b.setAttribute("aria-pressed", b === r); });
+      ShilohStore.submitRsvp({ eventId: r.getAttribute("data-rsvp"), answer: ans, name: profile.name || "", email: profile.email || "" })
+        .then(function () {
+          renderEvents();
+          toast(ans === "yes" ? "We'll see you there." : ans === "maybe" ? "Marked as maybe." : "Thanks for letting us know.");
+        });
+      return;
+    }
+    var ics = e.target.closest("button[data-ics]");
+    if (ics) {
+      var ev = EVENTS.find(function (x) { return x.id === ics.getAttribute("data-ics"); });
+      if (ev) { ShilohStore.downloadEventIcs(ev); toast("Added to your calendar."); }
+      return;
+    }
+    var sh = e.target.closest("button[data-share]");
+    if (sh) {
+      var ev2 = EVENTS.find(function (x) { return x.id === sh.getAttribute("data-share"); });
+      if (!ev2) return;
+      var text = ev2.title + " — " + fmtDate(ev2.date) + (ev2.time ? ", " + ev2.time : "");
+      var url = location.href.split("#")[0] + "#/events";
+      if (navigator.share) {
+        navigator.share({ title: ev2.title, text: text, url: url }).catch(function () {});
+      } else if (navigator.clipboard) {
+        navigator.clipboard.writeText(text + " " + url).then(function () { toast("Copied."); });
+      }
+      return;
+    }
+  });
+
+  /* ------------------------------ prayer ------------------------------ */
+  function renderPrayer() {
+    ShilohStore.listVisiblePrayerRequests().then(function (list) {
+      document.getElementById("prayerList").innerHTML = list.length ? list.map(function (p) {
+        var done = ShilohStore.hasPrayed(p.id);
+        return '<article class="card prayercard reveal">' +
+          '<div class="prayercard__who">' + esc(p.name || "Anonymous") + " · " + timeAgo(p.submittedAt) + "</div>" +
+          '<p class="prayercard__text">' + esc(p.text) + "</p>" +
+          '<button class="praybtn" data-pray="' + esc(p.id) + '" data-done="' + done + '" type="button">' +
+            ICON("i-flame") + (done ? "You're praying" : "I'm praying") +
+            ' <span class="n">(' + (p.prayingCount || 0) + ")</span></button>" +
+          "</article>";
+      }).join("") : '<div class="empty">No requests on the church-wide wall yet.</div>';
+    });
+  }
+  document.getElementById("prayerForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var vis = document.querySelector('input[name="prVis"]:checked').value;
+    ShilohStore.submitPrayerRequest({
+      name: document.getElementById("prName").value.trim(),
+      text: document.getElementById("prText").value.trim(),
+      visibility: vis
+    }).then(function () {
+      document.getElementById("prText").value = "";
+      renderPrayer();
+      haptic(18);
+      toast(vis === "church" ? "Shared with the church." : vis === "team" ? "Shared with the prayer team." : "Sent to the pastor.");
+    });
+  });
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-pray]");
+    if (!b) return;
+    if (b.getAttribute("data-done") === "true") return;
+    haptic(16);
+    b.classList.add("pulsing");
+    setTimeout(function () { b.classList.remove("pulsing"); }, 700);
+    ShilohStore.markPraying(b.getAttribute("data-pray")).then(function (ok) {
+      if (ok) { renderPrayer(); toast("Thank you for praying."); }
+    });
+  });
+
+  /* ---------------------------- ministries ---------------------------- */
+  function ministryCard(m) {
+    var img = m.image ? '<img src="' + esc(m.image) + '" alt="" loading="lazy" decoding="async">' : "";
+    var scripture = "";
+    if (m.scripture) {
+      /* Citation sits outside the quotation marks: “verse” — Reference */
+      var cut = m.scripture.lastIndexOf(" — ");
+      var verse = cut > 0 ? m.scripture.slice(0, cut) : m.scripture;
+      var ref = cut > 0 ? m.scripture.slice(cut + 3) : "";
+      scripture = '<p class="scripture">“' + esc(verse.trim()) + "”" + (ref ? " — " + esc(ref.trim()) : "") + "</p>";
+    }
+    var action = m.bookable
+      ? '<details class="resform" style="margin-top:var(--space-4)"><summary class="btn btn--quiet">Request to book</summary>' +
+        '<form data-book="' + esc(m.id) + '" style="margin-top:var(--space-4)">' +
+        '<div class="field"><label>Date<input type="date" name="date" required></label></div>' +
+        '<div class="field"><label>Start time<input type="time" name="startTime" required></label></div>' +
+        '<div class="field"><label>End time<input type="time" name="endTime" required></label></div>' +
+        '<div class="field"><label>What for?<input type="text" name="purpose" required></label></div>' +
+        '<p class="hint" data-conflict hidden>That space already has a booking that overlaps. An admin will follow up.</p>' +
+        '<button class="btn btn--primary btn--block" type="submit">Send request</button></form></details>'
+      : '<button class="btn btn--quiet" data-interest="' + esc(m.id) + '" type="button" style="margin-top:var(--space-4)">I\'m interested</button>';
+    var desc = m.description
+      ? '<details style="margin-top:var(--space-3)"><summary class="btn btn--quiet" style="list-style:none">About this ministry</summary><div style="margin-top:var(--space-3)">' + paras(m.description) + "</div></details>"
+      : "";
+    return '<article class="card ministrycard reveal">' + img +
+      '<div class="ministrycard__body">' +
+      "<h3>" + esc(m.name) + "</h3>" + scripture + desc + action +
+      "</div></article>";
+  }
+  function renderMinistries() {
+    var mins = MINISTRIES.filter(function (m) { return m.type !== "facility"; });
+    var facs = MINISTRIES.filter(function (m) { return m.type === "facility"; });
+    document.getElementById("ministryList").innerHTML = mins.map(ministryCard).join("");
+    document.getElementById("facilityList").innerHTML = facs.map(ministryCard).join("");
+  }
+  document.addEventListener("submit", function (e) {
+    var f = e.target.closest("form[data-book]");
+    if (!f) return;
+    e.preventDefault();
+    var fd = new FormData(f);
+    var facilityId = f.getAttribute("data-book");
+    var date = fd.get("date"), s = fd.get("startTime"), en = fd.get("endTime");
+    if (ShilohStore.hasConflict(facilityId, date, s, en)) f.querySelector("[data-conflict]").hidden = false;
+    var profile = ShilohStore.getProfile() || {};
+    ShilohStore.submitReservationRequest({
+      facilityId: facilityId, date: date, startTime: s, endTime: en,
+      purpose: fd.get("purpose"), requestedBy: profile.name || ""
+    }).then(function () {
+      f.closest("details").innerHTML = '<p class="hint">Request sent — an admin will confirm it soon.</p>';
+      toast("Booking request sent.");
+    });
+  });
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-interest]");
+    if (!b) return;
+    var profile = ShilohStore.getProfile() || {};
+    ShilohStore.submitReservationRequest({ facilityId: b.getAttribute("data-interest"), type: "interest", requestedBy: profile.name || "" })
+      .then(function () {
+        b.outerHTML = '<p class="hint" style="margin-top:var(--space-4)">Thanks — the ministry leader will reach out.</p>';
+        toast("We'll pass that along.");
+      });
+  });
+
+  /* -------------------------------- give ------------------------------ */
+  function renderGive() {
+    if (!GIVING) return;
+    document.getElementById("giveIntro").textContent = GIVING.intro || "";
+    var linked = (GIVING.methods || []).filter(function (g) { return g.url; });
+    var offline = (GIVING.methods || []).filter(function (g) { return !g.url; });
+    /* Tap-out apps as tiles; in-person and mail as full-width reading cards. */
+    document.getElementById("giveGrid").innerHTML = linked.map(function (g) {
+      var img = g.image ? '<img src="' + esc(g.image) + '" alt="" loading="lazy" decoding="async">' : "";
+      return '<a class="givemethod" href="' + esc(g.url) + '" target="_blank" rel="noopener">' +
+        img + "<b>" + esc(g.method) + "</b><small>" + esc(g.details || "") + "</small></a>";
+    }).join("");
+    document.getElementById("giveOffline").innerHTML = offline.map(function (g) {
+      return '<div class="card"><p class="eyebrow">' + esc(g.method) + '</p><p style="margin-top:var(--space-3)">' + esc(g.details || "") + "</p></div>";
+    }).join("");
+  }
+
+  /* ------------------------------- live ------------------------------- */
+  /* True while the current time (in the church's own timezone) falls inside
+     the weekly window from data/live.json. The player's own offline state
+     covers the case where the window is open but nobody is streaming yet —
+     the app never claims "live" outside what the config says. */
+  function inLiveWindow(sched) {
+    if (!sched) return false;
+    try {
+      var parts = new Intl.DateTimeFormat("en-US", {
+        timeZone: sched.timezone || "America/New_York",
+        weekday: "short", hour: "numeric", minute: "numeric", hour12: false
+      }).formatToParts(new Date());
+      var get = function (t) { var p = parts.find(function (x) { return x.type === t; }); return p ? p.value : ""; };
+      var days = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+      var day = days[get("weekday")];
+      var mins = (parseInt(get("hour"), 10) % 24) * 60 + parseInt(get("minute"), 10);
+      return day === sched.dayOfWeek && mins >= sched.startMinutes && mins < sched.endMinutes;
+    } catch (e) { return false; }
+  }
+  function liveActive() {
+    if (!LIVE || !LIVE.embedUrl) return false;
+    if (LIVE.mode === "off") return false;
+    if (LIVE.mode === "always") return true;
+    if (LIVE.mode === "manual") return LIVE.liveNow === true;
+    return inLiveWindow(LIVE.schedule); /* mode: "schedule" */
+  }
+  function renderLive() {
+    var active = liveActive();
+    document.getElementById("liveBanner").hidden = !active;
+    var player = document.getElementById("livePlayer");
+    player.hidden = !active;
+    if (!active && player.getAttribute("data-mounted")) {
+      /* Tear the iframe down, not just hide it — a display:none embed keeps
+         its media session and could keep playing audio after the window. */
+      document.getElementById("liveFrame").innerHTML = "";
+      player.removeAttribute("data-mounted");
+    }
+    if (active && !player.getAttribute("data-mounted")) {
+      /* Iframe injected only when live — no third-party requests otherwise. */
+      var f = document.createElement("iframe");
+      f.src = LIVE.embedUrl;
+      f.setAttribute("allow", "autoplay; fullscreen; encrypted-media; picture-in-picture");
+      f.setAttribute("allowfullscreen", "true");
+      f.setAttribute("title", "Live worship stream");
+      f.style.aspectRatio = LIVE.aspectRatio || "16 / 9";
+      document.getElementById("liveFrame").appendChild(f);
+      player.setAttribute("data-mounted", "1");
+    }
+    document.getElementById("liveFallbackCard").hidden = active;
+    if (LIVE && LIVE.fallback) {
+      if (LIVE.schedule && LIVE.schedule.label) document.getElementById("liveFallbackTitle").textContent = "Live — " + LIVE.schedule.label;
+      document.getElementById("liveFallbackText").textContent = LIVE.fallback.text || "";
+      document.getElementById("watchLiveBtn").href = LIVE.fallback.linkUrl || (CHURCH.online && CHURCH.online.url) || "#";
+    }
+  }
+
+  /* ------------------------------- watch ------------------------------ */
+  function renderWatch() {
+    if (CHURCH.online && CHURCH.online.url) document.getElementById("watchLiveBtn").href = CHURCH.online.url;
+    if (SERMONS) {
+      document.getElementById("sermonArchive").href = SERMONS.sermonsUrl || "#";
+      document.getElementById("sermonList").innerHTML = (SERMONS.sermons || []).map(function (s) {
+        return '<div class="card row" style="justify-content:space-between">' +
+          "<div><b>" + esc(s.title) + '</b><div class="muted" style="font-size:var(--step--1)">' + esc(s.speaker || "") + (s.date ? " · " + esc(s.date) : "") + "</div></div>" +
+          (s.url ? '<a class="btn btn--quiet" href="' + esc(s.url) + '" target="_blank" rel="noopener">' + ICON("i-play") + "Watch</a>" : "") +
+          "</div>";
+      }).join("");
+    }
+    if (CHURCH.rightNowMedia) {
+      document.getElementById("rightnowCard").hidden = false;
+      document.getElementById("rightnowBtn").href = CHURCH.rightNowMedia;
+    }
+  }
+
+  /* ------------------------------- about ------------------------------ */
+  function renderAbout() {
+    if (!ABOUT) return;
+    var secs = [
+      { eyebrow: "Our story so far", title: "85 years in Bridgeport", body: ABOUT.who, image: "assets/media/about-us-hero.webp" },
+      { eyebrow: "What we believe", title: "Our faith", body: ABOUT.believe },
+      { eyebrow: "Our purpose", title: "Why we're here", body: ABOUT.purpose }
+    ];
+    document.getElementById("aboutSections").innerHTML = secs.filter(function (s) { return s.body; }).map(function (s, i) {
+      var img = (i === 0 && s.image) ? '<img src="' + esc(s.image) + '" alt="" loading="lazy" decoding="async">' : "";
+      var cls = img ? "card photocard reveal" : "card reveal";
+      var body = i === 0 ? paras(s.body) :
+        '<details style="margin-top:var(--space-2)"><summary class="btn btn--quiet" style="list-style:none">Read more</summary><div style="margin-top:var(--space-3)">' + paras(s.body) + "</div></details>" +
+        "<p style='margin-top:var(--space-2)'>" + esc(s.body.split("\n")[0].split(". ")[0]) + ".</p>";
+      if (i > 0) {
+        /* lead sentence visible, remainder behind a disclosure */
+        var first = s.body.split("\n")[0];
+        var lead = first.length > 220 ? first.slice(0, 200).replace(/\s+\S*$/, "") + "…" : first;
+        body = "<p>" + esc(lead) + "</p>" +
+          '<details style="margin-top:var(--space-3)"><summary class="btn btn--quiet" style="list-style:none">Read more</summary><div style="margin-top:var(--space-3)">' + paras(s.body) + "</div></details>";
+      }
+      return '<article class="' + cls + '">' + img +
+        (img ? '<div class="photocard__body">' : "") +
+        '<p class="eyebrow">' + esc(s.eyebrow) + "</p><h3 style=\"margin-top:var(--space-2)\">" + esc(s.title) + "</h3>" + body +
+        (img ? "</div>" : "") + "</article>";
+    }).join("");
+
+    /* Sunday flow */
+    document.getElementById("sundayFlow").innerHTML = (CHURCH.serviceTimes || []).slice(0, 3).map(function (t) {
+      return '<div class="row" style="justify-content:space-between"><b>' + esc(t.label) + '</b><span class="muted tnum">' + esc(t.time) + "</span></div>";
+    }).join("");
+
+    /* Bible Discovery class groupings — from the site's Christian Education page */
+    var groups = ["Nursery (ages 0–3)", "Primary (4–7)", "Primary (8–12)", "Secondary (13–18)", "University (19–25)", "Adults (26–40)", "Middle of the Road (41–60)", "Praise Jesus (60+)"];
+    document.getElementById("classGroups").innerHTML = groups.map(function (g) {
+      return '<div class="row" style="gap:var(--space-3)"><span style="color:var(--accent)">' + ICON("i-check") + "</span><span>" + esc(g) + "</span></div>";
+    }).join("");
+
+    /* Community impact — the story the church's own site doesn't tell.
+       Every item carries its sources; the links are the point. */
+    if (IMPACT && IMPACT.items && IMPACT.items.length) {
+      document.getElementById("impactWrap").hidden = false;
+      document.getElementById("impactIntro").textContent = IMPACT.intro || "";
+      if (IMPACT.image) {
+        document.getElementById("impactFig").hidden = false;
+        document.getElementById("impactImg").src = IMPACT.image;
+        /* Captioned, not claimed: this photo's specific event is unconfirmed,
+           so the caption says what it shows and where it came from. */
+        document.getElementById("impactCap").textContent = IMPACT.imageCaption || "";
+      }
+      document.getElementById("impactList").innerHTML = IMPACT.items.map(function (it) {
+        /* Citations wrap as a list, not as pills — these labels are long, and
+           a nowrap pill row overflows the card. */
+        var links = (it.links || []).length
+          ? '<div class="sources"><p class="eyebrow">Sources</p><ul>' + it.links.map(function (l) {
+              return '<li><a href="' + esc(l.url) + '" target="_blank" rel="noopener">' + esc(l.label) + "</a></li>";
+            }).join("") + "</ul></div>"
+          : "";
+        var outcome = it.outcome
+          ? '<p class="outcome"><b>Outcome.</b> ' + esc(it.outcome) + "</p>"
+          : "";
+        return '<article class="card reveal">' +
+          '<div>' +
+          '<p class="eyebrow">' + esc(it.year || "") + "</p>" +
+          '<h3 style="margin-top:var(--space-2)">' + esc(it.title) + "</h3>" +
+          "<p>" + esc(it.body) + "</p>" + outcome + links +
+          "</div></article>";
+      }).join("");
+    }
+
+    /* Staff */
+    document.getElementById("staffList").innerHTML = (ABOUT.staff || []).map(function (p, i) {
+      var media = p.image
+        ? '<img class="portrait" src="' + esc(p.image) + '" alt="Portrait of ' + esc(p.name) + '" loading="lazy" decoding="async" style="width:100%;max-width:9rem">'
+        : '<div class="portrait" aria-hidden="true" style="width:9rem;aspect-ratio:3/4;display:grid;place-items:center;background:color-mix(in oklch, var(--accent) 14%, transparent);font-family:var(--font-display);font-size:var(--step-3);font-weight:800;color:var(--accent)">' +
+          esc(p.name.replace(/Rev\.|Dr\.|,.*$/g, "").trim().split(/\s+/).map(function (w) { return w[0]; }).slice(0, 2).join("")) + "</div>";
+      var extra = "";
+      if (i === 0 && ABOUT.pastorExtended) {
+        var pe = ABOUT.pastorExtended;
+        extra = '<p class="eyebrow" style="margin-top:var(--space-5)">Service beyond Shiloh</p><ul class="rolelist">' +
+          (pe.roles || []).map(function (r) { return "<li>" + esc(r) + "</li>"; }).join("") + "</ul>" +
+          [pe.consulting, pe.beforeMinistry, pe.education].filter(Boolean).map(function (t) { return "<p>" + esc(t) + "</p>"; }).join("");
+      }
+      var bio = p.bio ? '<details style="margin-top:var(--space-3)"><summary class="btn btn--quiet" style="list-style:none">About ' + esc(p.name.split(",")[0]) + '</summary><div style="margin-top:var(--space-3)">' + paras(p.bio) + extra + "</div></details>" : "";
+      return '<article class="card pastorcard reveal">' + media +
+        "<div><h3>" + esc(p.name) + '</h3><p class="muted">' + esc(p.title || "") + "</p>" + bio + "</div></article>";
+    }).join("");
+
+    /* Anniversary */
+    if (ABOUT.anniversary) {
+      document.getElementById("annivCard").hidden = false;
+      document.getElementById("annivImg").src = ABOUT.anniversary.image || "";
+      document.getElementById("annivWhen").textContent = ABOUT.anniversary.when || "";
+      document.getElementById("annivTitle").textContent = ABOUT.anniversary.title || "";
+      document.getElementById("annivTheme").textContent = ABOUT.anniversary.theme ? "“" + ABOUT.anniversary.theme + "”" : "";
+    }
+
+    /* socials */
+    var socials = [];
+    if (CHURCH.website) socials.push(['Website', CHURCH.website]);
+    if (CHURCH.facebook) socials.push(['Facebook', CHURCH.facebook]);
+    if (CHURCH.instagram) socials.push(['Instagram', CHURCH.instagram]);
+    document.getElementById("socialRow").innerHTML = socials.map(function (s) {
+      return '<a class="btn btn--quiet" href="' + esc(s[1]) + '" target="_blank" rel="noopener">' + esc(s[0]) + "</a>";
+    }).join("");
+  }
+
+  /* ------------------------------ connect ----------------------------- */
+  function renderConnectExtras() {
+    document.getElementById("kidsText").textContent = CHURCH.kids || "";
+    document.getElementById("directionsBtn").href = "https://maps.google.com/?q=" + encodeURIComponent(CHURCH.address || "");
+    document.getElementById("callBtn").href = telHref(CHURCH.phone);
+    document.getElementById("faqList").innerHTML = (FAQ || []).map(function (f) {
+      return '<details class="card" style="padding:var(--space-4) var(--space-5)"><summary style="cursor:pointer;font-weight:700;list-style:none;min-height:calc(var(--tap) - 20px);display:flex;align-items:center">' + esc(f.q) + '</summary><p class="muted" style="margin-top:var(--space-3)">' + esc(f.a) + "</p></details>";
+    }).join("");
+  }
+  document.getElementById("connectForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    ShilohStore.submitVisitorCard({
+      name: document.getElementById("cName").value.trim(),
+      email: document.getElementById("cEmail").value.trim(),
+      phone: document.getElementById("cPhone").value.trim(),
+      who: document.getElementById("cWho").value,
+      message: document.getElementById("cMsg").value.trim()
+    }).then(function () {
+      document.getElementById("connectDone").hidden = false;
+      e.target.reset();
+      haptic(18);
+      toast("Thank you — we've got it.");
+    });
+  });
+
+  /* ------------------------------ profile ----------------------------- */
+  function renderProfile() {
+    var p = ShilohStore.getProfile() || {};
+    document.getElementById("pName").value = p.name || "";
+    document.getElementById("pEmail").value = p.email || "";
+    document.getElementById("pPhone").value = p.phone || "";
+    var mine = ShilohStore.myRsvps();
+    document.getElementById("myRsvpList").innerHTML = mine.length ? mine.map(function (r) {
+      var ev = EVENTS.find(function (x) { return x.id === r.eventId; });
+      var cls = r.answer === "yes" ? "chip--ok" : r.answer === "maybe" ? "chip--warn" : "";
+      return '<div class="card row" style="justify-content:space-between"><b>' + esc(ev ? ev.title : r.eventId) +
+        '</b><span class="chip ' + cls + '">' + esc(r.answer) + "</span></div>";
+    }).join("") : '<div class="empty">No RSVPs yet.</div>';
+    renderStaffCard();
+  }
+  document.getElementById("profileForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    ShilohStore.saveProfile({
+      name: document.getElementById("pName").value.trim(),
+      email: document.getElementById("pEmail").value.trim(),
+      phone: document.getElementById("pPhone").value.trim()
+    }).then(function () { renderProfile(); toast("Saved."); });
+  });
+
+  /* The staff entrance lives on the profile so the back office needs no
+     discoverable URL of its own. The passcode here is demo mode's courtesy
+     lock (data/config.json); in supabase mode staff sign in with email on
+     admin.html, and this card simply reflects that signed-in state. */
+  function renderStaffCard() {
+    var role = ShilohStore.staffRole();
+    var el = document.getElementById("staffCard");
+    if (!role) {
+      el.innerHTML =
+        '<details><summary class="btn btn--quiet" style="list-style:none">Church staff? Sign in</summary>' +
+        '<form id="staffForm" style="margin-top:var(--space-4)">' +
+        '<div class="field"><label for="staffPass">Staff passcode</label>' +
+        '<input type="password" id="staffPass" autocomplete="current-password" required></div>' +
+        '<button class="btn btn--primary btn--block" type="submit">Sign in</button>' +
+        "</form></details>";
+      return;
+    }
+    var golive = ShilohStore.can("live")
+      ? '<a class="btn btn--block" href="golive.html"><span class="livedot" aria-hidden="true"></span>Go live</a>'
+      : "";
+    el.innerHTML =
+      '<div class="row" style="justify-content:space-between">' +
+        '<span class="eyebrow">Church staff</span>' +
+        '<span class="chip ' + (role === "admin" ? "chip--accent" : "chip--teal") + '">' + esc(role === "admin" ? "Admin" : "Editor") + "</span>" +
+      "</div>" +
+      '<div class="stack" style="--gap: var(--space-3); margin-top: var(--space-4)">' +
+        '<a class="btn btn--primary btn--block" href="admin.html">Open the back office</a>' +
+        golive +
+        '<button class="btn btn--quiet btn--block" id="staffOut" type="button">Sign out</button>' +
+      "</div>";
+  }
+  document.addEventListener("submit", function (e) {
+    var f = e.target.closest("#staffForm");
+    if (!f) return;
+    e.preventDefault();
+    ShilohStore.staffSignIn(document.getElementById("staffPass").value.trim())
+      .then(function (role) {
+        haptic(18);
+        renderStaffCard();
+        toast("Welcome — signed in as " + role + ".");
+      })
+      .catch(function (err) { toast(err.message); });
+  });
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("#staffOut");
+    if (!b) return;
+    haptic();
+    ShilohStore.staffSignOut();
+    renderStaffCard();
+    toast("Signed out.");
+  });
+
+  /* ------------------------------ rentals ------------------------------ */
+  /* Outside congregations and community groups renting Shiloh's spaces.
+     Wording rule: nothing here is called a booking or confirmed until the
+     office marks the request approved. */
+  function rentSpaceCard(s) {
+    var img = s.image ? '<img src="' + esc(s.image) + '" alt="" loading="lazy" decoding="async">' : "";
+    var rate = s.rate
+      ? '<p style="margin-top:var(--space-3)"><b>' + esc(s.rate) + "</b></p>"
+      : '<p class="muted" style="margin-top:var(--space-3)">Ask about rates — the church office will go over everything with you.</p>';
+    var rules = (s.houseRules || []).length
+      ? '<div class="houserules"><p class="eyebrow">House rules</p><ul>' +
+        s.houseRules.map(function (r) { return "<li>" + esc(r) + "</li>"; }).join("") + "</ul></div>"
+      : "";
+    return '<article class="card photocard reveal">' + img +
+      '<div class="photocard__body"><h3>' + esc(s.name) + "</h3>" +
+      "<p>" + esc(s.goodFor || "") + "</p>" + rate + rules +
+      '<button class="btn btn--primary btn--block" data-rentpick="' + esc(s.id) + '" type="button" style="margin-top:var(--space-5)">Request these dates</button>' +
+      "</div></article>";
+  }
+  function renderRentCodes() {
+    var codes = ShilohStore.myRentalCodes();
+    document.getElementById("rentMineWrap").hidden = !codes.length;
+    document.getElementById("rentMyCodes").innerHTML = codes.map(function (c) {
+      return '<button class="codechip" data-code="' + esc(c) + '" type="button">' + esc(c) + "</button>";
+    }).join("");
+  }
+  function renderRent() {
+    renderRentCodes();
+    if (RENTALS) return; /* static content — fetched once, codes refresh every visit */
+    ShilohStore.listRentalSpaces().then(function (data) {
+      var spaces = (data && data.spaces) || [];
+      if (!spaces.length) {
+        document.getElementById("rentSpaces").innerHTML =
+          '<div class="empty">We couldn\'t load the spaces just now. Call the church office' +
+          (CHURCH && CHURCH.phone ? " at " + esc(CHURCH.phone) : "") + " and we'll help.</div>";
+        return;
+      }
+      RENTALS = data;
+      document.getElementById("rentIntro").textContent = data.intro || "";
+      document.getElementById("rentSpaces").innerHTML = spaces.map(rentSpaceCard).join("");
+      document.getElementById("rentSpacePick").innerHTML = spaces.map(function (s, i) {
+        return '<label><input type="radio" name="rentSpace" value="' + esc(s.id) + '"' + (i === 0 ? " checked" : "") +
+          "><span><b>" + esc(s.name) + "</b></span></label>";
+      }).join("");
+      if (data.policy) {
+        document.getElementById("rentPolicyHint").textContent =
+          ((data.policy.approval || "") + " " + (data.policy.payment || "")).trim();
+      }
+    });
+  }
+  document.getElementById("rentForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var picked = document.querySelector('input[name="rentSpace"]:checked');
+    if (!picked) { toast("Choose a space first."); return; }
+    var space = ((RENTALS && RENTALS.spaces) || []).find(function (s) { return s.id === picked.value; });
+    ShilohStore.submitRentalRequest({
+      spaceId: picked.value,
+      spaceName: space ? space.name : picked.value,
+      org: document.getElementById("rOrg").value.trim(),
+      contactName: document.getElementById("rName").value.trim(),
+      email: document.getElementById("rEmail").value.trim(),
+      phone: document.getElementById("rPhone").value.trim(),
+      date: document.getElementById("rDate").value,
+      startTime: document.getElementById("rStart").value,
+      endTime: document.getElementById("rEnd").value,
+      purpose: document.getElementById("rPurpose").value.trim()
+    }).then(function (rec) {
+      document.getElementById("rentForm").hidden = true;
+      var done = document.getElementById("rentDone");
+      done.hidden = false;
+      document.getElementById("rentCode").textContent = rec.code || "";
+      document.getElementById("rentApprovalNote").textContent =
+        (RENTALS && RENTALS.policy && RENTALS.policy.approval) || "";
+      if (CHURCH && CHURCH.phone) {
+        document.getElementById("rentDoneCall").href = telHref(CHURCH.phone);
+        document.getElementById("rentDonePhone").textContent = "Call the church office · " + CHURCH.phone;
+      }
+      renderRentCodes();
+      done.scrollIntoView({ block: "start" });
+      haptic(18);
+      toast("Request sent — the office will call you.");
+    });
+  });
+  document.getElementById("rentAgain").addEventListener("click", function () {
+    document.getElementById("rentDone").hidden = true;
+    var f = document.getElementById("rentForm");
+    f.hidden = false;
+    f.scrollIntoView({ block: "start" });
+  });
+  function rentStatusCard(rec) {
+    var phone = (CHURCH && CHURCH.phone) || "";
+    var when = esc(fmtDate(rec.date)) +
+      (rec.startTime ? " · " + esc(fmtTime(rec.startTime)) + " to " + esc(fmtTime(rec.endTime)) : "");
+    var head = function (chip) {
+      return '<div class="row" style="justify-content:space-between"><span class="eyebrow">Your booking code</span>' + chip + "</div>" +
+        '<h3 style="margin-top:var(--space-3)">' + esc(rec.spaceName || "") + "</h3>" +
+        '<p class="muted">' + when + "</p>";
+    };
+    if (rec.status === "approved") {
+      return '<div class="card">' + head('<span class="chip chip--ok">Approved</span>') +
+        '<p style="margin-top:var(--space-3)">You\'re confirmed — we\'ll be glad to have you.</p>' +
+        '<div id="rentPassSlot"><p class="hint" style="margin-top:var(--space-4)">Your access details will appear here before your date.</p></div>' +
+        "</div>";
+    }
+    if (rec.status === "denied") {
+      return '<div class="card">' + head('<span class="chip chip--danger">Not this time</span>') +
+        '<p style="margin-top:var(--space-3)">We\'re sorry — we couldn\'t say yes to these dates. Please call the church office' +
+        (phone ? " at <b>" + esc(phone) + "</b>" : "") + " — we'd love to find a time that works.</p></div>";
+    }
+    /* pending, or anything we don't recognize: never claim more than "reviewing" */
+    return '<div class="card">' + head('<span class="chip chip--warn">Being reviewed</span>') +
+      '<p style="margin-top:var(--space-3)">The office is reviewing your request — you\'ll get a call.</p></div>';
+  }
+  function renderGuestPass(rec) {
+    Promise.all([ShilohStore.grantForRental(rec.id), ShilohStore.listDoors()]).then(function (res) {
+      var g = res[0], doors = res[1] || [];
+      var slot = document.getElementById("rentPassSlot");
+      if (!slot || !g) return; /* the placeholder line already covers "no pass yet" */
+      var names = (g.doorIds || []).map(function (id) {
+        var d = doors.filter(function (x) { return x.id === id; })[0];
+        return d ? d.name : "";
+      }).filter(Boolean);
+      slot.innerHTML = '<div class="guestpass">' +
+        '<p class="eyebrow">Building access pass</p>' +
+        '<p class="guestpass__code tnum">' + esc(g.doorCode || "") + "</p>" +
+        "<p><b>" + esc(fmtDate(g.date || rec.date)) + " · " +
+          esc(fmtTime(g.startTime || rec.startTime)) + " to " + esc(fmtTime(g.endTime || rec.endTime)) + "</b></p>" +
+        (names.length ? '<p style="margin-top:var(--space-2)">Opens ' + esc(names.join(" and ")) + ".</p>" : "") +
+        '<p class="muted" style="margin-top:var(--space-3)">This code works only during your booked time.</p>' +
+        "</div>";
+    });
+  }
+  function rentLookup(code) {
+    if (!code) { toast("Type your booking code first."); return; }
+    var out = document.getElementById("rentStatus");
+    ShilohStore.findRentalByCode(code).then(function (rec) {
+      if (!rec) {
+        out.innerHTML = '<div class="card"><h3>We couldn\'t find that code</h3>' +
+          '<p class="muted" style="margin-top:var(--space-2)">Check the letters and try again' +
+          (CHURCH && CHURCH.phone ? ", or call the church office at <b>" + esc(CHURCH.phone) + "</b> and we'll look it up for you" : "") +
+          ".</p></div>";
+        return;
+      }
+      out.innerHTML = rentStatusCard(rec);
+      if (rec.status === "approved") renderGuestPass(rec);
+      out.scrollIntoView({ block: "start" });
+    });
+  }
+  document.getElementById("rentLookupForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    rentLookup(document.getElementById("rentLookup").value.trim());
+  });
+  document.addEventListener("click", function (e) {
+    var pick = e.target.closest("button[data-rentpick]");
+    if (pick) {
+      haptic();
+      var id = pick.getAttribute("data-rentpick");
+      document.querySelectorAll('input[name="rentSpace"]').forEach(function (r) { r.checked = r.value === id; });
+      var f = document.getElementById("rentForm");
+      f.hidden = false;
+      f.scrollIntoView({ block: "start" });
+      return;
+    }
+    var chipBtn = e.target.closest("button[data-code]");
+    if (chipBtn) {
+      document.getElementById("rentLookup").value = chipBtn.getAttribute("data-code");
+      rentLookup(chipBtn.getAttribute("data-code"));
+    }
+  });
+
+  /* -------------------------------- help ------------------------------ */
+  document.getElementById("replayTour").addEventListener("click", function () { startTrack("tour"); });
+  document.getElementById("teachMe").addEventListener("click", function () { startTrack("basics"); });
+  document.getElementById("installHelp").addEventListener("click", function () { openInstaller(); });
+  document.getElementById("comfortToggle").addEventListener("change", function () { setComfort(this.checked); });
+  document.getElementById("darkToggle").addEventListener("change", function () { setTheme(this.checked ? "dark" : "light"); });
+
+  /* ---------------------------- onboarding ---------------------------- */
+  /* Two tracks. Track A ("basics") is for someone who has never used a
+     smartphone: phone basics first — tap, scroll, getting back, what a
+     button is, "you cannot break anything" — then it flows straight into
+     the app tour. Track B ("tour") is the app tour alone. Every step is one
+     instruction plus one line of encouragement, with huge Next and Back. */
+  function brandShort() {
+    return (THEME && (THEME.shortName || THEME.name)) || "church";
+  }
+  /* The template rebrands itself: every church-name string that isn't data
+     gets stamped from THEME here, so a fork only ever edits data files. */
+  function brandPass() {
+    var s = brandShort();
+    OB_WELCOME.title = "Welcome to the " + s + " app";
+    var el;
+    if ((el = document.getElementById("aboutHeading"))) el.textContent = "About " + s;
+    if ((el = document.getElementById("sundayFlowEyebrow"))) el.textContent = "Sunday morning at " + s;
+    if ((el = document.getElementById("rnEyebrow"))) el.textContent = "Free for the " + s + " family";
+    if ((el = document.getElementById("rnBody"))) el.textContent = "A huge library of Bible studies and video teaching for every age — free with a " + s + " church account.";
+    if ((el = document.getElementById("visitIntro")) && /At Shiloh,/.test(el.textContent) && s !== "Shiloh") {
+      el.textContent = "At " + s + ", we love to welcome new visitors. Here is what you can expect when you come.";
+    }
+    if ((el = document.getElementById("connectDone"))) el.textContent = "Someone from " + s + " will reach out soon.";
+    var hero = document.querySelector(".photohero img");
+    if (hero && CHURCH && CHURCH.name) hero.alt = "Worship at " + CHURCH.name;
+  }
+  var OB_WELCOME = {
+    icon: "i-cross",
+    /* title is stamped from THEME at boot — the template rebrands itself */
+    title: "Welcome to the church app",
+    body: "Service times, what's coming up, and the prayers this church is holding — all in one place."
+  };
+  var OB_BASICS = [
+    { icon: "i-tap", big: true, title: "How to tap",
+      body: "Touch the screen once, gently, like pressing a doorbell.",
+      cheer: "That one little touch is how you do everything here." },
+    { icon: "i-scroll", big: true, title: "How to move down a page",
+      body: "Stroke the screen upward slowly, like smoothing a tablecloth.",
+      cheer: "The page follows your finger — go as slowly as you like." },
+    { icon: "i-back", big: true, title: "You can always get back",
+      body: "If the screen ever looks unfamiliar, tap the picture of a house at the bottom and you'll be home again.",
+      cheer: "There is no way to get lost." },
+    { icon: "i-btn", big: true, title: "What a button looks like",
+      body: "A button is words inside a soft rounded shape — the blue “Next” below is one.",
+      cheer: "When you're ready, give it one gentle tap." },
+    { icon: "i-shield", big: true, title: "You cannot break anything",
+      body: "Nothing you tap can hurt the app or your phone.",
+      cheer: "Wander freely — the house at the bottom always brings you home." }
+  ];
+  var OB_TOUR = [
+    { icon: "i-flame", title: "You choose who sees it",
+      body: "When you share a prayer request, you decide: the whole church, the prayer team, or the pastor alone.",
+      cheer: "Nothing is ever shared for you." },
+    { icon: "i-cal", title: "Never miss a gathering",
+      body: "Tap Yes on any event and the church will know to expect you.",
+      cheer: "We'd love to see you there." },
+    { icon: "i-help", title: "Help is always close",
+      body: "Tap Help at the bottom any time — the tour, the paper guide, and the church office number all live there.",
+      cheer: "You are never on your own." },
+    { icon: "i-home", title: "Keep it on your phone",
+      body: "You can put this app on your home screen, so it opens like any other app.",
+      cheer: "We'll show you each step whenever you're ready.", install: true }
+  ];
+  var obMode = "choose", obQueue = [], obIndex = 0;
+  function renderOb() {
+    var steps = document.getElementById("obSteps");
+    var body = document.getElementById("obBody");
+    var acts = document.getElementById("obActions");
+    if (obMode === "choose") {
+      steps.innerHTML = "";
+      body.innerHTML =
+        '<div class="onboard__mark">' + ICON(OB_WELCOME.icon) + "</div>" +
+        '<h1 id="obTitle">' + esc(OB_WELCOME.title) + "</h1><p>" + esc(OB_WELCOME.body) + "</p>";
+      /* Three equal-weight doors in — nobody is nudged past the gentle one. */
+      acts.innerHTML =
+        '<button class="btn btn--block onboard__choice" data-ob="basics" type="button">I’m new to phones — teach me everything</button>' +
+        '<button class="btn btn--block onboard__choice" data-ob="tour" type="button">Show me around the app</button>' +
+        '<button class="btn btn--block onboard__choice" data-ob="skip" type="button">Skip</button>';
+      document.getElementById("onboard").scrollTop = 0;
+      return;
+    }
+    var s = obQueue[obIndex];
+    steps.innerHTML = obQueue.map(function (_, i) {
+      return '<i data-on="' + (i <= obIndex) + '"></i>';
+    }).join("");
+    body.innerHTML =
+      '<div class="onboard__mark' + (s.big ? " onboard__mark--big" : "") + '">' + ICON(s.icon) + "</div>" +
+      '<h1 id="obTitle">' + esc(s.title) + "</h1><p>" + esc(s.body) + "</p>" +
+      (s.cheer ? '<p class="onboard__cheer">' + esc(s.cheer) + "</p>" : "");
+    var last = obIndex === obQueue.length - 1;
+    var html = "";
+    if (s.install) {
+      html = '<button class="btn btn--primary btn--block" data-ob="install" type="button">Show me how</button>' +
+             '<button class="btn btn--block" data-ob="done" type="button">Maybe later</button>';
+    } else if (last) {
+      html = '<button class="btn btn--primary btn--block" data-ob="done" type="button">Get started</button>';
+    } else {
+      html = '<button class="btn btn--primary btn--block" data-ob="next" type="button">Next</button>';
+    }
+    html += '<button class="btn btn--quiet btn--block" data-ob="back" type="button">Back</button>';
+    acts.innerHTML = html;
+    document.getElementById("onboard").scrollTop = 0;
+  }
+  function startOnboarding() {
+    obMode = "choose"; obQueue = []; obIndex = 0;
+    renderOb();
+    document.getElementById("onboard").classList.add("on");
+  }
+  function startTrack(track) {
+    obMode = "steps";
+    obQueue = track === "basics" ? OB_BASICS.concat(OB_TOUR) : OB_TOUR.slice();
+    obIndex = 0;
+    renderOb();
+    document.getElementById("onboard").classList.add("on");
+  }
+  function finishOb() {
+    ShilohStore.setOnboardingDone(true);
+    document.getElementById("onboard").classList.remove("on");
+  }
+  document.getElementById("onboard").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-ob]");
+    if (!b) return;
+    haptic();
+    var act = b.getAttribute("data-ob");
+    if (act === "basics" || act === "tour") { startTrack(act); return; }
+    if (act === "next") { obIndex++; renderOb(); return; }
+    if (act === "back") {
+      if (obIndex === 0) { obMode = "choose"; } else { obIndex--; }
+      renderOb();
+      return;
+    }
+    if (act === "install") { finishOb(); openInstaller(); return; }
+    finishOb(); /* "skip" or "done" */
+  });
+
+  /* -------------------------- install chapter -------------------------- */
+  /* Show ONLY the steps for the phone in hand. navigator.standalone covers
+     iOS Safari's installed state; display-mode covers everyone else. */
+  function installState() {
+    var standalone = false;
+    try {
+      standalone = (window.navigator.standalone === true) ||
+        (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches);
+    } catch (e) {}
+    if (standalone) return "installed";
+    var ua = navigator.userAgent || "";
+    var iOS = /iPad|iPhone|iPod/.test(ua) ||
+      (/Macintosh/.test(ua) && (navigator.maxTouchPoints || 0) > 1); /* iPadOS reports as Mac */
+    if (iOS) return "ios";
+    if (/Android/i.test(ua)) return "android";
+    return "desktop";
+  }
+  function instCard(n, icon, title, body) {
+    return '<div class="instep">' +
+      '<span class="instep__num" aria-hidden="true">' + n + "</span>" +
+      '<div class="instep__body"><span class="instep__pic" aria-hidden="true">' + ICON(icon) + "</span>" +
+      "<b>" + esc(title) + "</b><p>" + esc(body) + "</p></div></div>";
+  }
+  function openInstaller() {
+    var state = installState();
+    var intro = document.getElementById("instIntro");
+    var html = "";
+    if (state === "installed") {
+      intro.textContent = "Good news — there is nothing left to do.";
+      html = '<div class="instep"><span class="instep__num instep__num--ok" aria-hidden="true">✓</span>' +
+        '<div class="instep__body"><span class="instep__pic" style="color:var(--ok)" aria-hidden="true">' + ICON("i-phonehome") + "</span>" +
+        "<b>You already did this — the app is on your home screen</b>" +
+        "<p>Tap the " + esc(brandShort()) + " picture on your home screen any time, and the app opens.</p></div></div>";
+    } else if (state === "ios") {
+      intro.textContent = "You're on an iPhone or iPad, so these are your steps — a few gentle taps.";
+      html =
+        instCard(1, "i-share", "Tap the Share button", "It's the small square with an arrow pointing up, at the bottom of the screen.") +
+        instCard(2, "i-addsquare", "Tap “Add to Home Screen”", "Stroke the list upward slowly until you see it, then tap it once.") +
+        instCard(3, "i-check", "Tap “Add” in the top corner", "That's the last tap — you're done.") +
+        instCard(4, "i-phonehome", "Find it on your home screen", "The " + brandShort() + " picture now sits with your other apps — tap it any time to open the app.");
+    } else if (state === "android") {
+      intro.textContent = "You're on an Android phone, so these are your steps — a few gentle taps.";
+      html =
+        instCard(1, "i-dots", "Tap the three little dots", "They sit in the top corner of the screen, one above another.") +
+        instCard(2, "i-addsquare", "Tap “Add to Home screen”", "Stroke the list upward slowly if you don't see it at first.") +
+        instCard(3, "i-check", "Tap “Add” or “Install”", "Your phone may also offer an Install message at the bottom of the screen — tapping that works just as well.") +
+        instCard(4, "i-phonehome", "Find it on your home screen", "The " + brandShort() + " picture now sits with your other apps — tap it any time to open the app.");
+    } else {
+      intro.textContent = "It looks like you're on a computer right now.";
+      html =
+        instCard(1, "i-phonehome", "Open the app on your phone", "Open this same address on your phone — or ask a family member to help you.") +
+        instCard(2, "i-help", "Then open Help on the phone", "Tap Help at the bottom, then “How to put the app on your phone” — it will show the right steps for that phone.");
+    }
+    document.getElementById("instBody").innerHTML = html;
+    var inst = document.getElementById("installer");
+    inst.hidden = false;
+    inst.scrollTop = 0;
+  }
+  document.getElementById("installer").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-inst]");
+    if (!b) return;
+    haptic();
+    document.getElementById("installer").hidden = true;
+  });
+
+  /* -------------------------------- boot ------------------------------ */
+  function j(path, fallback) {
+    return fetch(path, { cache: "no-cache" }).then(function (r) { return r.json(); }).catch(function () { return fallback; });
+  }
+  Promise.all([
+    ShilohStore.init(),
+    j("data/theme.json", {}), j("data/church.json", {}),
+    j("data/events.json", { events: [] }), j("data/news.json", { news: [] }),
+    j("data/ministries.json", { ministries: [] }),
+    j("data/giving.json", null), j("data/about.json", null),
+    j("data/sermons.json", null), j("data/faq.json", { faq: [] }),
+    j("data/impact.json", null), j("data/live.json", null)
+  ]).then(function (res) {
+    THEME = res[1]; CHURCH = res[2];
+    EVENTS = res[3].events || []; MINISTRIES = res[5].ministries || [];
+    GIVING = res[6]; ABOUT = res[7]; SERMONS = res[8]; FAQ = (res[9] || {}).faq || []; IMPACT = res[10]; LIVE = res[11];
+
+    document.title = THEME.churchName || document.title;
+    var full = THEME.churchName || "", shortName = THEME.shortName || full;
+    var rest = full.indexOf(shortName) === 0 ? full.slice(shortName.length).trim() : "";
+    document.getElementById("barName").innerHTML = esc(shortName) + (rest ? '<span>' + esc(rest) + "</span>" : "");
+    document.getElementById("helpPhone").textContent = CHURCH.phone
+      ? CHURCH.phone + " · " + (CHURCH.address || "")
+      : "Ask a deacon after service.";
+    document.getElementById("helpCallBtn").href = telHref(CHURCH.phone);
+
+    if (CHURCH.prayerLine && CHURCH.prayerLine.number) {
+      document.getElementById("prayerLineCard").hidden = false;
+      document.getElementById("prayerLineCall").href = telHref(CHURCH.prayerLine.number);
+      document.getElementById("prayerLineCode").textContent = CHURCH.prayerLine.number + " · access code " + CHURCH.prayerLine.accessCode;
+    }
+
+    renderServiceTimes();
+    renderPastor();
+    renderHeroNext();
+    renderNews(res[4].news || []);
+    renderGive();
+    renderLive();
+    renderWatch();
+    /* Re-evaluate the live window once a minute so the banner appears and
+       disappears on time without anyone reloading the app. */
+    setInterval(renderLive, 60000);
+    renderAbout();
+    renderConnectExtras();
+
+    var cal = document.getElementById("subscribeCal");
+    if (cal && location.protocol === "https:") {
+      cal.href = "webcal://" + location.host + location.pathname.replace(/index\.html$/, "") + "events.ics";
+    }
+
+    brandPass();
+    document.getElementById("comfortToggle").checked = document.documentElement.getAttribute("data-comfort") === "on";
+    syncThemeIcon();
+    try { ShilohAmbient.mount(); } catch (e) {} /* cosmetics must never block boot */
+    route();
+    if (!ShilohStore.isOnboardingDone()) startOnboarding();
+  }).catch(function () {
+    /* Data failed to load (ancient browser, dead network mid-boot): the
+       shell is still standing — navigation must still work. */
+    try { route(); } catch (e) {}
+  });
+})();
+</script>
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function () { navigator.serviceWorker.register("sw.js").catch(function () {}); });
+  }
+</script>
+<script src="js/animations.js"></script>
+</body>
+</html>
+
+HTMLEOF
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet || git commit -m "Redesign v2 — sacred architecture: glass, spring physics, scroll reveals"
