@@ -1,0 +1,12 @@
+# McCluster satellite / control plane
+
+Always read AGENTS.md before editing.
+
+- Control repo: mcclusterishere/mccluster
+- Cloudflare project: mccluster (static edge at matthew.mccluster.org)
+- Worker: mccluster-core (api.mccluster.org)
+- Data: Supabase zmnhbrjyhxzhkxmhkexs
+- Satellites render product UI. They do not own auth, social, billing, or admin.
+- No CI git push onto feature branches.
+- No competing backends.
+- Preserve local product gates (PRIM3 Site 0, Uprise World, etc.).

@@ -1,0 +1,18 @@
+---
+description: McCluster control-plane law. Always apply in this repo.
+alwaysApply: true
+---
+
+McCluster is the backend and the control plane.
+
+- Control repo: mcclusterishere/mccluster
+- Cloudflare project: mccluster (public edge matthew.mccluster.org / mccluster.org)
+- Worker: mccluster-core (api.mccluster.org)
+- Data: Supabase zmnhbrjyhxzhkxmhkexs
+- Do not create a competing auth, database, social, billing, or admin stack
+- Do not auto-push CI onto feature branches
+- Do not rewrite index.html or revive rejected visual systems
+- Preserve local product gates below (PRIM3 Site 0, Uprise World, story canon, etc.)
+- Client social lives on McCluster Control
+
+Read AGENTS.md and CLAUDE.md before any edit.
